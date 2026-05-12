@@ -1,0 +1,83 @@
+<%- include('layout') %>
+<div class="back-link">
+  <a href="/admin/bestellungen"><i class="fas fa-arrow-left"></i> Zurück zu Bestellungen</a>
+</div>
+
+<div class="order-detail-card">
+  <div class="order-detail-header">
+    <div>
+      <h2>Bestellung <%= order.order_number %></h2>
+      <p class="order-date"><%= new Date(order.created_at).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+    </div>
+    <div class="order-status-control">
+      <form method="POST" action="/admin/bestellungen/status/<%= order.id %>">
+        <select name="status" onchange="this.form.submit()" class="status-select">
+          <option value="neu" <%= order.order_status === 'neu' ? 'selected' : '' %>>Neu</option>
+          <option value="in_bearbeitung" <%= order.order_status === 'in_bearbeitung' ? 'selected' : '' %>>In Bearbeitung</option>
+          <option value="unterwegs" <%= order.order_status === 'unterwegs' ? 'selected' : '' %>>Unterwegs</option>
+          <option value="geliefert" <%= order.order_status === 'geliefert' ? 'selected' : '' %>>Geliefert</option>
+          <option value="storniert" <%= order.order_status === 'storniert' ? 'selected' : '' %>>Storniert</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <div class="order-detail-grid">
+    <div class="detail-section">
+      <h3><i class="fas fa-user"></i> Kundendaten</h3>
+      <table class="detail-table">
+        <tr><td>Name</td><td><%= order.customer_name %></td></tr>
+        <tr><td>E-Mail</td><td><%= order.customer_email %></td></tr>
+        <tr><td>Telefon</td><td><%= order.customer_phone || '—' %></td></tr>
+      </table>
+    </div>
+    <div class="detail-section">
+      <h3><i class="fas fa-map-marker-alt"></i> Lieferadresse</h3>
+      <table class="detail-table">
+        <tr><td>Adresse</td><td><%= order.delivery_address %></td></tr>
+        <tr><td>Stadt</td><td><%= order.delivery_city %></td></tr>
+        <tr><td>PLZ</td><td><%= order.delivery_zip %></td></tr>
+      </table>
+    </div>
+    <div class="detail-section">
+      <h3><i class="fas fa-credit-card"></i> Zahlung</h3>
+      <table class="detail-table">
+        <tr><td>Methode</td><td><%= order.payment_method === 'bar' ? 'Barzahlung' : (order.payment_method === 'karte' ? 'Kartenzahlung' : 'Online') %></td></tr>
+        <tr><td>Status</td><td><%= order.payment_status %></td></tr>
+      </table>
+    </div>
+    <div class="detail-section">
+      <h3><i class="fas fa-sticky-note"></i> Anmerkungen</h3>
+      <p><%= order.notes || 'Keine Anmerkungen' %></p>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h3><i class="fas fa-shopping-bag"></i> Bestellte Artikel</h3>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Produkt</th><th>Anzahl</th><th>Preis</th><th>Gesamt</th></tr>
+      </thead>
+      <tbody>
+        <% order.items.forEach(function(item) { %>
+        <tr>
+          <td><%= item.name %></td>
+          <td><%= item.qty %></td>
+          <td><%= parseFloat(item.price).toFixed(2) %> €</td>
+          <td><%= (item.qty * item.price).toFixed(2) %> €</td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="order-totals">
+    <div class="total-row"><span>Zwischensumme</span><span><%= parseFloat(order.subtotal).toFixed(2) %> €</span></div>
+    <% if (parseFloat(order.discount) > 0) { %>
+    <div class="total-row discount"><span>Rabatt (<%= order.discount_code || '' %>)</span><span>−<%= parseFloat(order.discount).toFixed(2) %> €</span></div>
+    <% } %>
+    <div class="total-row"><span>Liefergebühr</span><span><%= parseFloat(order.delivery_fee).toFixed(2) %> €</span></div>
+    <div class="total-row total"><span>Gesamt</span><span><%= parseFloat(order.total).toFixed(2) %> €</span></div>
+  </div>
+</div>
+<%- include('footer') %>

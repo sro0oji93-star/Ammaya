@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="<%= typeof settings !== 'undefined' && settings.site_description ? settings.site_description : 'Premium Restaurant' %>">
+  <meta name="theme-color" content="#0a0a1a">
+  <title><%= typeof title !== 'undefined' ? title : 'Feinschmeckerei' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <span class="nav-logo-icon">✦</span>
+      <span class="nav-logo-text"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Feinschmeckerei' %></span>
+    </a>
+    <div class="nav-toggle" id="navToggle" aria-label="Menü öffnen">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="nav-menu" id="navMenu">
+      <a href="/" class="nav-link"><i class="fas fa-home"></i> Start</a>
+      <a href="/speisekarte" class="nav-link"><i class="fas fa-utensils"></i> Speisekarte</a>
+      <a href="/warenkorb" class="nav-link cart-link">
+        <i class="fas fa-shopping-bag"></i> Warenkorb
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+      <a href="/kontakt" class="nav-link"><i class="fas fa-envelope"></i> Kontakt</a>
+      <a href="/admin" class="nav-link nav-link-admin"><i class="fas fa-lock"></i></a>
+    </div>
+  </div>
+</nav>
+
+<%- body %>
+
+<footer class="footer">
+  <div class="footer-decoration">
+    <span>✦</span><span>✦</span><span>✦</span>
+  </div>
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-info">
+        <h3 class="footer-logo"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Feinschmeckerei' %></h3>
+        <p class="footer-desc">Exquisite Küche mit Leidenschaft. Bei uns verschmelzen traditionelle Rezepte mit moderner Gastronomie zu einem unvergesslichen Erlebnis.</p>
+        <div class="footer-social">
+          <a href="<%= typeof settings !== 'undefined' && settings.social_instagram ? settings.social_instagram : '#' %>" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="<%= typeof settings !== 'undefined' && settings.social_facebook ? settings.social_facebook : '#' %>" target="_blank" rel="noopener" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="<%= typeof settings !== 'undefined' && settings.social_tiktok ? settings.social_tiktok : '#' %>" target="_blank" rel="noopener" class="social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <a href="/">Startseite</a>
+        <a href="/speisekarte">Speisekarte</a>
+        <a href="/warenkorb">Warenkorb</a>
+        <a href="/kontakt">Kontakt</a>
+      </div>
+      <div class="footer-hours">
+        <h4>Öffnungszeiten</h4>
+        <p><%= typeof settings !== 'undefined' && settings.opening_hours ? settings.opening_hours : 'Mo–So: 11:30 – 22:30' %></p>
+        <p class="footer-note">Küche durchgehend warme Küche</p>
+      </div>
+      <div class="footer-contact">
+        <h4>Kontakt</h4>
+        <p><i class="fas fa-map-marker-alt"></i> <%= typeof settings !== 'undefined' && settings.address ? settings.address : 'Berlin' %></p>
+        <p><i class="fas fa-phone"></i> <a href="tel:<%= typeof settings !== 'undefined' && settings.phone ? settings.phone : '' %>"><%= typeof settings !== 'undefined' && settings.phone ? settings.phone : '' %></a></p>
+        <p><i class="fas fa-envelope"></i> <a href="mailto:<%= typeof settings !== 'undefined' && settings.email ? settings.email : '' %>"><%= typeof settings !== 'undefined' && settings.email ? settings.email : '' %></a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 <%- typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Feinschmeckerei' %>. Alle Rechte vorbehalten. | Mit <span class="footer-heart">❤</span> für Genießer gemacht</p>
+    </div>
+  </div>
+</footer>
+
+<div class="cart-toast" id="cartToast">
+  <i class="fas fa-check-circle"></i>
+  <span id="cartToastMsg">Zum Warenkorb hinzugefügt!</span>
+</div>
+
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+</body>
+</html>

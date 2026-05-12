@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+
+<div class="page-hero confirmation-hero">
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="confirmation-icon"><i class="fas fa-check-circle"></i></div>
+    <h1 class="page-hero-title">Bestellung erfolgreich!</h1>
+    <p class="page-hero-subtitle">Vielen Dank für Ihre Bestellung</p>
+  </div>
+</div>
+
+<section class="section confirmation-section">
+  <div class="container">
+    <div class="confirmation-card">
+      <div class="confirmation-header">
+        <div class="confirmation-check"><i class="fas fa-check"></i></div>
+        <h2>Bestellung aufgegeben</h2>
+        <p>Ihre Bestellung wurde erfolgreich übermittelt.</p>
+      </div>
+      <div class="confirmation-details">
+        <div class="confirmation-row">
+          <span>Bestellnummer</span>
+          <strong><%= order.order_number %></strong>
+        </div>
+        <div class="confirmation-row">
+          <span>Status</span>
+          <strong class="status-<%= order.order_status %>"><%= order.order_status === 'neu' ? 'In Bearbeitung' : order.order_status %></strong>
+        </div>
+        <div class="confirmation-row">
+          <span>Gesamtbetrag</span>
+          <strong><%= parseFloat(order.total).toFixed(2) %> €</strong>
+        </div>
+        <div class="confirmation-row">
+          <span>Zahlungsmethode</span>
+          <strong><%= order.payment_method === 'bar' ? 'Barzahlung' : (order.payment_method === 'karte' ? 'Kartenzahlung' : 'Online-Zahlung') %></strong>
+        </div>
+      </div>
+      <div class="confirmation-actions">
+        <a href="/" class="btn btn-primary">Zur Startseite</a>
+        <a href="/speisekarte" class="btn btn-outline">Weiter bestellen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

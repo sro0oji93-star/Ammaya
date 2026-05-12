@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login – Feinschmeckerei</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-logo">✦</div>
+      <h1>Admin Login</h1>
+      <p>Feinschmeckerei Verwaltung</p>
+      <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+      <% } %>
+      <form method="POST" action="/admin/login">
+        <div class="form-group">
+          <label for="username">Benutzername</label>
+          <input type="text" id="username" name="username" required placeholder="admin">
+        </div>
+        <div class="form-group">
+          <label for="password">Passwort</label>
+          <input type="password" id="password" name="password" required placeholder="••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Anmelden</button>
+      </form>
+      <a href="/" class="login-back"><i class="fas fa-arrow-left"></i> Zurück zur Website</a>
+    </div>
+  </div>
+</body>
+</html>

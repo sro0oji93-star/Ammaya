@@ -1,0 +1,56 @@
+<%- include('layout') %>
+<div class="section-header-row">
+  <h2><i class="fas fa-clipboard-list"></i> Bestellungen</h2>
+  <div class="filter-group">
+    <a href="/admin/bestellungen?status=alle" class="btn btn-sm <%= currentStatus === 'alle' ? 'btn-primary' : 'btn-outline' %>">Alle</a>
+    <a href="/admin/bestellungen?status=neu" class="btn btn-sm <%= currentStatus === 'neu' ? 'btn-primary' : 'btn-outline' %>">Neu</a>
+    <a href="/admin/bestellungen?status=in_bearbeitung" class="btn btn-sm <%= currentStatus === 'in_bearbeitung' ? 'btn-primary' : 'btn-outline' %>">In Bearbeitung</a>
+    <a href="/admin/bestellungen?status=unterwegs" class="btn btn-sm <%= currentStatus === 'unterwegs' ? 'btn-primary' : 'btn-outline' %>">Unterwegs</a>
+    <a href="/admin/bestellungen?status=geliefert" class="btn btn-sm <%= currentStatus === 'geliefert' ? 'btn-primary' : 'btn-outline' %>">Geliefert</a>
+  </div>
+</div>
+
+<div class="table-container">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Bestellnr.</th>
+        <th>Kunde</th>
+        <th>E-Mail</th>
+        <th>Betrag</th>
+        <th>Zahlung</th>
+        <th>Status</th>
+        <th>Datum</th>
+        <th>Aktion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% orders.forEach(function(o) { %>
+      <tr>
+        <td><a href="/admin/bestellungen/<%= o.id %>"><%= o.order_number %></a></td>
+        <td><%= o.customer_name %></td>
+        <td><%= o.customer_email %></td>
+        <td><strong><%= parseFloat(o.total).toFixed(2) %> €</strong></td>
+        <td><span class="badge badge-payment"><%= o.payment_method === 'bar' ? 'Bar' : (o.payment_method === 'karte' ? 'Karte' : 'Online') %></span></td>
+        <td>
+          <form method="POST" action="/admin/bestellungen/status/<%= o.id %>" class="status-form">
+            <select name="status" onchange="this.form.submit()">
+              <option value="neu" <%= o.order_status === 'neu' ? 'selected' : '' %>>Neu</option>
+              <option value="in_bearbeitung" <%= o.order_status === 'in_bearbeitung' ? 'selected' : '' %>>In Bearbeitung</option>
+              <option value="unterwegs" <%= o.order_status === 'unterwegs' ? 'selected' : '' %>>Unterwegs</option>
+              <option value="geliefert" <%= o.order_status === 'geliefert' ? 'selected' : '' %>>Geliefert</option>
+              <option value="storniert" <%= o.order_status === 'storniert' ? 'selected' : '' %>>Storniert</option>
+            </select>
+          </form>
+        </td>
+        <td><%= new Date(o.created_at).toLocaleDateString('de-DE') + ' ' + new Date(o.created_at).toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) %></td>
+        <td><a href="/admin/bestellungen/<%= o.id %>" class="btn btn-sm btn-outline"><i class="fas fa-eye"></i></a></td>
+      </tr>
+      <% }); %>
+      <% if (orders.length === 0) { %>
+      <tr><td colspan="8" class="empty-state">Keine Bestellungen gefunden</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<%- include('footer') %>

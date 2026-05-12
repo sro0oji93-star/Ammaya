@@ -1,0 +1,127 @@
+<%- include('partials/header') %>
+
+<div class="page-hero checkout-hero">
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-badge">KASSE</div>
+    <h1 class="page-hero-title">Bestellung abschließen</h1>
+    <p class="page-hero-subtitle">Geben Sie Ihre Daten ein und senden Sie die Bestellung ab</p>
+  </div>
+</div>
+
+<section class="section checkout-section">
+  <div class="container">
+    <form id="checkoutForm" class="checkout-form">
+      <div class="checkout-layout">
+        <div class="checkout-main">
+          <div class="checkout-card">
+            <h3><i class="fas fa-user"></i> Ihre Daten</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Vor- und Nachname">
+              </div>
+              <div class="form-group">
+                <label for="email">E-Mail *</label>
+                <input type="email" id="email" name="email" required placeholder="ihre@email.de">
+              </div>
+              <div class="form-group">
+                <label for="phone">Telefon</label>
+                <input type="tel" id="phone" name="phone" placeholder="+49 30 123456789">
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <h3><i class="fas fa-map-marker-alt"></i> Lieferadresse</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="address">Straße & Hausnummer *</label>
+                <input type="text" id="address" name="address" required placeholder="Musterstraße 123">
+              </div>
+              <div class="form-group">
+                <label for="city">Stadt *</label>
+                <input type="text" id="city" name="city" required placeholder="Berlin">
+              </div>
+              <div class="form-group">
+                <label for="zip">PLZ *</label>
+                <input type="text" id="zip" name="zip" required placeholder="10117">
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <h3><i class="fas fa-sticky-note"></i> Anmerkungen</h3>
+            <div class="form-group">
+              <textarea id="notes" name="notes" rows="3" placeholder="Allergien, Wünsche, etc."></textarea>
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <h3><i class="fas fa-credit-card"></i> Zahlungsmethode</h3>
+            <div class="payment-options">
+              <label class="payment-option">
+                <input type="radio" name="payment" value="bar" checked>
+                <div class="payment-option-content">
+                  <i class="fas fa-money-bill-wave"></i>
+                  <div>
+                    <strong>Barzahlung</strong>
+                    <span>Bezahlung bei Lieferung</span>
+                  </div>
+                </div>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="karte">
+                <div class="payment-option-content">
+                  <i class="fas fa-credit-card"></i>
+                  <div>
+                    <strong>Kartenzahlung</strong>
+                    <span>EC-Karte oder Kreditkarte vor Ort</span>
+                  </div>
+                </div>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="online">
+                <div class="payment-option-content">
+                  <i class="fas fa-globe"></i>
+                  <div>
+                    <strong>Online-Zahlung</strong>
+                    <span>Über Stripe (Kreditkarte, PayPal)</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-sidebar">
+          <div class="checkout-card summary-card">
+            <h3>Ihre Bestellung</h3>
+            <div id="checkoutItems"></div>
+            <div class="summary-divider"></div>
+            <div class="summary-row"><span>Zwischensumme</span><span id="checkoutSubtotal">0,00 €</span></div>
+            <div class="summary-row" id="checkoutDiscountRow" style="display:none;">
+              <span>Rabatt</span>
+              <span id="checkoutDiscount" class="summary-discount">−0,00 €</span>
+            </div>
+            <div class="summary-row"><span>Liefergebühr</span><span id="checkoutDelivery">0,00 €</span></div>
+            <div class="summary-divider"></div>
+            <div class="summary-row summary-total"><span>Gesamt</span><span id="checkoutTotal">0,00 €</span></div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitOrder">
+              <i class="fas fa-check"></i> Bestellung aufgeben
+            </button>
+            <p class="checkout-note">Mit dem Absenden akzeptieren Sie unsere AGB.</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  window.restaurantSettings = {
+    delivery_fee: <%- (typeof settings !== 'undefined' && settings.delivery_fee ? parseFloat(settings.delivery_fee) : 4.50) %>,
+    free_delivery_from: <%- (typeof settings !== 'undefined' && settings.free_delivery_from ? parseFloat(settings.free_delivery_from) : 40.00) %>
+  };
+</script>
+<%- include('partials/footer') %>

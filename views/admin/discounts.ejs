@@ -1,0 +1,82 @@
+<%- include('layout') %>
+<div class="section-header-row">
+  <h2><i class="fas fa-percent"></i> Rabattcodes verwalten</h2>
+  <button class="btn btn-primary" onclick="openModal('addDiscountModal')"><i class="fas fa-plus"></i> Neuer Rabatt</button>
+</div>
+
+<div class="table-container">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Typ</th>
+        <th>Wert</th>
+        <th>Mindestbestellwert</th>
+        <th>Genutzt</th>
+        <th>Gültig bis</th>
+        <th>Status</th>
+        <th>Aktion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% discounts.forEach(function(d) { %>
+      <tr>
+        <td><strong><%= d.code %></strong></td>
+        <td><%= d.type === 'prozent' ? 'Prozent' : 'Festbetrag' %></td>
+        <td><%= d.type === 'prozent' ? d.value + '%' : d.value.toFixed(2) + ' €' %></td>
+        <td><%= parseFloat(d.min_order).toFixed(2) %> €</td>
+        <td><%= d.used_count %><% if (d.usage_limit > 0) { %> / <%= d.usage_limit %><% } %></td>
+        <td><%= d.expires_at ? new Date(d.expires_at).toLocaleDateString('de-DE') : '∞' %></td>
+        <td><span class="status-badge <%= d.active ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= d.active ? 'Aktiv' : 'Inaktiv' %></span></td>
+        <td>
+          <form method="POST" action="/admin/rabatte/loeschen/<%= d.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal" id="addDiscountModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Neuer Rabattcode</h3>
+      <button class="modal-close" onclick="closeModal('addDiscountModal')">&times;</button>
+    </div>
+    <form method="POST" action="/admin/rabatte">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Code *</label>
+          <input type="text" name="code" required placeholder="z.B. SOMMER10">
+        </div>
+        <div class="form-group">
+          <label>Typ</label>
+          <select name="type">
+            <option value="prozent">Prozent (%)</option>
+            <option value="fest">Festbetrag (€)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Wert *</label>
+          <input type="number" step="0.01" name="value" required placeholder="10">
+        </div>
+        <div class="form-group">
+          <label>Mindestbestellwert</label>
+          <input type="number" step="0.01" name="min_order" value="0">
+        </div>
+        <div class="form-group">
+          <label>Nutzungslimit (0 = unbegrenzt)</label>
+          <input type="number" name="usage_limit" value="0">
+        </div>
+        <div class="form-group">
+          <label>Gültig bis</label>
+          <input type="date" name="expires_at">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Speichern</button>
+    </form>
+  </div>
+</div>
+<%- include('footer') %>

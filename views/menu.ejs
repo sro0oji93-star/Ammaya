@@ -1,0 +1,70 @@
+<%- include('partials/header') %>
+
+<div class="page-hero menu-hero">
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-badge">SPEISEKARTE</div>
+    <h1 class="page-hero-title">Unsere Speisekarte</h1>
+    <p class="page-hero-subtitle">Entdecken Sie unsere vielfältigen Gerichte</p>
+  </div>
+</div>
+
+<section class="section menu-section">
+  <div class="container">
+    <div class="menu-filter">
+      <button class="filter-btn active" data-filter="all">Alle</button>
+      <% categories.forEach(function(c) { %>
+      <button class="filter-btn <%= activeCategory && activeCategory === c.slug ? 'active' : '' %>" data-filter="<%= c.slug %>"><%= c.name %></button>
+      <% }) %>
+    </div>
+
+    <% categories.forEach(function(cat) { %>
+    <div class="menu-category" data-category="<%= cat.slug %>">
+      <div class="menu-category-header">
+        <h2 class="menu-category-title"><%= cat.name %></h2>
+        <% if (cat.description) { %><p class="menu-category-desc"><%= cat.description %></p><% } %>
+      </div>
+      <div class="menu-items">
+        <% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
+        <% catProducts.forEach(function(p) { %>
+        <div class="menu-item" data-category="<%= cat.slug %>">
+          <div class="menu-item-image">
+            <div class="menu-item-img" style="background: linear-gradient(135deg, #1a1a2e 0%, #2a1a3e 100%);">
+              <div class="menu-item-placeholder">
+                <i class="fas fa-<%= p.category_id == 6 ? 'wine-glass-alt' : (p.category_id == 5 ? 'ice-cream' : (p.category_id == 4 ? 'leaf' : (p.category_id == 3 ? 'utensils' : (p.category_id == 1 ? 'seedling' : 'drumstick-bite')))) %>"></i>
+              </div>
+            </div>
+            <% if (p.old_price) { %>
+            <span class="menu-item-badge">−<%= Math.round((1 - p.price / p.old_price) * 100) %>%</span>
+            <% } %>
+          </div>
+          <div class="menu-item-body">
+            <div class="menu-item-header">
+              <h3 class="menu-item-title"><%= p.name %></h3>
+              <div class="menu-item-price">
+                <% if (p.old_price) { %>
+                <span class="price-old"><%= p.old_price.toFixed(2) %> €</span>
+                <% } %>
+                <span class="price-current"><%= p.price.toFixed(2) %> €</span>
+              </div>
+            </div>
+            <p class="menu-item-desc"><%= p.description %></p>
+            <% if (p.ingredients) { %>
+            <p class="menu-item-ingredients"><i class="fas fa-seedling"></i> <%= p.ingredients %></p>
+            <% } %>
+            <button class="btn btn-primary btn-sm add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">
+              <i class="fas fa-shopping-bag"></i> In den Warenkorb
+            </button>
+          </div>
+        </div>
+        <% }); %>
+        <% if (catProducts.length === 0) { %>
+        <p class="menu-empty">In dieser Kategorie sind derzeit keine Gerichte verfügbar.</p>
+        <% } %>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

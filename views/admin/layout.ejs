@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-logo">✦</span>
+        <h2><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Feinschmeckerei' %></h2>
+        <span class="sidebar-badge">Admin</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin" class="nav-item <% if (title.includes('Dashboard')) { %>active<% } %>"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        <a href="/admin/produkte" class="nav-item <% if (title.includes('Produkte')) { %>active<% } %>"><i class="fas fa-utensils"></i> Produkte</a>
+        <a href="/admin/kategorien" class="nav-item <% if (title.includes('Kategorien')) { %>active<% } %>"><i class="fas fa-tags"></i> Kategorien</a>
+        <a href="/admin/bestellungen" class="nav-item <% if (title.includes('Bestellungen')) { %>active<% } %>"><i class="fas fa-clipboard-list"></i> Bestellungen</a>
+        <a href="/admin/rabatte" class="nav-item <% if (title.includes('Rabatte')) { %>active<% } %>"><i class="fas fa-percent"></i> Rabatte</a>
+        <a href="/admin/banner" class="nav-item <% if (title.includes('Banner')) { %>active<% } %>"><i class="fas fa-images"></i> Banner</a>
+        <a href="/admin/einstellungen" class="nav-item <% if (title.includes('Einstellungen')) { %>active<% } %>"><i class="fas fa-cog"></i> Einstellungen</a>
+        <a href="/admin/passwort" class="nav-item <% if (title.includes('Passwort')) { %>active<% } %>"><i class="fas fa-key"></i> Passwort</a>
+        <div class="sidebar-divider"></div>
+        <a href="/" class="nav-item" target="_blank"><i class="fas fa-external-link-alt"></i> Website ansehen</a>
+        <a href="/admin/logout" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+      </nav>
+    </aside>
+    <main class="admin-main">
+      <header class="admin-header">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <h1><%= title.replace(' – Admin', '') %></h1>
+        <div class="header-user">
+          <span><%= session.admin.display_name || session.admin.username %></span>
+          <div class="header-avatar"><%= (session.admin.display_name || session.admin.username).charAt(0).toUpperCase() %></div>
+        </div>
+      </header>
+      <div class="admin-content">

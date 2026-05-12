@@ -1,0 +1,91 @@
+<%- include('layout') %>
+<div class="section-header-row">
+  <h2><i class="fas fa-tags"></i> Kategorien verwalten</h2>
+  <button class="btn btn-primary" onclick="openModal('addCategoryModal')"><i class="fas fa-plus"></i> Neue Kategorie</button>
+</div>
+
+<div class="table-container">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Beschreibung</th>
+        <th>Produkte</th>
+        <th>Sortierung</th>
+        <th>Status</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% categories.forEach(function(c) { %>
+      <tr>
+        <td><strong><%= c.name %></strong></td>
+        <td><%= c.description || '—' %></td>
+        <td><span class="badge"><%= c.product_count %></span></td>
+        <td><%= c.sort_order %></td>
+        <td><span class="status-badge <%= c.active ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= c.active ? 'Aktiv' : 'Inaktiv' %></span></td>
+        <td class="actions-cell">
+          <button class="btn btn-sm btn-outline" onclick='editCategory(<%= JSON.stringify(c) %>)'><i class="fas fa-edit"></i></button>
+          <form method="POST" action="/admin/kategorien/loeschen/<%= c.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add Modal -->
+<div class="modal" id="addCategoryModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Neue Kategorie</h3>
+      <button class="modal-close" onclick="closeModal('addCategoryModal')">&times;</button>
+    </div>
+    <form method="POST" action="/admin/kategorien">
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>Beschreibung</label>
+        <textarea name="description" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Sortierung</label>
+        <input type="number" name="sort_order" value="0">
+      </div>
+      <button type="submit" class="btn btn-primary">Speichern</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal" id="editCategoryModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Kategorie bearbeiten</h3>
+      <button class="modal-close" onclick="closeModal('editCategoryModal')">&times;</button>
+    </div>
+    <form method="POST" action="" id="editCategoryForm">
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" name="name" id="cat_name" required>
+      </div>
+      <div class="form-group">
+        <label>Beschreibung</label>
+        <textarea name="description" id="cat_description" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Sortierung</label>
+        <input type="number" name="sort_order" id="cat_sort_order" value="0">
+      </div>
+      <div class="form-checkboxes">
+        <label class="checkbox-label"><input type="checkbox" name="active" id="cat_active" value="1"> Aktiv</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Aktualisieren</button>
+    </form>
+  </div>
+</div>
+<%- include('footer') %>
