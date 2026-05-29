@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons%7CMaterial+Icons+Outlined%7CMaterial+Icons+Round%7CMaterial+Icons+Sharp" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
   <link rel="stylesheet" href="/css/style.css">
@@ -27,11 +26,11 @@
     <div class="pre-header-inner">
       <div class="pre-header-info">
         <span class="pre-header-item">
-          <i class="material-icons-outlined">location_on</i>
+          <i class="fas fa-map-marker-alt"></i>
           <span><%= typeof settings !== 'undefined' && settings.address ? settings.address : 'Berlin' %></span>
         </span>
         <span class="pre-header-item">
-          <i class="material-icons">access_time</i>
+          <i class="fas fa-clock"></i>
           <span><%= typeof settings !== 'undefined' && settings.opening_hours ? settings.opening_hours : 'Mo–So: 11:30 – 22:30' %></span>
         </span>
       </div>
@@ -56,14 +55,14 @@
         <span></span><span></span><span></span>
       </div>
       <div class="nav-menu" id="navMenu">
-        <a href="/" class="nav-link"><i class="material-icons">home</i> Start</a>
-        <a href="/speisekarte" class="nav-link"><i class="material-icons">restaurant_menu</i> Speisekarte</a>
+        <a href="/" class="nav-link"><i class="fas fa-home"></i> Start</a>
+        <a href="/speisekarte" class="nav-link"><i class="fas fa-utensils"></i> Speisekarte</a>
         <a href="/warenkorb" class="nav-link cart-link">
-          <i class="material-icons-outlined">shopping_cart</i> Warenkorb
+          <i class="fas fa-shopping-bag"></i> Warenkorb
           <span class="cart-badge" id="cartBadge">0</span>
         </a>
-        <a href="/kontakt" class="nav-link"><i class="material-icons">email</i> Kontakt</a>
-        <a href="/admin" class="nav-link" style="opacity:.4;font-size:13px"><i class="material-icons">lock</i></a>
+        <a href="/kontakt" class="nav-link"><i class="fas fa-envelope"></i> Kontakt</a>
+        <a href="/admin" class="nav-link" style="opacity:.4;font-size:13px"><i class="fas fa-lock"></i></a>
       </div>
     </div>
   </div>

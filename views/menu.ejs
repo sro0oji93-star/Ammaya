@@ -32,7 +32,7 @@
             <div class="menu-item-img" style="<%= p.image ? 'background-image: url(' + p.image + ');background-size:cover;background-position:center;' : 'background: var(--bg-alt);' %>">
               <% if (!p.image) { %>
               <div class="menu-item-placeholder">
-                <i class="material-icons"><%= p.category_id == 8 ? 'local_drink' : (p.category_id == 4 ? 'eco' : (p.category_id == 10 ? 'opacity' : 'restaurant')) %></i>
+                <i class="fas fa-<%= p.category_id == 8 ? 'wine-glass-alt' : (p.category_id == 4 ? 'leaf' : (p.category_id == 10 ? 'tint' : 'utensils')) %>"></i>
               </div>
               <% } %>
             </div>
@@ -52,10 +52,10 @@
             </div>
             <p class="menu-item-desc"><%= p.description %></p>
             <% if (p.ingredients) { %>
-            <p class="menu-item-ingredients"><i class="material-icons" style="font-size:14px;vertical-align:middle">eco</i> <%= p.ingredients %></p>
+            <p class="menu-item-ingredients"><i class="fas fa-seedling"></i> <%= p.ingredients %></p>
             <% } %>
             <button class="btn btn-primary btn-sm add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">
-              <i class="material-icons" style="font-size:16px">shopping_bag</i> In den Warenkorb
+              <i class="fas fa-shopping-bag"></i> In den Warenkorb
             </button>
           </div>
         </div>

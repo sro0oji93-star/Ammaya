@@ -52,7 +52,7 @@ img{max-width:100%}
 .pre-header-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .pre-header-info{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .pre-header-item{display:flex;align-items:center;gap:6px}
-.pre-header-item i{font-size:16px;color:var(--yellow)}
+.pre-header-item i{font-size:14px;color:var(--yellow);width:16px;text-align:center}
 .pre-header-links{display:flex;align-items:center;gap:8px}
 .pre-header-links a{color:rgba(255,255,255,.7);font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:500}
 .pre-header-links a:hover{color:var(--yellow)}
@@ -66,7 +66,7 @@ img{max-width:100%}
 .nav-logo-text{font-family:var(--font-head);font-size:24px;font-weight:700;color:var(--text);font-style:italic}
 .nav-menu{display:flex;align-items:center;gap:2px}
 .nav-link{padding:10px 18px;color:var(--text-muted);font-size:14px;font-weight:500;transition:var(--transition);border-radius:var(--radius-sm);display:flex;align-items:center;gap:6px}
-.nav-link i{font-size:18px}
+.nav-link i{font-size:16px;width:18px;text-align:center}
 .nav-link:hover,.nav-link.active{color:var(--red);background:rgba(184,0,31,.06)}
 .cart-link{position:relative}
 .cart-badge{position:absolute;top:-2px;right:2px;background:var(--red);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
