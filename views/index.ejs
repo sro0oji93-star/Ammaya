@@ -1,19 +1,21 @@
 <%- include('partials/header') %>
 
 <div class="hero" id="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=80" alt="Delicious food">
+  </div>
   <div class="hero-overlay"></div>
-  <div class="hero-particles" id="heroParticles"></div>
   <div class="hero-content">
-    <div class="hero-badge">PREMIUM RESTAURANT</div>
+    <div class="hero-badge">HERZLICH WILLKOMMEN</div>
     <h1 class="hero-title"><%= typeof settings !== 'undefined' && settings.hero_title ? settings.hero_title : 'Genuss auf höchstem Niveau' %></h1>
-    <p class="hero-subtitle"><%= typeof settings !== 'undefined' && settings.hero_subtitle ? settings.hero_subtitle : 'Entdecken Sie unsere exquisiten Gerichte' %></p>
+    <p class="hero-subtitle"><%= typeof settings !== 'undefined' && settings.hero_subtitle ? settings.hero_subtitle : 'Entdecken Sie unsere vielfältigen Gerichte' %></p>
     <div class="hero-actions">
       <a href="/speisekarte" class="btn btn-primary">
         <span>Speisekarte entdecken</span>
         <i class="fas fa-arrow-right"></i>
       </a>
       <a href="/kontakt" class="btn btn-outline">
-        <span>Tisch reservieren</span>
+        <span>Kontakt</span>
         <i class="fas fa-calendar-check"></i>
       </a>
     </div>
@@ -98,7 +100,7 @@
       <div class="about-content">
         <span class="section-tag">ÜBER UNS</span>
         <h2 class="section-title"><%= typeof settings !== 'undefined' && settings.about_title ? settings.about_title : 'Unsere Philosophie' %></h2>
-        <p class="about-text"><%= typeof settings !== 'undefined' && settings.about_text ? settings.about_text : 'In unserer Feinschmeckerei vereinen wir traditionelle Kochkunst mit modernen Einflüssen.' %></p>
+        <p class="about-text"><%= typeof settings !== 'undefined' && settings.about_text ? settings.about_text : 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten.' %></p>
         <div class="about-stats">
           <div class="about-stat">
             <span class="stat-number" data-target="15">0</span>
@@ -158,19 +160,5 @@
     </div>
   </div>
 </section>
-
-<script>
-  (function() {
-    const container = document.getElementById('heroParticles');
-    if (container) {
-      for (let i = 0; i < 30; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        p.style.cssText = 'left:' + (Math.random() * 100) + '%;top:' + (Math.random() * 100) + '%;width:' + (Math.random() * 4 + 2) + 'px;height:' + (Math.random() * 4 + 2) + 'px;animation-delay:' + (Math.random() * 8) + 's;animation-duration:' + (Math.random() * 8 + 6) + 's;';
-        container.appendChild(p);
-      }
-    }
-  })();
-</script>
 
 <%- include('partials/footer') %>

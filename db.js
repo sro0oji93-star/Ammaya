@@ -119,54 +119,72 @@ function initialize() {
   const catCount = db.prepare('SELECT COUNT(*) as count FROM categories').get();
   if (catCount.count === '0' || catCount.count === 0) {
     const insertCat = db.prepare("INSERT INTO categories (name, slug, description, sort_order) VALUES (?, ?, ?, ?)");
-    insertCat.run('Vorspeisen', 'vorspeisen', 'Leichte Köstlichkeiten für den perfekten Start', 1);
-    insertCat.run('Hauptgerichte', 'hauptgerichte', 'Herzhafte Meisterwerke der internationalen Küche', 2);
-    insertCat.run('Pasta & Risotto', 'pasta-risotto', 'Italienische Klassiker, frisch zubereitet', 3);
-    insertCat.run('Salate', 'salate', 'Frische und kreative Salatkreationen', 4);
-    insertCat.run('Desserts', 'desserts', 'Süße Verführungen für den perfekten Abschluss', 5);
-    insertCat.run('Getränke', 'getraenke', 'Erfrischende Getränke und erlesene Weine', 6);
+    insertCat.run('Pizza', 'pizza', 'Italienische Steinofenpizza, knusprig und frisch belegt', 1);
+    insertCat.run('Burger', 'burger', 'Saftige Burger mit handgemachten Pattys und frischen Zutaten', 2);
+    insertCat.run('Croque', 'croque', 'Französisch inspirierte Croques, goldbraun überbacken', 3);
+    insertCat.run('Salat', 'salat', 'Frische Salatkreationen mit hausgemachten Dressings', 4);
+    insertCat.run('Pasta', 'pasta', 'Italienische Pastagerichte, traditionell und kreativ', 5);
+    insertCat.run('Schnitzel', 'schnitzel', 'Knusprige Schnitzelvariationen', 6);
+    insertCat.run('Snacks', 'snacks', 'Kleine Köstlichkeiten für den Hunger zwischendurch', 7);
+    insertCat.run('Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8);
+    insertCat.run('Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9);
+    insertCat.run('Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10);
   }
 
   const prodCount = db.prepare('SELECT COUNT(*) as count FROM products').get();
   if (prodCount.count === '0' || prodCount.count === 0) {
     const insertProd = db.prepare("INSERT INTO products (category_id, name, slug, description, price, old_price, ingredients, is_featured, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    insertProd.run(2, 'Filetsteak vom Black Angus', 'filetsteak-black-angus', 'Zartes Black Angus Filetsteak mit Kräuterbutter, Ofengemüse und Kartoffelgratin', 34.90, 39.90, 'Black Angus Rind, Kräuterbutter, saisonales Gemüse, Kartoffeln', 1, 1);
-    insertProd.run(2, 'Lachsfilet auf Spinatbett', 'lachsfilet-spinatbett', 'Frisches Lachsfilet auf cremigem Spinatbett mit Risotto und Zitronen-Dill-Soße', 26.90, null, 'Lachs, Blattspinat, Risotto, Zitrone, Dill', 1, 2);
-    insertProd.run(2, 'Hähnchenbrust gefüllt', 'haehnchenbrust-gefuellt', 'Saftige Hähnchenbrust gefüllt mit Mozzarella und getrockneten Tomaten', 22.90, null, 'Hähnchenbrust, Mozzarella, getrocknete Tomaten, Kräuter', 0, 3);
-    insertProd.run(3, 'Tagliatelle al Tartufo', 'tagliatelle-tartufo', 'Frische Tagliatelle mit schwarzem Trüffel und Parmigiano', 28.50, null, 'Tagliatelle, schwarzer Trüffel, Parmigiano, Butter', 1, 4);
-    insertProd.run(3, 'Risotto ai Funghi', 'risotto-funghi', 'Cremiges Risotto mit Steinpilzen und Trüffelöl', 24.50, 27.50, 'Risotto, Steinpilze, Trüffelöl, Parmesan', 0, 5);
-    insertProd.run(1, 'Bruschetta Classica', 'bruschetta-classica', 'Geröstetes Ciabatta mit Tomaten, Basilikum und Büffelmozzarella', 12.90, null, 'Ciabatta, Tomaten, Basilikum, Büffelmozzarella', 0, 6);
-    insertProd.run(1, 'Garnelen im Knoblauchmantel', 'garnelen-knoblauch', 'Gebratene Garnelen in Knoblauchöl mit Chili und frischem Baguette', 16.50, null, 'Garnelen, Knoblauch, Chili, Baguette', 1, 7);
-    insertProd.run(5, 'Tiramisu Classico', 'tiramisu-classico', 'Italienisches Tiramisu mit Mascarpone und Espresso', 11.90, null, 'Mascarpone, Espresso, Löffelbiskuit, Kakao', 1, 8);
-    insertProd.run(5, 'Crème Brûlée', 'creme-brulee', 'Klassische Crème Brûlée mit Vanille und karamellisierter Zuckerhaube', 10.90, null, 'Vanille, Sahne, Eigelb, Zucker', 0, 9);
-    insertProd.run(4, 'Caesar Salad', 'caesar-salad', 'Römersalat mit Hähnchenstreifen, Croutons und Parmesan-Dressing', 16.90, null, 'Römersalat, Hähnchen, Croutons, Parmesan, Dressing', 0, 10);
-    insertProd.run(4, 'Mediterraner Salat', 'mediterraner-salat', 'Gegrilltes Gemüse mit Feta, Oliven und Pinienkernen', 15.50, 17.50, 'Gegrilltes Gemüse, Feta, Oliven, Pinienkerne', 0, 11);
-    insertProd.run(6, 'Hausgemachte Limonade', 'hausgemachte-limonade', 'Erfrischende Limonade mit Minze und Zitrone', 5.90, null, 'Zitrone, Minze, Zucker, Sprudelwasser', 0, 12);
-    insertProd.run(6, 'Barolo Riserva DOCG', 'barolo-riserva', 'Kräftiger Rotwein aus dem Piemont, Jahrgang 2018', 42.00, null, 'Nebbiolo Trauben', 1, 13);
-    insertProd.run(6, 'Espresso Doppio', 'espresso-doppio', 'Doppelter Espresso aus unserer Hausröstung', 4.50, null, 'Arabica Bohnen', 0, 14);
+    insertProd.run(1, 'Margherita', 'margherita', 'Tomatensauce, Mozzarella, frischer Basilikum', 9.90, null, 'Tomatensauce, Mozzarella, Basilikum', 1, 1);
+    insertProd.run(1, 'Salami', 'salami', 'Tomatensauce, Mozzarella, pikante Salami', 11.90, null, 'Tomatensauce, Mozzarella, Salami', 1, 2);
+    insertProd.run(1, 'Prosciutto', 'prosciutto', 'Tomatensauce, Mozzarella, luftgetrockneter Schinken, Rucola', 13.90, null, 'Tomatensauce, Mozzarella, Schinken, Rucola', 0, 3);
+    insertProd.run(2, 'Classic Burger', 'classic-burger', 'Rinderpattie, Cheddar, Salat, Tomate, Zwiebeln, hausgemachte Sauce', 14.90, null, 'Rindfleisch, Cheddar, Salat, Tomate, Zwiebeln', 1, 4);
+    insertProd.run(2, 'Cheese Burger', 'cheese-burger', 'Rinderpattie, doppelter Cheddar, Gurken, karamellisierte Zwiebeln', 15.90, null, 'Rindfleisch, Cheddar, Gurken, Zwiebeln', 0, 5);
+    insertProd.run(2, 'Chicken Burger', 'chicken-burger', 'Knuspriges Hähnchenfilet, Eisbergsalat, Tomate, Knoblauchsauce', 13.90, null, 'Hähnchen, Salat, Tomate, Knoblauchsauce', 0, 6);
+    insertProd.run(3, 'Croque Monsieur', 'croque-monsieur', 'Toast mit Schinken und Käse überbacken mit Béchamelsauce', 8.90, null, 'Toast, Schinken, Käse, Béchamelsauce', 1, 7);
+    insertProd.run(3, 'Croque Madame', 'croque-madame', 'Croque Monsieur mit Spiegelei und Trüffelmayo', 10.90, null, 'Toast, Schinken, Käse, Béchamelsauce, Ei, Trüffelmayo', 0, 8);
+    insertProd.run(3, 'Croque Hawaii', 'croque-hawaii', 'Toast mit Schinken, Ananas und Käse überbacken', 9.90, null, 'Toast, Schinken, Ananas, Käse', 0, 9);
+    insertProd.run(4, 'Griechischer Salat', 'griechischer-salat', 'Frischer Salat mit Feta, Oliven, Gurken, Tomaten und Oregano-Dressing', 11.90, null, 'Feta, Oliven, Gurke, Tomate, Oregano', 1, 10);
+    insertProd.run(4, 'Caesar Salat', 'caesar-salat', 'Römersalat mit Hähnchen, Croutons, Parmesan und Caesar-Dressing', 12.90, null, 'Römersalat, Hähnchen, Croutons, Parmesan', 0, 11);
+    insertProd.run(5, 'Spaghetti Bolognese', 'spaghetti-bolognese', 'Spaghetti mit hausgemachter Fleischsoße und Parmesan', 12.90, null, 'Spaghetti, Rinderhack, Tomaten, Parmesan', 1, 12);
+    insertProd.run(5, 'Penne Arrabiata', 'penne-arrabiata', 'Penne in scharfer Tomatensoße mit Knoblauch und Chili', 10.90, null, 'Penne, Tomaten, Knoblauch, Chili', 0, 13);
+    insertProd.run(6, 'Wiener Schnitzel', 'wiener-schnitzel', 'Kalbfleisch paniert und goldbraun gebraten, mit Preiselbeeren und Zitrone', 16.90, null, 'Kalbfleisch, Panade, Preiselbeeren, Zitrone', 1, 14);
+    insertProd.run(6, 'Jägerschnitzel', 'jaegerschnitzel', 'Schweineschnitzel mit cremiger Pilzsoße und Pommes', 15.90, null, 'Schweinefleisch, Pilze, Sahne, Pommes', 0, 15);
+    insertProd.run(6, 'Zigeunerschnitzel', 'zigeunerschnitzel', 'Schnitzel mit bunter Paprika-Zwiebel-Soße und Reis', 15.90, null, 'Schweinefleisch, Paprika, Zwiebeln, Reis', 0, 16);
+    insertProd.run(7, 'Pommes Frites', 'pommes-frites', 'Knusprige Pommes mit hausgemachter Mayo oder Ketchup', 5.90, null, 'Kartoffeln, Pflanzenöl', 0, 17);
+    insertProd.run(7, 'Chicken Nuggets', 'chicken-nuggets', 'Knusprige Hähnchen-Nuggets mit Dipsauce', 8.90, null, 'Hähnchen, Panade, Dip', 0, 18);
+    insertProd.run(7, 'Nachos', 'nachos', 'Knusprige Nachos mit Käsesauce, Jalapeños und Sour Cream', 9.90, null, 'Nachos, Käse, Jalapeños, Sour Cream', 0, 19);
+    insertProd.run(8, 'Coca Cola', 'coca-cola', 'Eisgekühlte Coca Cola 0,33l', 3.50, null, null, 0, 20);
+    insertProd.run(8, 'Fanta', 'fanta', 'Eisgekühlte Fanta 0,33l', 3.50, null, null, 0, 21);
+    insertProd.run(8, 'Wasser', 'wasser', 'Natürliches Mineralwasser mit Kohlensäure 0,75l', 3.00, null, null, 0, 22);
+    insertProd.run(9, 'Frühlingsrolle', 'fruehlingsrolle', 'Knusprige Frühlingsrollen mit süß-saurer Dippsauce', 6.90, null, 'Teig, Gemüse, Glasnudeln', 0, 23);
+    insertProd.run(9, 'Falafel Wrap', 'falafel-wrap', 'Vegetarischer Wrap mit Falafel, Hummus und frischem Gemüse', 8.90, null, 'Falafel, Hummus, Gemüse, Fladenbrot', 0, 24);
+    insertProd.run(10, 'Ketchup', 'ketchup', 'Hausgemachter Ketchup 50ml', 1.50, null, null, 0, 25);
+    insertProd.run(10, 'Mayonnaise', 'mayonnaise', 'Hausgemachte Mayonnaise 50ml', 1.50, null, null, 0, 26);
+    insertProd.run(10, 'Knoblauchsauce', 'knoblauchsauce', 'Cremige Knoblauchsauce 50ml', 1.50, null, null, 0, 27);
+    insertProd.run(10, 'Chillisauce', 'chillisauce', 'Scharfe Chillisauce 50ml', 1.50, null, null, 0, 28);
   }
 
   const settingCount = db.prepare('SELECT COUNT(*) as count FROM settings').get();
   if (settingCount.count === '0' || settingCount.count === 0) {
     const insertSetting = db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)");
-    insertSetting.run('site_name', 'Feinschmeckerei');
-    insertSetting.run('site_description', 'Premium Restaurant & Feinschmecker-Erlebnis');
-    insertSetting.run('address', 'Friedrichstraße 42, 10117 Berlin');
+    insertSetting.run('site_name', 'Ammaya');
+    insertSetting.run('site_description', 'Ihr Restaurant für Pizza, Burger und mehr');
+    insertSetting.run('address', 'Musterstraße 42, 10117 Berlin');
     insertSetting.run('phone', '+49 30 123456789');
-    insertSetting.run('email', 'info@feinschmeckerei.de');
+    insertSetting.run('email', 'info@ammaya.de');
     insertSetting.run('opening_hours', 'Mo\u2013So: 11:30 \u2013 22:30');
     insertSetting.run('delivery_fee', '4.50');
-    insertSetting.run('free_delivery_from', '40.00');
-    insertSetting.run('social_instagram', 'https://instagram.com/feinschmeckerei');
-    insertSetting.run('social_facebook', 'https://facebook.com/feinschmeckerei');
-    insertSetting.run('social_tiktok', 'https://tiktok.com/@feinschmeckerei');
+    insertSetting.run('free_delivery_from', '30.00');
+    insertSetting.run('social_instagram', 'https://instagram.com/ammaya');
+    insertSetting.run('social_facebook', 'https://facebook.com/ammaya');
+    insertSetting.run('social_tiktok', 'https://tiktok.com/@ammaya');
     insertSetting.run('google_maps_key', 'YOUR_GOOGLE_MAPS_KEY');
     insertSetting.run('latitude', '52.520008');
     insertSetting.run('longitude', '13.404954');
-    insertSetting.run('hero_title', 'Genuss auf h\u00f6chstem Niveau');
-    insertSetting.run('hero_subtitle', 'Entdecken Sie unsere exquisiten Gerichte \u2013 frisch zubereitet mit den besten Zutaten');
+    insertSetting.run('hero_title', 'Willkommen bei Ammaya');
+    insertSetting.run('hero_subtitle', 'Entdecken Sie unsere vielfältigen Gerichte \u2013 frisch zubereitet mit den besten Zutaten');
     insertSetting.run('about_title', 'Unsere Philosophie');
-    insertSetting.run('about_text', 'In unserer Feinschmeckerei vereinen wir traditionelle Kochkunst mit modernen Einfl\u00fcssen. Jedes Gericht wird mit Leidenschaft und Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschlie\u00dflich frische, regionale Produkte und legen gr\u00f6\u00dften Wert auf Qualit\u00e4t und Pr\u00e4sentation.');
+    insertSetting.run('about_text', 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschließlich frische Zutaten und legen größten Wert auf Qualität.');
   }
 }
 

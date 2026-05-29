@@ -1,11 +1,12 @@
 {
-  "name": "feinschmeckerei-restaurant",
+  "name": "ammaya-restaurant",
   "version": "1.0.0",
-  "description": "Feinschmeckerei - Premium Restaurant Online",
+  "description": "Ammaya - Restaurant Online",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
     "express": "^4.18.2",

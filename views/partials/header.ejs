@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="<%= typeof settings !== 'undefined' && settings.site_description ? settings.site_description : 'Premium Restaurant' %>">
-  <meta name="theme-color" content="#0a0a1a">
-  <title><%= typeof title !== 'undefined' ? title : 'Feinschmeckerei' %></title>
+  <meta name="description" content="<%= typeof settings !== 'undefined' && settings.site_description ? settings.site_description : 'Ammaya Restaurant' %>">
+  <meta name="theme-color" content="#b8001f">
+  <title><%= typeof title !== 'undefined' ? title : 'Ammaya' %></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
-  <!-- SEO -->
-  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Feinschmeckerei' %>">
-  <meta property="og:description" content="<%= typeof settings !== 'undefined' && settings.site_description ? settings.site_description : 'Premium Restaurant' %>">
+  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Ammaya' %>">
+  <meta property="og:description" content="<%= typeof settings !== 'undefined' && settings.site_description ? settings.site_description : 'Ammaya Restaurant' %>">
   <meta property="og:type" content="website">
   <meta property="og:url" content="<%= typeof site_url !== 'undefined' ? site_url : 'http://localhost:3000' %>">
   <meta name="twitter:card" content="summary_large_image">
@@ -24,8 +25,8 @@
 <nav class="navbar" id="navbar">
   <div class="nav-container">
     <a href="/" class="nav-logo">
-      <span class="nav-logo-icon">✦</span>
-      <span class="nav-logo-text"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Feinschmeckerei' %></span>
+      <span class="nav-logo-icon">A</span>
+      <span class="nav-logo-text"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %></span>
     </a>
     <div class="nav-toggle" id="navToggle" aria-label="Menü öffnen">
       <span></span><span></span><span></span>
@@ -38,7 +39,7 @@
         <span class="cart-badge" id="cartBadge">0</span>
       </a>
       <a href="/kontakt" class="nav-link"><i class="fas fa-envelope"></i> Kontakt</a>
-      <a href="/admin" class="nav-link nav-link-admin"><i class="fas fa-lock"></i></a>
+      <a href="/admin" class="nav-link" style="opacity:.4;font-size:13px"><i class="fas fa-lock"></i></a>
     </div>
   </div>
 </nav>

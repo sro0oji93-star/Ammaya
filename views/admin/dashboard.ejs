@@ -1,35 +1,35 @@
 <%- include('layout') %>
 <div class="dashboard-stats">
   <div class="stat-card">
-    <div class="stat-icon" style="background: rgba(212, 168, 85, 0.15);"><i class="fas fa-utensils" style="color: #d4a855;"></i></div>
+    <div class="stat-icon" style="background: rgba(184, 0, 31, 0.1);"><i class="fas fa-utensils" style="color: #b8001f;"></i></div>
     <div class="stat-info">
       <span class="stat-value"><%= stats.products %></span>
       <span class="stat-label">Produkte</span>
     </div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon" style="background: rgba(72, 187, 120, 0.15);"><i class="fas fa-tags" style="color: #48bb78;"></i></div>
+    <div class="stat-icon" style="background: rgba(45, 138, 78, 0.1);"><i class="fas fa-tags" style="color: #2d8a4e;"></i></div>
     <div class="stat-info">
       <span class="stat-value"><%= stats.categories %></span>
       <span class="stat-label">Kategorien</span>
     </div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon" style="background: rgba(66, 153, 225, 0.15);"><i class="fas fa-clipboard-list" style="color: #4299e1;"></i></div>
+    <div class="stat-icon" style="background: rgba(66, 153, 225, 0.1);"><i class="fas fa-clipboard-list" style="color: #4299e1;"></i></div>
     <div class="stat-info">
       <span class="stat-value"><%= stats.orders %></span>
       <span class="stat-label">Bestellungen</span>
     </div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon" style="background: rgba(237, 137, 54, 0.15);"><i class="fas fa-clock" style="color: #ed8936;"></i></div>
+    <div class="stat-icon" style="background: rgba(237, 137, 54, 0.1);"><i class="fas fa-clock" style="color: #ed8936;"></i></div>
     <div class="stat-info">
       <span class="stat-value"><%= stats.pending %></span>
       <span class="stat-label">Offene Bestellungen</span>
     </div>
   </div>
   <div class="stat-card stat-card-full">
-    <div class="stat-icon" style="background: rgba(212, 168, 85, 0.15);"><i class="fas fa-euro-sign" style="color: #d4a855;"></i></div>
+    <div class="stat-icon" style="background: rgba(184, 0, 31, 0.1);"><i class="fas fa-euro-sign" style="color: #b8001f;"></i></div>
     <div class="stat-info">
       <span class="stat-value"><%= parseFloat(stats.revenue).toFixed(2) %> €</span>
       <span class="stat-label">Gesamtumsatz</span>

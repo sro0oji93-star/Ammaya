@@ -65,8 +65,10 @@
       <% related.forEach(function(p) { %>
       <div class="menu-card" data-id="<%= p.id %>">
         <div class="menu-card-image">
-          <div class="menu-card-img" style="background: linear-gradient(135deg, #1a1a2e 0%, #2a1a3e 100%);">
+          <div class="menu-card-img" style="<%= p.image ? 'background-image: url(' + p.image + ');background-size:cover;background-position:center;' : 'background: var(--bg-alt);' %>">
+            <% if (!p.image) { %>
             <div class="menu-card-placeholder"><i class="fas fa-utensils"></i></div>
+            <% } %>
           </div>
           <button class="menu-card-cart add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">
             <i class="fas fa-plus"></i>
