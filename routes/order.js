@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { db } = require('../db');
+const db = require('../db');
 
-router.get('/', async (req, res) => {
-  const settingsRows = await db.prepare('SELECT key, value FROM settings').all();
+router.get('/', (req, res) => {
   const settings = {};
-  settingsRows.forEach(s => settings[s.key] = s.value);
+  db.prepare('SELECT key, value FROM settings').all().forEach(s => settings[s.key] = s.value);
   
   res.render('checkout', {
     title: 'Kasse – ' + settings.site_name,
@@ -13,7 +12,7 @@ router.get('/', async (req, res) => {
   });
 });
 
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
   try {
     const { name, email, phone, address, city, zip, notes, payment, items, subtotal, delivery_fee, discount, discount_code, total } = req.body;
     
@@ -21,7 +20,7 @@ router.post('/', async (req, res) => {
     
     const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
     
-    await db.prepare(`INSERT INTO orders (order_number, customer_name, customer_email, customer_phone, delivery_address, delivery_city, delivery_zip, notes, items, subtotal, delivery_fee, discount, discount_code, total, payment_method, payment_status, order_status)
+    const result = db.prepare(`INSERT INTO orders (order_number, customer_name, customer_email, customer_phone, delivery_address, delivery_city, delivery_zip, notes, items, subtotal, delivery_fee, discount, discount_code, total, payment_method, payment_status, order_status)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(
       orderNumber, name, email, phone, address, city, zip, notes,
       JSON.stringify(parsedItems), subtotal, delivery_fee, discount, discount_code || null, total,
@@ -35,10 +34,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.post('/rabatt-pruefen', async (req, res) => {
+router.post('/rabatt-pruefen', (req, res) => {
   const { code, subtotal } = req.body;
   const now = new Date().toISOString().split('T')[0];
-  const discount = await db.prepare(`SELECT * FROM discounts WHERE code = ? AND active = 1 AND (expires_at IS NULL OR expires_at > ?) AND (usage_limit = 0 OR used_count < usage_limit)`).get(code, now);
+  const discount = db.prepare(`SELECT * FROM discounts WHERE code = ? AND active = 1 AND (expires_at IS NULL OR expires_at > ?) AND (usage_limit = 0 OR used_count < usage_limit)`).get(code, now);
   
   if (!discount) return res.json({ valid: false, message: 'Rabattcode ungültig oder abgelaufen' });
   
@@ -56,13 +55,12 @@ router.post('/rabatt-pruefen', async (req, res) => {
   res.json({ valid: true, value: parseFloat(discountValue.toFixed(2)), type: discount.type, message: 'Rabatt angewendet!' });
 });
 
-router.get('/bestellung/:orderNumber', async (req, res) => {
-  const order = await db.prepare('SELECT * FROM orders WHERE order_number = ?').get(req.params.orderNumber);
+router.get('/bestellung/:orderNumber', (req, res) => {
+  const order = db.prepare('SELECT * FROM orders WHERE order_number = ?').get(req.params.orderNumber);
   if (!order) return res.status(404).render('404', { title: 'Bestellung nicht gefunden' });
   
-  const settingsRows = await db.prepare('SELECT key, value FROM settings').all();
   const settings = {};
-  settingsRows.forEach(s => settings[s.key] = s.value);
+  db.prepare('SELECT key, value FROM settings').all().forEach(s => settings[s.key] = s.value);
   
   res.render('order-confirmation', {
     title: 'Bestellung ' + order.order_number + ' – ' + settings.site_name,
