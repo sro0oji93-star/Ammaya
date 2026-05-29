@@ -29,10 +29,12 @@
         <% catProducts.forEach(function(p) { %>
         <div class="menu-item" data-category="<%= cat.slug %>">
           <div class="menu-item-image">
-            <div class="menu-item-img" style="background: linear-gradient(135deg, #1a1a2e 0%, #2a1a3e 100%);">
+            <div class="menu-item-img" style="<%= p.image ? 'background-image: url(' + p.image + ');background-size:cover;background-position:center;' : 'background: linear-gradient(135deg, #1a1a2e 0%, #2a1a3e 100%);' %>">
+              <% if (!p.image) { %>
               <div class="menu-item-placeholder">
                 <i class="fas fa-<%= p.category_id == 6 ? 'wine-glass-alt' : (p.category_id == 5 ? 'ice-cream' : (p.category_id == 4 ? 'leaf' : (p.category_id == 3 ? 'utensils' : (p.category_id == 1 ? 'seedling' : 'drumstick-bite')))) %>"></i>
               </div>
+              <% } %>
             </div>
             <% if (p.old_price) { %>
             <span class="menu-item-badge">−<%= Math.round((1 - p.price / p.old_price) * 100) %>%</span>

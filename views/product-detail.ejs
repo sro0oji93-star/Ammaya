@@ -12,10 +12,12 @@
   <div class="container">
     <div class="product-detail">
       <div class="product-detail-image">
-        <div class="product-detail-img" style="background: linear-gradient(135deg, #1a1a2e 0%, #2a1a3e 100%);">
+        <div class="product-detail-img" style="<%= product.image ? 'background-image: url(' + product.image + ');background-size:cover;background-position:center;' : 'background: linear-gradient(135deg, #1a1a2e 0%, #2a1a3e 100%);' %>">
+          <% if (!product.image) { %>
           <div class="product-detail-placeholder">
             <i class="fas fa-utensils"></i>
           </div>
+          <% } %>
         </div>
         <% if (product.old_price) { %>
         <span class="product-detail-badge">−<%= Math.round((1 - product.price / product.old_price) * 100) %>% SPAREN</span>
