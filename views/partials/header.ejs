@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="<%= typeof settings !== 'undefined' && settings.site_description ? settings.site_description : 'Ammaya Restaurant' %>">
-  <meta name="theme-color" content="#b8001f">
+  <meta name="theme-color" content="#eb0029">
   <title><%= typeof title !== 'undefined' ? title : 'Ammaya' %></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +19,7 @@
 </head>
 <body class="<%= typeof bodyClass !== 'undefined' ? bodyClass : '' %>">
 
+<header class="site-header">
 <!-- Pre-header -->
 <div class="pre-header">
   <div class="container">
@@ -66,3 +67,4 @@
     </div>
   </div>
 </nav>
+</header>

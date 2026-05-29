@@ -1,11 +1,11 @@
 <%- include('partials/header') %>
 
-<div class="page-hero menu-hero">
-  <div class="page-hero-overlay"></div>
-  <div class="page-hero-content">
+<div class="page-hero menu-hero" style="background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80');background-size:cover;background-position:center;position:relative">
+  <div class="page-hero-overlay" style="position:absolute;inset:0;background:rgba(35,34,35,.5);z-index:1"></div>
+  <div class="page-hero-content" style="position:relative;z-index:2">
     <div class="page-hero-badge">SPEISEKARTE</div>
-    <h1 class="page-hero-title">Unsere Speisekarte</h1>
-    <p class="page-hero-subtitle">Entdecken Sie unsere vielfältigen Gerichte</p>
+    <h1 class="page-hero-title" style="color:#fff">Unsere Speisekarte</h1>
+    <nav class="menu-breadcrumb"><a href="/">Start</a> / <span>Speisekarte</span></nav>
   </div>
 </div>
 
@@ -14,49 +14,35 @@
     <div class="menu-filter">
       <button class="filter-btn active" data-filter="all">Alle</button>
       <% categories.forEach(function(c) { %>
-      <button class="filter-btn <%= activeCategory && activeCategory === c.slug ? 'active' : '' %>" data-filter="<%= c.slug %>"><%= c.name %></button>
+      <button class="filter-btn" data-filter="<%= c.slug %>"><%= c.name %></button>
       <% }) %>
     </div>
 
     <% categories.forEach(function(cat) { %>
     <div class="menu-category" data-category="<%= cat.slug %>">
-      <div class="menu-category-header">
+      <div class="menu-category-head">
         <h2 class="menu-category-title"><%= cat.name %></h2>
         <% if (cat.description) { %><p class="menu-category-desc"><%= cat.description %></p><% } %>
       </div>
-      <div class="menu-items">
+      <div class="menu-specs">
         <% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
         <% catProducts.forEach(function(p) { %>
-        <div class="menu-item" data-category="<%= cat.slug %>">
-          <div class="menu-item-image">
-            <div class="menu-item-img" style="<%= p.image ? 'background-image: url(' + p.image + ');background-size:cover;background-position:center;' : 'background: var(--bg-alt);' %>">
-              <% if (!p.image) { %>
-              <div class="menu-item-placeholder">
-                <i class="fas fa-<%= p.category_id == 8 ? 'wine-glass-alt' : (p.category_id == 4 ? 'leaf' : (p.category_id == 10 ? 'tint' : 'utensils')) %>"></i>
-              </div>
-              <% } %>
-            </div>
-            <% if (p.old_price) { %>
-            <span class="menu-item-badge">−<%= Math.round((1 - p.price / p.old_price) * 100) %>%</span>
-            <% } %>
+        <div class="menu-spec-item">
+          <div class="menu-spec-img">
+            <i class="fas fa-<%= p.category_id == 8 ? 'wine-glass-alt' : (p.category_id == 4 ? 'leaf' : (p.category_id == 10 ? 'tint' : 'utensils')) %>"></i>
           </div>
-          <div class="menu-item-body">
-            <div class="menu-item-header">
-              <h3 class="menu-item-title"><%= p.name %></h3>
-              <div class="menu-item-price">
-                <% if (p.old_price) { %>
-                <span class="price-old"><%= p.old_price.toFixed(2) %> €</span>
-                <% } %>
-                <span class="price-current"><%= p.price.toFixed(2) %> €</span>
-              </div>
+          <div class="menu-spec-info">
+            <div class="menu-spec-header">
+              <h3 class="menu-spec-title"><%= p.name %></h3>
+              <span class="menu-spec-line"></span>
+              <span class="menu-spec-price"><%= p.price.toFixed(2) %> €</span>
             </div>
-            <p class="menu-item-desc"><%= p.description %></p>
-            <% if (p.ingredients) { %>
-            <p class="menu-item-ingredients"><i class="fas fa-seedling"></i> <%= p.ingredients %></p>
-            <% } %>
-            <button class="btn btn-primary btn-sm add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">
-              <i class="fas fa-shopping-bag"></i> In den Warenkorb
-            </button>
+            <p class="menu-spec-desc"><%= p.description %></p>
+            <div class="menu-spec-actions">
+              <button class="btn btn-primary btn-sm add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">
+                <i class="fas fa-shopping-bag"></i> In den Warenkorb
+              </button>
+            </div>
           </div>
         </div>
         <% }); %>

@@ -65,7 +65,7 @@
       <% related.forEach(function(p) { %>
       <div class="menu-card" data-id="<%= p.id %>">
         <div class="menu-card-image">
-          <div class="menu-card-img" style="<%= p.image ? 'background-image: url(' + p.image + ');background-size:cover;background-position:center;' : 'background: var(--bg-alt);' %>">
+          <div class="menu-card-img" style="<%= p.image ? 'background-image: url(' + p.image + ');background-size:cover;background-position:center;' : 'background: #f8f5f0;' %>">
             <% if (!p.image) { %>
             <div class="menu-card-placeholder"><i class="fas fa-utensils"></i></div>
             <% } %>
