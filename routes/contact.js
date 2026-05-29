@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const { db } = require('../db');
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+  const settingsRows = await db.prepare('SELECT key, value FROM settings').all();
   const settings = {};
-  db.prepare('SELECT key, value FROM settings').all().forEach(s => settings[s.key] = s.value);
+  settingsRows.forEach(s => settings[s.key] = s.value);
   
   res.render('kontakt', {
     title: 'Kontakt – ' + settings.site_name,
