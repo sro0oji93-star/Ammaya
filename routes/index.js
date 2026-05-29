@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
   
   res.render('index', {
     title: settings.site_name + ' – ' + settings.site_description,
+    bodyClass: 'homepage',
     featured,
     categories,
     banners,
