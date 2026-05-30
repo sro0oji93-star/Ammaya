@@ -11,8 +11,7 @@
       </div>
       <div class="hero-food-right">
         <div class="hero-food-img-wrap">
-          <img class="hero-slide-img" src="<%= settings.hero_burger_image || '/images/revolution/5b6b6-burger.png' %>" alt="">
-          <img class="hero-slide-img" src="" alt="" style="display:none">
+          <img id="heroFoodImg" src="<%= settings.hero_burger_image || '/images/revolution/5b6b6-burger.png' %>" alt="">
         </div>
         <div class="hero-food-price">
           <span class="hero-price"><%= settings.hero_price || '12' %>€</span>
@@ -342,37 +341,20 @@
 
 <script>
 (function() {
-  var imgs = document.querySelectorAll('.hero-slide-img');
-  if (imgs.length < 2) return;
+  var img = document.getElementById('heroFoodImg');
+  if (!img) return;
   var images = [
     '<%= settings.hero_burger_image || "/images/revolution/5b6b6-burger.png" %>',
     '<%= settings.hero_pizza_image || "/images/pizza_hero.png" %>'
   ];
-  var curIdx = 0;
-  imgs[0].src = images[0];
-  imgs[1].src = images[1];
-  imgs[0].style.transform = 'translateX(0)';
-  imgs[1].style.transform = 'translateX(100%)';
+  var current = 0;
   setInterval(function() {
-    curIdx = (curIdx + 1) % images.length;
-    var inn = imgs[curIdx % 2];
-    var out = imgs[(curIdx + 1) % 2];
-    inn.src = images[curIdx];
-    inn.style.transform = 'translateX(100%)';
-    inn.style.transition = 'none';
-    out.style.transition = 'transform .5s ease-in-out';
-    inn.style.display = '';
-    out.style.display = '';
-    requestAnimationFrame(function() {
-      inn.style.transition = 'transform .5s ease-in-out';
-      out.style.transform = 'translateX(-100%)';
-      inn.style.transform = 'translateX(0)';
-    });
+    current = (current + 1) % images.length;
+    img.style.opacity = '0';
     setTimeout(function() {
-      out.style.transform = 'translateX(100%)';
-      out.style.transition = 'none';
-      out.style.display = 'none';
-    }, 600);
+      img.src = images[current];
+      img.style.opacity = '1';
+    }, 400);
   }, 5000);
 })();
 </script>
