@@ -74,7 +74,7 @@ img{max-width:100%}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(35,34,35,.8),rgba(35,34,35,.3));z-index:2}
 .hero-content{position:relative;z-index:3;text-align:center;max-width:900px;padding:60px 24px 0}
 .hero-food-row{display:flex;align-items:center;justify-content:center;gap:clamp(16px,4vw,60px);flex-wrap:wrap}
-.hero-food-img-wrap{width:clamp(180px,36vw,550px);filter:drop-shadow(0 20px 50px rgba(0,0,0,.5));animation:heroFloat 3s ease-in-out infinite}
+.hero-food-img-wrap{width:clamp(220px,42vw,750px);filter:drop-shadow(0 20px 50px rgba(0,0,0,.5));animation:heroFloat 3s ease-in-out infinite}
 .hero-food-img-wrap img{width:100%;height:auto;display:block;transition:opacity .5s ease}
 .hero-food-price{display:flex;flex-direction:column;align-items:center;gap:4px;animation:heroFloat 3s ease-in-out infinite;animation-delay:.8s}
 
@@ -504,7 +504,7 @@ img{max-width:100%}
     gap: 12px;
   }
   .hero-food-img-wrap {
-    width: clamp(140px, 50vw, 300px);
+    width: clamp(160px, 60vw, 400px);
   }
   .hero-actions {
     flex-direction: column;
