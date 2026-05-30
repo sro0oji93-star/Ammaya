@@ -22,9 +22,9 @@ router.get('/login', (req, res) => {
   res.render('admin/login', { title: 'Admin Login', error: null });
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username);
+  const admin = await db.get('SELECT * FROM admins WHERE username = $1', [username]);
   if (admin && bcrypt.compareSync(password, admin.password)) {
     req.session.admin = { id: admin.id, username: admin.username, display_name: admin.display_name };
     return res.redirect('/admin');
@@ -37,188 +37,191 @@ router.get('/logout', (req, res) => {
   res.redirect('/admin/login');
 });
 
-router.get('/', auth, (req, res) => {
+router.get('/', auth, async (req, res) => {
   const stats = {
-    products: db.prepare('SELECT COUNT(*) as count FROM products').get().count,
-    categories: db.prepare('SELECT COUNT(*) as count FROM categories').get().count,
-    orders: db.prepare('SELECT COUNT(*) as count FROM orders').get().count,
-    pending: db.prepare("SELECT COUNT(*) as count FROM orders WHERE order_status = 'neu' OR order_status = 'in_bearbeitung'").get().count,
-    revenue: db.prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE order_status != 'storniert'").get().total,
-    recentOrders: db.prepare('SELECT * FROM orders ORDER BY created_at DESC LIMIT 5').all()
+    products: (await db.get('SELECT COUNT(*) as count FROM products')).count,
+    categories: (await db.get('SELECT COUNT(*) as count FROM categories')).count,
+    orders: (await db.get('SELECT COUNT(*) as count FROM orders')).count,
+    pending: (await db.get("SELECT COUNT(*) as count FROM orders WHERE order_status = 'neu' OR order_status = 'in_bearbeitung'")).count,
+    revenue: (await db.get("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE order_status != 'storniert'")).total,
+    recentOrders: await db.all('SELECT * FROM orders ORDER BY created_at DESC LIMIT 5')
   };
-  const settings = {};
-  db.prepare('SELECT key, value FROM settings').all().forEach(s => settings[s.key] = s.value);
+  const settingsRows = await db.all('SELECT key, value FROM settings');
+  const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
   res.render('admin/dashboard', { title: 'Dashboard – Admin', stats, settings });
 });
 
-router.get('/produkte', auth, (req, res) => {
-  const products = db.prepare('SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.sort_order').all();
-  const categories = db.prepare('SELECT * FROM categories ORDER BY sort_order').all();
+router.get('/produkte', auth, async (req, res) => {
+  const products = await db.all('SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.sort_order');
+  const categories = await db.all('SELECT * FROM categories ORDER BY sort_order');
   res.render('admin/products', { title: 'Produkte – Admin', products, categories });
 });
 
-router.post('/produkte', auth, upload.single('image'), (req, res) => {
+router.post('/produkte', auth, upload.single('image'), async (req, res) => {
   const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order } = req.body;
   const slug = slugify(name, { lower: true, strict: true });
   const image = req.file ? '/uploads/' + req.file.filename : null;
-  db.prepare(`INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(
-    category_id || null, name, slug + '-' + Date.now(), description, price, old_price || null,
-    image, ingredients, is_featured ? 1 : 0, is_available ? 1 : 0, sort_order || 0
+  await db.run(`INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+    [category_id || null, name, slug + '-' + Date.now(), description, price, old_price || null,
+    image, ingredients, is_featured ? 1 : 0, is_available ? 1 : 0, sort_order || 0]
   );
   res.redirect('/admin/produkte');
 });
 
-router.post('/produkte/bearbeiten/:id', auth, upload.single('image'), (req, res) => {
+router.post('/produkte/bearbeiten/:id', auth, upload.single('image'), async (req, res) => {
   const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order } = req.body;
-  const product = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
+  const product = await db.get('SELECT * FROM products WHERE id = $1', [req.params.id]);
   if (!product) return res.status(404).send('Produkt nicht gefunden');
   const slug = slugify(name, { lower: true, strict: true }) + '-' + req.params.id;
   const image = req.file ? '/uploads/' + req.file.filename : product.image;
-  db.prepare(`UPDATE products SET category_id=?, name=?, slug=?, description=?, price=?, old_price=?, image=?, ingredients=?, is_featured=?, is_available=?, sort_order=? WHERE id=?`).run(
-    category_id || null, name, slug, description, price, old_price || null, image, ingredients,
-    is_featured ? 1 : 0, is_available ? 1 : 0, sort_order || 0, req.params.id
+  await db.run(`UPDATE products SET category_id=$1, name=$2, slug=$3, description=$4, price=$5, old_price=$6, image=$7, ingredients=$8, is_featured=$9, is_available=$10, sort_order=$11 WHERE id=$12`,
+    [category_id || null, name, slug, description, price, old_price || null, image, ingredients,
+    is_featured ? 1 : 0, is_available ? 1 : 0, sort_order || 0, req.params.id]
   );
   res.redirect('/admin/produkte');
 });
 
-router.post('/produkte/loeschen/:id', auth, (req, res) => {
-  db.prepare('DELETE FROM products WHERE id = ?').run(req.params.id);
+router.post('/produkte/loeschen/:id', auth, async (req, res) => {
+  await db.run('DELETE FROM products WHERE id = $1', [req.params.id]);
   res.redirect('/admin/produkte');
 });
 
-router.get('/kategorien', auth, (req, res) => {
-  const categories = db.prepare('SELECT c.*, (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) as product_count FROM categories c ORDER BY sort_order').all();
+router.get('/kategorien', auth, async (req, res) => {
+  const categories = await db.all('SELECT c.*, (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) as product_count FROM categories c ORDER BY sort_order');
   res.render('admin/categories', { title: 'Kategorien – Admin', categories });
 });
 
-router.post('/kategorien', auth, (req, res) => {
+router.post('/kategorien', auth, async (req, res) => {
   const { name, description, sort_order } = req.body;
   const slug = slugify(name, { lower: true, strict: true }) + '-' + Date.now();
-  db.prepare('INSERT INTO categories (name, slug, description, sort_order) VALUES (?, ?, ?, ?)').run(name, slug, description, sort_order || 0);
+  await db.run('INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4)',
+    [name, slug, description, sort_order || 0]);
   res.redirect('/admin/kategorien');
 });
 
-router.post('/kategorien/bearbeiten/:id', auth, (req, res) => {
+router.post('/kategorien/bearbeiten/:id', auth, async (req, res) => {
   const { name, description, sort_order, active } = req.body;
-  db.prepare('UPDATE categories SET name=?, description=?, sort_order=?, active=? WHERE id=?').run(name, description, sort_order || 0, active ? 1 : 0, req.params.id);
+  await db.run('UPDATE categories SET name=$1, description=$2, sort_order=$3, active=$4 WHERE id=$5',
+    [name, description, sort_order || 0, active ? 1 : 0, req.params.id]);
   res.redirect('/admin/kategorien');
 });
 
-router.post('/kategorien/loeschen/:id', auth, (req, res) => {
-  db.prepare('DELETE FROM categories WHERE id = ?').run(req.params.id);
+router.post('/kategorien/loeschen/:id', auth, async (req, res) => {
+  await db.run('DELETE FROM categories WHERE id = $1', [req.params.id]);
   res.redirect('/admin/kategorien');
 });
 
-router.get('/bestellungen', auth, (req, res) => {
+router.get('/bestellungen', auth, async (req, res) => {
   const status = req.query.status || 'alle';
   let orders;
   if (status === 'alle') {
-    orders = db.prepare('SELECT * FROM orders ORDER BY created_at DESC').all();
+    orders = await db.all('SELECT * FROM orders ORDER BY created_at DESC');
   } else {
-    orders = db.prepare('SELECT * FROM orders WHERE order_status = ? ORDER BY created_at DESC').all(status);
+    orders = await db.all('SELECT * FROM orders WHERE order_status = $1 ORDER BY created_at DESC', [status]);
   }
   res.render('admin/orders', { title: 'Bestellungen – Admin', orders, currentStatus: status });
 });
 
-router.post('/bestellungen/status/:id', auth, (req, res) => {
+router.post('/bestellungen/status/:id', auth, async (req, res) => {
   const { status } = req.body;
-  db.prepare('UPDATE orders SET order_status = ? WHERE id = ?').run(status, req.params.id);
+  await db.run('UPDATE orders SET order_status = $1 WHERE id = $2', [status, req.params.id]);
   res.redirect('/admin/bestellungen');
 });
 
-router.get('/bestellungen/:id', auth, (req, res) => {
-  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+router.get('/bestellungen/:id', auth, async (req, res) => {
+  const order = await db.get('SELECT * FROM orders WHERE id = $1', [req.params.id]);
   if (!order) return res.status(404).send('Bestellung nicht gefunden');
   order.items = JSON.parse(order.items);
-  const settings = {};
-  db.prepare('SELECT key, value FROM settings').all().forEach(s => settings[s.key] = s.value);
+  const settingsRows = await db.all('SELECT key, value FROM settings');
+  const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
   res.render('admin/order-detail', { title: 'Bestellung ' + order.order_number, order, settings });
 });
 
-router.get('/rabatte', auth, (req, res) => {
-  const discounts = db.prepare('SELECT * FROM discounts ORDER BY created_at DESC').all();
+router.get('/rabatte', auth, async (req, res) => {
+  const discounts = await db.all('SELECT * FROM discounts ORDER BY created_at DESC');
   res.render('admin/discounts', { title: 'Rabatte – Admin', discounts });
 });
 
-router.post('/rabatte', auth, (req, res) => {
+router.post('/rabatte', auth, async (req, res) => {
   const { code, type, value, min_order, usage_limit, expires_at } = req.body;
-  db.prepare('INSERT INTO discounts (code, type, value, min_order, usage_limit, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(
-    code.toUpperCase(), type, value, min_order || 0, usage_limit || 0, expires_at || null
-  );
+  await db.run('INSERT INTO discounts (code, type, value, min_order, usage_limit, expires_at) VALUES ($1, $2, $3, $4, $5, $6)',
+    [code.toUpperCase(), type, value, min_order || 0, usage_limit || 0, expires_at || null]);
   res.redirect('/admin/rabatte');
 });
 
-router.post('/rabatte/loeschen/:id', auth, (req, res) => {
-  db.prepare('DELETE FROM discounts WHERE id = ?').run(req.params.id);
+router.post('/rabatte/loeschen/:id', auth, async (req, res) => {
+  await db.run('DELETE FROM discounts WHERE id = $1', [req.params.id]);
   res.redirect('/admin/rabatte');
 });
 
-router.get('/banner', auth, (req, res) => {
-  const banners = db.prepare('SELECT * FROM banners ORDER BY sort_order').all();
+router.get('/banner', auth, async (req, res) => {
+  const banners = await db.all('SELECT * FROM banners ORDER BY sort_order');
   res.render('admin/banners', { title: 'Banner – Admin', banners });
 });
 
-router.post('/banner', auth, upload.single('image'), (req, res) => {
+router.post('/banner', auth, upload.single('image'), async (req, res) => {
   const { title, subtitle, link, sort_order } = req.body;
   const image = req.file ? '/uploads/' + req.file.filename : null;
-  db.prepare('INSERT INTO banners (title, subtitle, image, link, sort_order) VALUES (?, ?, ?, ?, ?)').run(title, subtitle, image, link, sort_order || 0);
+  await db.run('INSERT INTO banners (title, subtitle, image, link, sort_order) VALUES ($1, $2, $3, $4, $5)',
+    [title, subtitle, image, link, sort_order || 0]);
   res.redirect('/admin/banner');
 });
 
-router.post('/banner/loeschen/:id', auth, (req, res) => {
-  db.prepare('DELETE FROM banners WHERE id = ?').run(req.params.id);
+router.post('/banner/loeschen/:id', auth, async (req, res) => {
+  await db.run('DELETE FROM banners WHERE id = $1', [req.params.id]);
   res.redirect('/admin/banner');
 });
 
-router.get('/testimonials', auth, (req, res) => {
-  const testimonials = db.prepare('SELECT * FROM testimonials ORDER BY created_at DESC').all();
+router.get('/testimonials', auth, async (req, res) => {
+  const testimonials = await db.all('SELECT * FROM testimonials ORDER BY created_at DESC');
   res.render('admin/testimonials', { title: 'Testimonials – Admin', testimonials });
 });
 
-router.post('/testimonials', auth, upload.single('image'), (req, res) => {
+router.post('/testimonials', auth, upload.single('image'), async (req, res) => {
   const { name, text, rating } = req.body;
   const image = req.file ? '/uploads/' + req.file.filename : null;
-  db.prepare('INSERT INTO testimonials (name, text, rating, image) VALUES (?, ?, ?, ?)').run(name, text, rating || 5, image);
+  await db.run('INSERT INTO testimonials (name, text, rating, image) VALUES ($1, $2, $3, $4)',
+    [name, text, rating || 5, image]);
   res.redirect('/admin/testimonials');
 });
 
-router.post('/testimonials/bearbeiten/:id', auth, upload.single('image'), (req, res) => {
+router.post('/testimonials/bearbeiten/:id', auth, upload.single('image'), async (req, res) => {
   const { name, text, rating, active } = req.body;
-  const t = db.prepare('SELECT * FROM testimonials WHERE id = ?').get(req.params.id);
+  const t = await db.get('SELECT * FROM testimonials WHERE id = $1', [req.params.id]);
   if (!t) return res.status(404).send('Testimonial nicht gefunden');
   const image = req.file ? '/uploads/' + req.file.filename : t.image;
-  db.prepare('UPDATE testimonials SET name=?, text=?, rating=?, image=?, active=? WHERE id=?').run(name, text, rating || 5, image, active ? 1 : 0, req.params.id);
+  await db.run('UPDATE testimonials SET name=$1, text=$2, rating=$3, image=$4, active=$5 WHERE id=$6',
+    [name, text, rating || 5, image, active ? 1 : 0, req.params.id]);
   res.redirect('/admin/testimonials');
 });
 
-router.post('/testimonials/loeschen/:id', auth, (req, res) => {
-  db.prepare('DELETE FROM testimonials WHERE id = ?').run(req.params.id);
+router.post('/testimonials/loeschen/:id', auth, async (req, res) => {
+  await db.run('DELETE FROM testimonials WHERE id = $1', [req.params.id]);
   res.redirect('/admin/testimonials');
 });
 
-router.get('/einstellungen', auth, (req, res) => {
-  const settings = {};
-  db.prepare('SELECT key, value FROM settings').all().forEach(s => settings[s.key] = s.value);
+router.get('/einstellungen', auth, async (req, res) => {
+  const settingsRows = await db.all('SELECT key, value FROM settings');
+  const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
   res.render('admin/settings', { title: 'Einstellungen – Admin', settings });
 });
 
 router.post('/einstellungen', auth, upload.fields([
   { name: 'hero_burger_image', maxCount: 1 },
   { name: 'hero_pizza_image', maxCount: 1 }
-]), (req, res) => {
+]), async (req, res) => {
   const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','hero_title','hero_subtitle','about_title','about_text','latitude','longitude','hero_price','hero_price_label','hero_text_title','hero_text_subtitle'];
-  const update = db.prepare('UPDATE settings SET value = ? WHERE key = ?');
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
-      update.run(req.body[key], key);
+      await db.run('UPDATE settings SET value = $1 WHERE key = $2', [req.body[key], key]);
     }
   }
   if (req.files && req.files.hero_burger_image && req.files.hero_burger_image[0]) {
-    update.run('/uploads/' + req.files.hero_burger_image[0].filename, 'hero_burger_image');
+    await db.run('UPDATE settings SET value = $1 WHERE key = $2', ['/uploads/' + req.files.hero_burger_image[0].filename, 'hero_burger_image']);
   }
   if (req.files && req.files.hero_pizza_image && req.files.hero_pizza_image[0]) {
-    update.run('/uploads/' + req.files.hero_pizza_image[0].filename, 'hero_pizza_image');
+    await db.run('UPDATE settings SET value = $1 WHERE key = $2', ['/uploads/' + req.files.hero_pizza_image[0].filename, 'hero_pizza_image']);
   }
   res.redirect('/admin/einstellungen');
 });
@@ -227,9 +230,9 @@ router.get('/passwort', auth, (req, res) => {
   res.render('admin/password', { title: 'Passwort ändern – Admin', message: null, error: null });
 });
 
-router.post('/passwort', auth, (req, res) => {
+router.post('/passwort', auth, async (req, res) => {
   const { current_password, new_password, confirm_password } = req.body;
-  const admin = db.prepare('SELECT * FROM admins WHERE id = ?').get(req.session.admin.id);
+  const admin = await db.get('SELECT * FROM admins WHERE id = $1', [req.session.admin.id]);
   if (!bcrypt.compareSync(current_password, admin.password)) {
     return res.render('admin/password', { title: 'Passwort ändern – Admin', message: null, error: 'Aktuelles Passwort ist falsch' });
   }
@@ -237,7 +240,7 @@ router.post('/passwort', auth, (req, res) => {
     return res.render('admin/password', { title: 'Passwort ändern – Admin', message: null, error: 'Passwörter stimmen nicht überein' });
   }
   const hash = bcrypt.hashSync(new_password, 10);
-  db.prepare('UPDATE admins SET password = ? WHERE id = ?').run(hash, req.session.admin.id);
+  await db.run('UPDATE admins SET password = $1 WHERE id = $2', [hash, req.session.admin.id]);
   res.render('admin/password', { title: 'Passwort ändern – Admin', message: 'Passwort erfolgreich geändert!', error: null });
 });
 
