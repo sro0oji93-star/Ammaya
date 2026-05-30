@@ -78,6 +78,10 @@ img{max-width:100%}
 .hero-food-item--burger{width:clamp(180px,32vw,500px);animation-delay:0s}
 .hero-food-item--burger img{width:100%;height:auto;filter:drop-shadow(0 20px 50px rgba(0,0,0,.5))}
 .hero-food-item--price{display:flex;flex-direction:column;align-items:center;gap:4px}
+.hero-food{position:absolute;z-index:3;font-size:clamp(50px,6vw,100px);animation:heroFloat 3s ease-in-out infinite;filter:drop-shadow(0 15px 40px rgba(0,0,0,.5));pointer-events:none}
+.hero-food--cola-1{color:#3a1e04;top:10%;left:6%;animation-delay:0s;transform:rotate(-20deg)}
+.hero-food--cola-2{color:#00c853;bottom:12%;left:12%;animation-delay:1.2s;transform:rotate(15deg)}
+.hero-food--cola-3{color:#ff6d00;bottom:15%;right:8%;animation-delay:2.4s;transform:rotate(-10deg)}
 .hero-price{font-family:'Josefin Sans',sans-serif;font-size:clamp(48px,10vw,120px);font-weight:700;color:#ebe117;line-height:1;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;letter-spacing:-4px;animation:heroFloat 3s ease-in-out infinite;animation-delay:.8s}
 .hero-price-label{font-size:clamp(10px,1.2vw,14px);color:rgba(255,255,255,.6);letter-spacing:4px;text-transform:uppercase}
 .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeInUp .8s ease-out .6s both}
@@ -515,6 +519,9 @@ img{max-width:100%}
   .hero-scroll {
     display: none;
   }
+  .hero-food--cola-1{top:6%;left:4%;font-size:36px}
+  .hero-food--cola-2{bottom:6%;left:6%;font-size:36px}
+  .hero-food--cola-3{bottom:8%;right:4%;font-size:36px}
 
   /* Page Hero - Mobile */
   .page-hero {
