@@ -8,13 +8,15 @@
       <div class="hero-food-text">
         <% if (settings.hero_text_title) { %><h2 class="hero-text-title"><%= settings.hero_text_title %></h2><% } %>
         <% if (settings.hero_text_subtitle) { %><p class="hero-text-subtitle"><%= settings.hero_text_subtitle %></p><% } %>
+      </div>
+      <div class="hero-food-right">
+        <div class="hero-food-img-wrap">
+          <img id="heroFoodImg" src="<%= settings.hero_burger_image || '/images/revolution/5b6b6-burger.png' %>" alt="">
+        </div>
         <div class="hero-food-price">
           <span class="hero-price"><%= settings.hero_price || '12' %>€</span>
           <span class="hero-price-label"><%= settings.hero_price_label || 'Nur heute' %></span>
         </div>
-      </div>
-      <div class="hero-food-img-wrap">
-        <img id="heroFoodImg" src="<%= settings.hero_burger_image || '/images/revolution/5b6b6-burger.png' %>" alt="">
       </div>
     </div>
   </div>

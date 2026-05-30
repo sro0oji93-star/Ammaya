@@ -79,7 +79,8 @@ img{max-width:100%}
 .hero-food-text{display:flex;flex-direction:column;align-items:flex-start;gap:8px;max-width:400px}
 .hero-text-title{font-family:'Josefin Sans',sans-serif;font-size:clamp(28px,4vw,56px);font-weight:700;color:#fff;line-height:1.15;margin:0;text-shadow:2px 2px 0 rgba(0,0,0,.3)}
 .hero-text-subtitle{font-size:clamp(14px,1.5vw,18px);color:rgba(255,255,255,.85);margin:0;line-height:1.5}
-.hero-food-price{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:8px}
+.hero-food-right{display:flex;align-items:center;gap:clamp(16px,3vw,40px)}
+.hero-food-price{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
 
 .hero-price{font-family:'Josefin Sans',sans-serif;font-size:clamp(48px,10vw,120px);font-weight:700;color:#ebe117;line-height:1;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;letter-spacing:-4px;animation:heroFloat 3s ease-in-out infinite;animation-delay:.8s}
 .hero-price-label{font-size:clamp(10px,1.2vw,14px);color:rgba(255,255,255,.6);letter-spacing:4px;text-transform:uppercase}
@@ -514,6 +515,10 @@ img{max-width:100%}
   .hero-food-text {
     align-items: center;
     text-align: center;
+  }
+  .hero-food-right {
+    flex-direction: column;
+    align-items: center;
   }
   .hero-food-price {
     align-items: center;
