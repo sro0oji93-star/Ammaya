@@ -186,6 +186,8 @@ function initialize() {
     insertSetting.run('hero_subtitle', 'Entdecken Sie unsere vielfältigen Gerichte \u2013 frisch zubereitet mit den besten Zutaten');
     insertSetting.run('hero_price', '12');
     insertSetting.run('hero_price_label', 'Nur heute');
+    insertSetting.run('hero_text_title', 'Burger & Pizza');
+    insertSetting.run('hero_text_subtitle', 'Frisch zubereitet mit den besten Zutaten');
     insertSetting.run('hero_burger_image', '/images/revolution/5b6b6-burger.png');
     insertSetting.run('hero_pizza_image', '/images/pizza_hero.png');
     insertSetting.run('about_title', 'Unsere Philosophie');
