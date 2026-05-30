@@ -85,16 +85,15 @@
 <script src="/js/main.js"></script>
 <script src="/js/cart.js"></script>
 
-<!-- Cart overlay / menu toggle -->
+<!-- Enhanced mobile nav: close on link click -->
 <script>
-// Mobile nav toggle
 document.addEventListener('DOMContentLoaded', function() {
-  // Mobile toggle
-  var toggle = document.querySelector('.mad-navigation-container');
-  // Close mobile menu on link click
   document.querySelectorAll('.mad-navigation a').forEach(function(link) {
     link.addEventListener('click', function() {
-      document.querySelector('.mad-navigation-container').classList.remove('opened');
+      var nav = document.querySelector('.mad-navigation--vertical-sm');
+      var btn = document.querySelector('.mad-mobile-nav-btn');
+      if (nav) nav.classList.remove('mad-opened');
+      if (btn) btn.classList.remove('mad-opened');
     });
   });
 });

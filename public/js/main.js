@@ -16,17 +16,40 @@
   var nav = document.querySelector('.mad-navigation--vertical-sm');
   if (!btn || !nav) return;
 
-  btn.addEventListener('click', function() {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
     btn.classList.toggle('mad-opened');
     nav.classList.toggle('mad-opened');
   });
 
+  // Close on outside click
   document.addEventListener('click', function(e) {
     if (!btn.contains(e.target) && !nav.contains(e.target)) {
       btn.classList.remove('mad-opened');
       nav.classList.remove('mad-opened');
     }
   });
+
+  // Prevent nav clicks from closing parent
+  nav.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+})();
+
+// Mobile nav: prevent body scroll when nav open
+(function() {
+  var nav = document.querySelector('.mad-navigation--vertical-sm');
+  var btn = document.querySelector('.mad-mobile-nav-btn');
+  if (!nav || !btn) return;
+
+  var observer = new MutationObserver(function() {
+    if (nav.classList.contains('mad-opened')) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  });
+  observer.observe(nav, { attributes: true, attributeFilter: ['class'] });
 })();
 
 // Counter animation
