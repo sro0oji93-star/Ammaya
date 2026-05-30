@@ -3,15 +3,21 @@
 <!-- Hero Section -->
 <section class="hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg')">
   <div class="hero-overlay"></div>
-  <div class="hero-food hero-food-burger"><img src="/images/revolution/5b6b6-burger.png" alt=""></div>
-  <div class="hero-food hero-food-pizza"><i class="fas fa-pizza-slice"></i></div>
   <div class="hero-content">
-    <div class="hero-badge">WILLKOMMEN BEI <%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name.toUpperCase() : 'AMMAYA' %></div>
-    <h1 class="hero-title">Frisch & Lecker</h1>
-    <p class="hero-subtitle">Entdecken Sie unsere handverlesenen Gerichte – zubereitet mit den frischesten Zutaten und viel Liebe. Einfach online bestellen und genießen.</p>
+    <div class="hero-food-grid">
+      <div class="hero-food-item hero-food-item--burger">
+        <img src="/images/revolution/5b6b6-burger.png" alt="">
+      </div>
+      <div class="hero-food-item hero-food-item--pizza">
+        <i class="fas fa-pizza-slice"></i>
+      </div>
+      <div class="hero-food-item hero-food-item--price">
+        <span class="hero-price">12€</span>
+        <span class="hero-price-label">Nur heute</span>
+      </div>
+    </div>
     <div class="hero-actions">
       <a href="/speisekarte" class="btn btn-yellow btn-lg"><span>Jetzt bestellen</span></a>
-      <a href="/speisekarte" class="btn btn-outline btn-lg" style="border-color:#fff;color:#fff">Speisekarte ansehen</a>
     </div>
     <div class="hero-scroll">
       <i class="material-icons">expand_more</i>
