@@ -5,8 +5,14 @@
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-food-grid">
-      <div class="hero-food-item hero-food-item--burger" id="heroFoodItem">
-        <img id="heroFoodImg" src="/images/revolution/5b6b6-burger.png" alt="">
+      <div class="hero-food-item hero-food-item--burger">
+        <div class="hero-food-shadow">
+          <div class="hero-food-slide" id="heroFoodSlide">
+            <img src="/images/revolution/5b6b6-burger.png" alt="" class="hero-food-slide-img">
+            <img src="/images/pizza_hero.png" alt="" class="hero-food-slide-img">
+            <img src="/images/revolution/5b6b6-burger.png" alt="" class="hero-food-slide-img">
+          </div>
+        </div>
       </div>
       <div class="hero-food-item hero-food-item--price">
         <span class="hero-price">12€</span>
@@ -342,17 +348,23 @@
 
 <script>
 (function() {
-  var img = document.getElementById('heroFoodImg');
-  if (!img) return;
-  var images = ['/images/revolution/5b6b6-burger.png', '/images/pizza_hero.png'];
+  var slide = document.getElementById('heroFoodSlide');
+  if (!slide) return;
   var current = 0;
+  slide.style.transition = 'transform .5s ease-in-out';
   setInterval(function() {
-    current = (current + 1) % images.length;
-    img.style.opacity = '0';
-    setTimeout(function() {
-      img.src = images[current];
-      img.style.opacity = '1';
-    }, 300);
+    current++;
+    slide.style.transform = 'translateX(-' + (current * 33.333) + '%)';
+    if (current >= 2) {
+      setTimeout(function() {
+        slide.style.transition = 'none';
+        current = 0;
+        slide.style.transform = 'translateX(0)';
+        setTimeout(function() {
+          slide.style.transition = 'transform .5s ease-in-out';
+        }, 50);
+      }, 600);
+    }
   }, 5000);
 })();
 </script>
