@@ -75,7 +75,7 @@ img{max-width:100%}
 .hero-content{position:relative;z-index:3;text-align:center;max-width:900px;padding:60px 24px 0}
 .hero-food-grid{display:flex;align-items:center;justify-content:center;gap:clamp(16px,4vw,60px);flex-wrap:wrap;margin-bottom:32px}
 .hero-food-item{animation:heroFloat 3s ease-in-out infinite}
-.hero-food-item--burger{width:clamp(160px,24vw,360px);animation-delay:0s}
+.hero-food-item--burger{width:clamp(180px,32vw,500px);animation-delay:0s}
 .hero-food-item--burger img{width:100%;height:auto;filter:drop-shadow(0 20px 50px rgba(0,0,0,.5))}
 .hero-food-item--price{display:flex;flex-direction:column;align-items:center;gap:4px}
 .hero-price{font-family:'Josefin Sans',sans-serif;font-size:clamp(48px,10vw,120px);font-weight:700;color:#ebe117;line-height:1;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;letter-spacing:-4px;animation:heroFloat 3s ease-in-out infinite;animation-delay:.8s}
