@@ -74,8 +74,10 @@ img{max-width:100%}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(35,34,35,.8),rgba(35,34,35,.3));z-index:2}
 .hero-content{position:relative;z-index:3;text-align:center;max-width:900px;padding:60px 24px 0}
 .hero-food-row{display:flex;align-items:center;justify-content:center;gap:clamp(16px,4vw,60px);flex-wrap:wrap}
-.hero-food-img-wrap{width:clamp(220px,42vw,750px);filter:drop-shadow(0 20px 50px rgba(0,0,0,.5));animation:heroFloat 3s ease-in-out infinite}
-.hero-food-img-wrap img{width:100%;height:auto;display:block;transition:opacity .5s ease}
+.hero-food-img-wrap{width:clamp(220px,42vw,750px);filter:drop-shadow(0 20px 50px rgba(0,0,0,.5));animation:heroFloat 3s ease-in-out infinite;position:relative;overflow:hidden}
+.hero-slide-img{width:100%;height:100%;object-fit:contain;display:block;position:absolute;top:0;left:0;transform:translateX(100%)}
+.hero-slide-img:first-child{transform:translateX(0)}
+.hero-food-img-wrap::before{content:'';display:block;padding-bottom:75%}
 .hero-food-text{display:flex;flex-direction:column;align-items:flex-start;gap:8px;max-width:400px}
 .hero-text-title{font-family:'Josefin Sans',sans-serif;font-size:clamp(28px,4vw,56px);font-weight:700;color:#fff;line-height:1.15;margin:0;text-shadow:2px 2px 0 rgba(0,0,0,.3)}
 .hero-text-subtitle{font-size:clamp(14px,1.5vw,18px);color:rgba(255,255,255,.85);margin:0;line-height:1.5}
