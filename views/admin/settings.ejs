@@ -3,7 +3,7 @@
   <h2><i class="fas fa-cog"></i> Einstellungen</h2>
 </div>
 
-<form method="POST" action="/admin/einstellungen" class="settings-form">
+<form method="POST" action="/admin/einstellungen" class="settings-form" enctype="multipart/form-data">
   <div class="settings-card">
     <h3>Allgemein</h3>
     <div class="form-grid">
@@ -81,17 +81,34 @@
   </div>
 
   <div class="settings-card">
-    <h3>Startseite</h3>
+    <h3>Hero Slider</h3>
     <div class="form-grid">
       <div class="form-group">
-        <label>Hero-Überschrift</label>
-        <input type="text" name="hero_title" value="<%= settings.hero_title || '' %>">
+        <label>Burger Bild</label>
+        <input type="file" name="hero_burger_image" accept="image/*">
+        <% if (settings.hero_burger_image) { %>
+          <div class="hero-preview"><img src="<%= settings.hero_burger_image %>" style="max-width:120px;margin-top:8px;border-radius:8px"></div>
+        <% } %>
       </div>
       <div class="form-group">
-        <label>Hero-Untertitel</label>
-        <input type="text" name="hero_subtitle" value="<%= settings.hero_subtitle || '' %>">
+        <label>Pizza Bild</label>
+        <input type="file" name="hero_pizza_image" accept="image/*">
+        <% if (settings.hero_pizza_image) { %>
+          <div class="hero-preview"><img src="<%= settings.hero_pizza_image %>" style="max-width:120px;margin-top:8px;border-radius:8px"></div>
+        <% } %>
+      </div>
+      <div class="form-group">
+        <label>Preis (€)</label>
+        <input type="text" name="hero_price" value="<%= settings.hero_price || '12' %>">
+      </div>
+      <div class="form-group">
+        <label>Preis Label</label>
+        <input type="text" name="hero_price_label" value="<%= settings.hero_price_label || 'Nur heute' %>">
       </div>
     </div>
+  </div>
+  <div class="settings-card">
+    <h3>Startseite</h3>
     <div class="form-group">
       <label>Über uns - Titel</label>
       <input type="text" name="about_title" value="<%= settings.about_title || '' %>">

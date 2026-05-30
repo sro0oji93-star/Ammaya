@@ -177,13 +177,22 @@ router.get('/einstellungen', auth, (req, res) => {
   res.render('admin/settings', { title: 'Einstellungen – Admin', settings });
 });
 
-router.post('/einstellungen', auth, (req, res) => {
-  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','hero_title','hero_subtitle','about_title','about_text','latitude','longitude'];
+router.post('/einstellungen', auth, upload.fields([
+  { name: 'hero_burger_image', maxCount: 1 },
+  { name: 'hero_pizza_image', maxCount: 1 }
+]), (req, res) => {
+  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','hero_title','hero_subtitle','about_title','about_text','latitude','longitude','hero_price','hero_price_label'];
   const update = db.prepare('UPDATE settings SET value = ? WHERE key = ?');
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
       update.run(req.body[key], key);
     }
+  }
+  if (req.files && req.files.hero_burger_image && req.files.hero_burger_image[0]) {
+    update.run('/uploads/' + req.files.hero_burger_image[0].filename, 'hero_burger_image');
+  }
+  if (req.files && req.files.hero_pizza_image && req.files.hero_pizza_image[0]) {
+    update.run('/uploads/' + req.files.hero_pizza_image[0].filename, 'hero_pizza_image');
   }
   res.redirect('/admin/einstellungen');
 });

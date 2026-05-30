@@ -6,11 +6,11 @@
   <div class="hero-content">
     <div class="hero-food-row">
       <div class="hero-food-img-wrap">
-        <img id="heroFoodImg" src="/images/revolution/5b6b6-burger.png" alt="">
+        <img id="heroFoodImg" src="<%= settings.hero_burger_image || '/images/revolution/5b6b6-burger.png' %>" alt="">
       </div>
       <div class="hero-food-price">
-        <span class="hero-price">12€</span>
-        <span class="hero-price-label">Nur heute</span>
+        <span class="hero-price"><%= settings.hero_price || '12' %>€</span>
+        <span class="hero-price-label"><%= settings.hero_price_label || 'Nur heute' %></span>
       </div>
     </div>
   </div>
@@ -337,7 +337,10 @@
 (function() {
   var img = document.getElementById('heroFoodImg');
   if (!img) return;
-  var images = ['/images/revolution/5b6b6-burger.png', '/images/pizza_hero.png'];
+  var images = [
+    '<%= settings.hero_burger_image || "/images/revolution/5b6b6-burger.png" %>',
+    '<%= settings.hero_pizza_image || "/images/pizza_hero.png" %>'
+  ];
   var current = 0;
   setInterval(function() {
     current = (current + 1) % images.length;
