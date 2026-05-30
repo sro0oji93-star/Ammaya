@@ -227,10 +227,10 @@
           <div class="mad-testimonial">
             <div data-estimate="5" class="mad-rating"></div>
             <div class="mad-testimonial-info">
-              <blockquote><p>"<%= t.message %>"</p></blockquote>
+              <blockquote><p>"<%= t.text %>"</p></blockquote>
             </div>
             <div class="mad-author">
-              <div class="mad-author-img"><span class="material-icons" style="font-size:36px;color:#eb0029">person</span></div>
+              <div class="mad-author-img"><%= t.image ? '<img src="' + t.image + '" alt="' + t.name + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover">' : '<span class="material-icons" style="font-size:36px;color:#eb0029">person</span>' %></div>
               <div class="mad-author-info">
                 <cite><%= t.name %></cite>
               </div>

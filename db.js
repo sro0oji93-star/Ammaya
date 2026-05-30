@@ -111,6 +111,8 @@ function initialize() {
 
   `);
 
+  try { db.exec('ALTER TABLE testimonials ADD COLUMN image TEXT'); } catch(e) {}
+
   const adminCount = db.prepare('SELECT COUNT(*) as count FROM admins').get();
   if (adminCount.count === '0' || adminCount.count === 0) {
     const hash = bcrypt.hashSync('admin123', 10);

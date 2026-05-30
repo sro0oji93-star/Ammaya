@@ -171,6 +171,32 @@ router.post('/banner/loeschen/:id', auth, (req, res) => {
   res.redirect('/admin/banner');
 });
 
+router.get('/testimonials', auth, (req, res) => {
+  const testimonials = db.prepare('SELECT * FROM testimonials ORDER BY created_at DESC').all();
+  res.render('admin/testimonials', { title: 'Testimonials – Admin', testimonials });
+});
+
+router.post('/testimonials', auth, upload.single('image'), (req, res) => {
+  const { name, text, rating } = req.body;
+  const image = req.file ? '/uploads/' + req.file.filename : null;
+  db.prepare('INSERT INTO testimonials (name, text, rating, image) VALUES (?, ?, ?, ?)').run(name, text, rating || 5, image);
+  res.redirect('/admin/testimonials');
+});
+
+router.post('/testimonials/bearbeiten/:id', auth, upload.single('image'), (req, res) => {
+  const { name, text, rating, active } = req.body;
+  const t = db.prepare('SELECT * FROM testimonials WHERE id = ?').get(req.params.id);
+  if (!t) return res.status(404).send('Testimonial nicht gefunden');
+  const image = req.file ? '/uploads/' + req.file.filename : t.image;
+  db.prepare('UPDATE testimonials SET name=?, text=?, rating=?, image=?, active=? WHERE id=?').run(name, text, rating || 5, image, active ? 1 : 0, req.params.id);
+  res.redirect('/admin/testimonials');
+});
+
+router.post('/testimonials/loeschen/:id', auth, (req, res) => {
+  db.prepare('DELETE FROM testimonials WHERE id = ?').run(req.params.id);
+  res.redirect('/admin/testimonials');
+});
+
 router.get('/einstellungen', auth, (req, res) => {
   const settings = {};
   db.prepare('SELECT key, value FROM settings').all().forEach(s => settings[s.key] = s.value);
