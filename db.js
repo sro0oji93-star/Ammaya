@@ -113,30 +113,22 @@ function initialize() {
 
   try { db.exec('ALTER TABLE testimonials ADD COLUMN image TEXT'); } catch(e) {}
 
-  const adminCount = db.prepare('SELECT COUNT(*) as count FROM admins').get();
-  if (adminCount.count === '0' || adminCount.count === 0) {
-    const hash = bcrypt.hashSync('admin123', 10);
-    db.prepare("INSERT INTO admins (username, password, display_name) VALUES (?, ?, ?)").run('admin', hash, 'Admin');
-  }
+  const hash = bcrypt.hashSync('admin123', 10);
+  db.prepare("INSERT OR IGNORE INTO admins (username, password, display_name) VALUES (?, ?, ?)").run('admin', hash, 'Admin');
 
-  const catCount = db.prepare('SELECT COUNT(*) as count FROM categories').get();
-  if (catCount.count === '0' || catCount.count === 0) {
-    const insertCat = db.prepare("INSERT INTO categories (name, slug, description, sort_order) VALUES (?, ?, ?, ?)");
-    insertCat.run('Pizza', 'pizza', 'Italienische Steinofenpizza, knusprig und frisch belegt', 1);
-    insertCat.run('Burger', 'burger', 'Saftige Burger mit handgemachten Pattys und frischen Zutaten', 2);
-    insertCat.run('Croque', 'croque', 'Französisch inspirierte Croques, goldbraun überbacken', 3);
-    insertCat.run('Salat', 'salat', 'Frische Salatkreationen mit hausgemachten Dressings', 4);
-    insertCat.run('Pasta', 'pasta', 'Italienische Pastagerichte, traditionell und kreativ', 5);
-    insertCat.run('Schnitzel', 'schnitzel', 'Knusprige Schnitzelvariationen', 6);
-    insertCat.run('Snacks', 'snacks', 'Kleine Köstlichkeiten für den Hunger zwischendurch', 7);
-    insertCat.run('Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8);
-    insertCat.run('Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9);
-    insertCat.run('Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10);
-  }
+  const insertCat = db.prepare("INSERT OR IGNORE INTO categories (name, slug, description, sort_order) VALUES (?, ?, ?, ?)");
+  insertCat.run('Pizza', 'pizza', 'Italienische Steinofenpizza, knusprig und frisch belegt', 1);
+  insertCat.run('Burger', 'burger', 'Saftige Burger mit handgemachten Pattys und frischen Zutaten', 2);
+  insertCat.run('Croque', 'croque', 'Französisch inspirierte Croques, goldbraun überbacken', 3);
+  insertCat.run('Salat', 'salat', 'Frische Salatkreationen mit hausgemachten Dressings', 4);
+  insertCat.run('Pasta', 'pasta', 'Italienische Pastagerichte, traditionell und kreativ', 5);
+  insertCat.run('Schnitzel', 'schnitzel', 'Knusprige Schnitzelvariationen', 6);
+  insertCat.run('Snacks', 'snacks', 'Kleine Köstlichkeiten für den Hunger zwischendurch', 7);
+  insertCat.run('Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8);
+  insertCat.run('Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9);
+  insertCat.run('Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10);
 
-  const prodCount = db.prepare('SELECT COUNT(*) as count FROM products').get();
-  if (prodCount.count === '0' || prodCount.count === 0) {
-    const insertProd = db.prepare("INSERT INTO products (category_id, name, slug, description, price, old_price, ingredients, is_featured, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  const insertProd = db.prepare("INSERT OR IGNORE INTO products (category_id, name, slug, description, price, old_price, ingredients, is_featured, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     insertProd.run(1, 'Margherita', 'margherita', 'Tomatensauce, Mozzarella, frischer Basilikum', 9.90, null, 'Tomatensauce, Mozzarella, Basilikum', 1, 1);
     insertProd.run(1, 'Salami', 'salami', 'Tomatensauce, Mozzarella, pikante Salami', 11.90, null, 'Tomatensauce, Mozzarella, Salami', 1, 2);
     insertProd.run(1, 'Prosciutto', 'prosciutto', 'Tomatensauce, Mozzarella, luftgetrockneter Schinken, Rucola', 13.90, null, 'Tomatensauce, Mozzarella, Schinken, Rucola', 0, 3);
@@ -165,11 +157,8 @@ function initialize() {
     insertProd.run(10, 'Mayonnaise', 'mayonnaise', 'Hausgemachte Mayonnaise 50ml', 1.50, null, null, 0, 26);
     insertProd.run(10, 'Knoblauchsauce', 'knoblauchsauce', 'Cremige Knoblauchsauce 50ml', 1.50, null, null, 0, 27);
     insertProd.run(10, 'Chillisauce', 'chillisauce', 'Scharfe Chillisauce 50ml', 1.50, null, null, 0, 28);
-  }
 
-  const settingCount = db.prepare('SELECT COUNT(*) as count FROM settings').get();
-  if (settingCount.count === '0' || settingCount.count === 0) {
-    const insertSetting = db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)");
+  const insertSetting = db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)");
     insertSetting.run('site_name', 'Ammaya');
     insertSetting.run('site_description', 'Ihr Restaurant für Pizza, Burger und mehr');
     insertSetting.run('address', 'Musterstraße 42, 10117 Berlin');
@@ -194,7 +183,6 @@ function initialize() {
     insertSetting.run('hero_pizza_image', '/images/pizza_hero.png');
     insertSetting.run('about_title', 'Unsere Philosophie');
     insertSetting.run('about_text', 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschließlich frische Zutaten und legen größten Wert auf Qualität.');
-  }
 }
 
 initialize();
