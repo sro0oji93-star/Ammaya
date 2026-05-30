@@ -187,3 +187,12 @@ a:hover{color:var(--red-dark)}
 @media(max-width:480px){
   .dashboard-stats{grid-template-columns:1fr}
 }
+.admin-table tr.unread td{background:rgba(184,0,31,.04);font-weight:500}
+.admin-table tr.unread td:first-child{border-left:3px solid var(--red)}
+.actions-cell{white-space:nowrap;width:100px}
+.actions-cell .btn{padding:6px 10px;font-size:12px;margin:0 2px}
+.btn-danger{color:#e53e3e!important;border-color:#e53e3e!important}
+.btn-danger:hover{background:#e53e3e!important;color:#fff!important}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.empty-state i{font-size:48px;margin-bottom:16px;opacity:.4}
+.empty-state p{font-size:16px}

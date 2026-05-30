@@ -44,7 +44,8 @@ router.get('/', auth, async (req, res) => {
     orders: (await db.get('SELECT COUNT(*) as count FROM orders')).count,
     pending: (await db.get("SELECT COUNT(*) as count FROM orders WHERE order_status = 'neu' OR order_status = 'in_bearbeitung'")).count,
     revenue: (await db.get("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE order_status != 'storniert'")).total,
-    recentOrders: await db.all('SELECT * FROM orders ORDER BY created_at DESC LIMIT 5')
+    recentOrders: await db.all('SELECT * FROM orders ORDER BY created_at DESC LIMIT 5'),
+    unreadMessages: (await db.get("SELECT COUNT(*) as count FROM contact_messages WHERE is_read = 0")).count
   };
   const settingsRows = await db.all('SELECT key, value FROM settings');
   const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
@@ -224,6 +225,21 @@ router.post('/einstellungen', auth, upload.fields([
     await db.run('UPDATE settings SET value = $1 WHERE key = $2', ['/uploads/' + req.files.hero_pizza_image[0].filename, 'hero_pizza_image']);
   }
   res.redirect('/admin/einstellungen');
+});
+
+router.get('/kontakt', auth, async (req, res) => {
+  const messages = await db.all('SELECT * FROM contact_messages ORDER BY created_at DESC');
+  res.render('admin/contact', { title: 'Kontaktnachrichten – Admin', messages });
+});
+
+router.post('/kontakt/gelesen/:id', auth, async (req, res) => {
+  await db.run('UPDATE contact_messages SET is_read = 1 WHERE id = $1', [req.params.id]);
+  res.redirect('/admin/kontakt');
+});
+
+router.post('/kontakt/loeschen/:id', auth, async (req, res) => {
+  await db.run('DELETE FROM contact_messages WHERE id = $1', [req.params.id]);
+  res.redirect('/admin/kontakt');
 });
 
 router.get('/passwort', auth, (req, res) => {

@@ -1,0 +1,45 @@
+<%- include('layout') %>
+
+<% if (messages.length === 0) { %>
+  <div class="empty-state">
+    <i class="fas fa-envelope-open-text"></i>
+    <p>Keine Nachrichten vorhanden.</p>
+  </div>
+<% } else { %>
+  <div class="table-container">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Name</th>
+          <th>E-Mail</th>
+          <th>Nachricht</th>
+          <th>Datum</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% messages.forEach(function(m) { %>
+        <tr class="<%= m.is_read ? '' : 'unread' %>">
+          <td><span class="status-badge <%= m.is_read ? 'status-geliefert' : 'status-neu' %>"><%= m.is_read ? 'Gelesen' : 'Neu' %></span></td>
+          <td><strong><%= m.name %></strong></td>
+          <td><a href="mailto:<%= m.email %>"><%= m.email %></a></td>
+          <td><%= m.message.length > 80 ? m.message.substring(0, 80) + '…' : m.message %></td>
+          <td><%= new Date(m.created_at).toLocaleDateString('de-DE') + ' ' + new Date(m.created_at).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) %></td>
+          <td class="actions-cell">
+            <% if (!m.is_read) { %>
+            <form method="POST" action="/admin/kontakt/gelesen/<%= m.id %>" style="display:inline">
+              <button type="submit" class="btn btn-sm btn-outline" title="Als gelesen markieren"><i class="fas fa-check"></i></button>
+            </form>
+            <% } %>
+            <form method="POST" action="/admin/kontakt/loeschen/<%= m.id %>" style="display:inline" onsubmit="return confirm('Nachricht löschen?')">
+              <button type="submit" class="btn btn-sm btn-outline btn-danger" title="Löschen"><i class="fas fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+<%- include('footer') %>
