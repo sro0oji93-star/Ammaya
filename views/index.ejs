@@ -5,8 +5,8 @@
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-food-grid">
-      <div class="hero-food-item hero-food-item--burger">
-        <img src="/images/revolution/5b6b6-burger.png" alt="">
+      <div class="hero-food-item hero-food-item--burger" id="heroFoodItem">
+        <img id="heroFoodImg" src="/images/revolution/5b6b6-burger.png" alt="">
       </div>
       <div class="hero-food-item hero-food-item--price">
         <span class="hero-price">12€</span>
@@ -340,4 +340,20 @@
   </div>
 </div>
 
+<script>
+(function() {
+  var img = document.getElementById('heroFoodImg');
+  if (!img) return;
+  var images = ['/images/revolution/5b6b6-burger.png', '/images/pizza_hero.png'];
+  var current = 0;
+  setInterval(function() {
+    current = (current + 1) % images.length;
+    img.style.opacity = '0';
+    setTimeout(function() {
+      img.src = images[current];
+      img.style.opacity = '1';
+    }, 300);
+  }, 5000);
+})();
+</script>
 <%- include('partials/footer') %>
