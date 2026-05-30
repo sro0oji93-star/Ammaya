@@ -1750,13 +1750,48 @@
   }
 }
 
-/* Fix header mobile - ensure mad-navigation-container toggle works */
+/* Fix header mobile - compact header */
 @media (max-width: 769px) {
   .mad-navigation-container {
     position: static !important;
   }
   .mad-navigation--vertical-sm {
     top: 100% !important;
+  }
+  /* Hide pre-header on mobile for compact header */
+  .mad-pre-header {
+    display: none !important;
+  }
+  #mad-header .mad-header-section--sticky-xl {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .mad-header-items {
+    padding: 8px 0 !important;
+    flex-wrap: nowrap !important;
+  }
+  .mad-header-items .mad-header-item:not(:first-child) {
+    width: auto !important;
+  }
+  .mad-header-items .mad-header-item .mad-our-info.type-2 {
+    display: none !important;
+  }
+  .mad-header-item .mad-logo-text {
+    font-size: 20px !important;
+  }
+  .mad-header-item .mad-logo {
+    max-width: 120px !important;
+    padding: 0 !important;
+  }
+  .mad-header-item .mad-actions {
+    gap: 8px !important;
+  }
+  .mad-actions .btn {
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+  }
+  #mad-header {
+    min-height: auto !important;
   }
 }
 
@@ -1870,6 +1905,38 @@
   .form-group [class*="form-col"] {
     width: 100% !important;
     max-width: 100% !important;
+  }
+}
+
+/* Fix overflow on mobile - Yummi template negative margins */
+@media (max-width: 768px) {
+  .container .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .container .row > [class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .mad-icon-boxes,
+  .mad-half-section,
+  .mad-entities.item-col-3 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .mad-icon-boxes > .mad-col,
+  .mad-half-section > .mad-col,
+  .mad-entities.item-col-3 > .mad-col {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  [class*="item-col-"] {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  [class*="item-col-"] > * {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 

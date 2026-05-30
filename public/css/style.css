@@ -1063,3 +1063,13 @@ img{max-width:100%}
     padding: 20px 12px;
   }
 }
+
+/* Fix mobile nav button icon (use Font Awesome instead of missing Linearicons font) */
+.mad-mobile-nav-btn::after {
+  font-family: 'Font Awesome 5 Free' !important;
+  font-weight: 900 !important;
+  content: "\f0c9" !important; /* fa-bars */
+}
+.mad-mobile-nav-btn.mad-opened::after {
+  content: "\f00d" !important; /* fa-times */
+}

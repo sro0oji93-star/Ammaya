@@ -192,12 +192,16 @@
 
 // Testimonial carousel
 (function() {
-  var testimonials = <%- typeof testimonials !== 'undefined' ? JSON.stringify(testimonials) : '[]' %>;
   var container = document.getElementById('testimonialSlide');
   var dots = document.querySelectorAll('.carousel-dot');
   var prevBtn = document.getElementById('testPrev');
   var nextBtn = document.getElementById('testNext');
-  if (!container || testimonials.length === 0) return;
+  if (!container) return;
+
+  // Fetch testimonials via data attribute or skip
+  var dataEl = document.getElementById('testimonialData');
+  var testimonials = dataEl ? JSON.parse(dataEl.textContent || '[]') : [];
+  if (testimonials.length === 0) { container.innerHTML = '<p style="text-align:center;color:#999">Noch keine Bewertungen</p>'; return; }
 
   var current = 0;
 
