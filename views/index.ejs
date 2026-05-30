@@ -1,164 +1,338 @@
 <%- include('partials/header') %>
 
-<div class="hero" id="hero">
-  <div class="hero-bg">
-    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=80" alt="Delicious food">
-  </div>
+<!-- Hero Section -->
+<section class="hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg')">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-badge">HERZLICH WILLKOMMEN</div>
-    <h1 class="hero-title"><%= typeof settings !== 'undefined' && settings.hero_title ? settings.hero_title : 'Genuss auf höchstem Niveau' %></h1>
-    <p class="hero-subtitle"><%= typeof settings !== 'undefined' && settings.hero_subtitle ? settings.hero_subtitle : 'Entdecken Sie unsere vielfältigen Gerichte' %></p>
+    <div class="hero-badge">WILLKOMMEN BEI <%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name.toUpperCase() : 'AMMAYA' %></div>
+    <h1 class="hero-title">Frisch & Lecker</h1>
+    <p class="hero-subtitle">Entdecken Sie unsere handverlesenen Gerichte – zubereitet mit den frischesten Zutaten und viel Liebe. Einfach online bestellen und genießen.</p>
     <div class="hero-actions">
-      <a href="/speisekarte" class="btn btn-yellow btn-lg">
-        <span>Speisekarte entdecken</span>
-        <i class="fas fa-arrow-right"></i>
-      </a>
-      <a href="/kontakt" class="btn btn-outline">
-        <span>Kontakt</span>
-        <i class="fas fa-envelope"></i>
-      </a>
+      <a href="/speisekarte" class="btn btn-yellow btn-lg"><span>Jetzt bestellen</span></a>
+      <a href="/speisekarte" class="btn btn-outline btn-lg" style="border-color:#fff;color:#fff">Speisekarte ansehen</a>
+    </div>
+    <div class="hero-scroll">
+      <i class="material-icons">expand_more</i>
+      <span>Scroll</span>
     </div>
   </div>
-  <div class="hero-scroll">
-    <span>Entdecken</span>
-    <i class="fas fa-chevron-down"></i>
+</section>
+
+<div class="container">
+
+  <!-- Category Icons -->
+  <div class="mad-menu-box with-slide-top">
+    <% categories.forEach(function(c) { %>
+    <div class="mad-col">
+      <a href="/speisekarte/kategorie/<%= c.slug %>" class="mad-menu-item">
+        <i class="mad-menu-icon">
+          <% 
+            var icons = { pizza:'fa-pizza-slice', burger:'fa-hamburger', croque:'fa-bread-slice', salat:'fa-leaf', pasta:'fa-utensils', schnitzel:'fa-drumstick-bite', snacks:'fa-cookie', getraenke:'fa-wine-glass-alt', 'snack-rolls':'fa-egg-roll', 'saucen-dips':'fa-tint' };
+            var icon = icons[c.slug] || 'fa-utensils';
+          %>
+          <i class="fas <%= icon %>" style="font-size:32px;color:#eb0029"></i>
+        </i>
+        <h6 class="mad-menu-title"><%= c.name %></h6>
+      </a>
+    </div>
+    <% }); %>
+  </div>
+
+  <!-- Features / About Section -->
+  <div class="mad-section">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="content-element-4">
+          <h2>Frisch zubereitet &<br> direkt zu Ihnen nach Hause</h2>
+          <p>Bei Ammaya bereiten wir jedes Gericht mit Liebe und den frischesten Zutaten zu. Ob Pizza, Pasta, Burger oder Salat – bei uns finden Sie garantiert Ihr neues Lieblingsgericht. Jetzt online bestellen und bequem liefern lassen.</p>
+        </div>
+        <div class="mad-icon-boxes item-col-2">
+          <div class="mad-col">
+            <article class="mad-icon-box">
+              <i class="mad-icon-box-icon"><span class="material-icons-outlined" style="font-size:36px;color:#eb0029">verified</span></i>
+              <div class="mad-icon-box-content">
+                <h6 class="mad-icon-box-title">Beste Qualität</h6>
+                <p>Nur frische und hochwertige Zutaten aus der Region.</p>
+              </div>
+            </article>
+          </div>
+          <div class="mad-col">
+            <article class="mad-icon-box">
+              <i class="mad-icon-box-icon"><span class="material-icons-outlined" style="font-size:36px;color:#eb0029">eco</span></i>
+              <div class="mad-icon-box-content">
+                <h6 class="mad-icon-box-title">Immer frisch</h6>
+                <p>Jedes Gericht wird erst nach Ihrer Bestellung zubereitet.</p>
+              </div>
+            </article>
+          </div>
+          <div class="mad-col">
+            <article class="mad-icon-box">
+              <i class="mad-icon-box-icon"><span class="material-icons-outlined" style="font-size:36px;color:#eb0029">restaurant_menu</span></i>
+              <div class="mad-icon-box-content">
+                <h6 class="mad-icon-box-title">Große Auswahl</h6>
+                <p>Vielfältige Gerichte für jeden Geschmack.</p>
+              </div>
+            </article>
+          </div>
+          <div class="mad-col">
+            <article class="mad-icon-box">
+              <i class="mad-icon-box-icon"><span class="material-icons-outlined" style="font-size:36px;color:#eb0029">delivery_dining</span></i>
+              <div class="mad-icon-box-content">
+                <h6 class="mad-icon-box-title">Schnelle Lieferung</h6>
+                <p>Heiß und frisch direkt zu Ihnen nach Hause.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="mad-img">
+          <img src="/images/688x944_img1.jpg" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- How It Works (full width, colored) -->
+<div class="mad-section mad-section--stretched mad-colorizer--scheme-color-2">
+  <div class="container">
+    <div class="mad-title-wrap align-center">
+      <h2 class="mad-page-title">So funktioniert's</h2>
+      <p>In nur drei einfachen Schritten zu Ihrem Lieblingsgericht. <br> Bestellen Sie bequem von zu Hause aus.</p>
+    </div>
+    <div class="mad-icon-boxes with-arrows style-3 align-center item-col-3">
+      <div class="mad-col">
+        <article class="mad-icon-box">
+          <i class="mad-icon-box-icon"><span class="material-icons-outlined" style="font-size:48px;color:#eb0029">restaurant</span></i>
+          <div class="mad-icon-box-content">
+            <h5 class="mad-icon-box-title">1. Gericht auswählen</h5>
+            <p>Stöbern Sie durch unsere Speisekarte und wählen Sie Ihre Favoriten.</p>
+          </div>
+        </article>
+      </div>
+      <div class="mad-col">
+        <article class="mad-icon-box">
+          <i class="mad-icon-box-icon"><span class="material-icons-outlined" style="font-size:48px;color:#eb0029">payments</span></i>
+          <div class="mad-icon-box-content">
+            <h5 class="mad-icon-box-title">2. Bezahlen</h5>
+            <p>Zahlen Sie bequem per Karte, PayPal oder bar bei Lieferung.</p>
+          </div>
+        </article>
+      </div>
+      <div class="mad-col">
+        <article class="mad-icon-box">
+          <i class="mad-icon-box-icon"><span class="material-icons-outlined" style="font-size:48px;color:#eb0029">delivery_dining</span></i>
+          <div class="mad-icon-box-content">
+            <h5 class="mad-icon-box-title">3. Genießen</h5>
+            <p>Ihr Essen wird frisch zubereitet und direkt zu Ihnen geliefert.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="align-center">
+      <a href="/speisekarte" class="btn btn-style-3 btn-big">Jetzt bestellen</a>
+    </div>
   </div>
 </div>
 
-<% if (typeof banners !== 'undefined' && banners.length > 0) { %>
-<section class="banner-section">
-  <div class="banner-slider" id="bannerSlider">
-    <% banners.forEach(function(b) { %>
-    <div class="banner-slide" style="<%= b.image ? 'background-image: url(' + b.image + ')' : '' %>">
-      <div class="banner-content">
-        <h3><%= b.title %></h3>
-        <% if (b.subtitle) { %><p><%= b.subtitle %></p><% } %>
-        <% if (b.link) { %><a href="<%= b.link %>" class="btn btn-primary btn-sm">Mehr erfahren</a><% } %>
-      </div>
-    </div>
-    <% }) %>
-  </div>
-</section>
-<% } %>
-
-<section class="section featured-section">
+<!-- Tabbed Menu -->
+<div class="mad-section">
   <div class="container">
-    <div class="section-header">
-      <span class="section-tag">EMPFOHLEN</span>
-      <h2 class="section-title">Unsere Spezialitäten</h2>
-      <p class="section-desc">Von unserem Küchenteam für Sie zusammengestellt</p>
-    </div>
-    <div class="featured-grid">
-      <% featured.forEach(function(p) { %>
-      <div class="menu-card" data-id="<%= p.id %>">
-        <div class="menu-card-image">
-          <div class="menu-card-img" style="<%= p.image ? 'background-image: url(' + p.image + ');background-size:cover;background-position:center;' : 'background: linear-gradient(135deg, #1a1a2e 0%, #2a1a3e 100%);' %>">
-            <% if (!p.image) { %>
-            <div class="menu-card-placeholder">
-              <i class="fas fa-<%= p.category_id == 6 ? 'wine-glass-alt' : (p.category_id == 5 ? 'ice-cream' : (p.category_id == 4 ? 'leaf' : 'drumstick-bite')) %>"></i>
+    <h2 class="mad-page-title align-center">Entdecken Sie unsere Gerichte</h2>
+    <div class="mad-tabs">
+      <div role="tablist" aria-label="Kategorien" class="mad-tabs-nav justify-content-center">
+        <% categories.forEach(function(c, i) { %>
+        <span<%- i === 0 ? ' class="mad-active"' : '' %>><a id="tab-<%= c.id %>-link" href="#tab-<%= c.id %>" role="tab" aria-selected="<%= i === 0 %>" aria-controls="tab-<%= c.id %>" class="mad-tab-link"><%= c.name %></a></span>
+        <% }); %>
+      </div>
+      <div class="mad-tabs-container">
+        <% categories.forEach(function(c, ci) { %>
+        <% var catProducts = products.filter(function(p) { return p.category_id === c.id; }); %>
+        <div id="tab-<%= c.id %>" tabindex="0" role="tabpanel" aria-labelledby="tab-<%= c.id %>-link" class="mad-tab<%- ci === 0 ? ' mad-active' : '' %>">
+          <div class="mad-products mad-grid mad-grid--cols-4">
+            <% catProducts.forEach(function(p) { %>
+            <div class="mad-grid-item">
+              <div class="mad-product">
+                <figure class="mad-product-image">
+                  <% if (p.image) { %>
+                  <a href="/speisekarte/produkt/<%= p.slug %>"><img src="<%= p.image %>" alt="<%= p.name %>"></a>
+                  <% } else { %>
+                  <a href="/speisekarte/produkt/<%= p.slug %>" style="display:flex;align-items:center;justify-content:center;height:200px;background:#f8f5f0"><i class="fas fa-utensils" style="font-size:48px;color:#ccc"></i></a>
+                  <% } %>
+                </figure>
+                <div class="mad-product-description">
+                  <h4 class="mad-product-title"><a href="/speisekarte/produkt/<%= p.slug %>" class="mad-link"><%= p.name %></a></h4>
+                  <p><%= p.description ? p.description.substring(0, 80) + (p.description.length > 80 ? '...' : '') : '' %></p>
+                </div>
+                <div class="mad-product-calc">
+                  <span class="mad-product-price"><%= p.price.toFixed(2) %> €</span>
+                  <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">In den Warenkorb</button>
+                </div>
+              </div>
             </div>
-            <% } %>
+            <% }); %>
           </div>
-          <% if (p.old_price) { %>
-          <span class="menu-card-badge">−<%= Math.round((1 - p.price / p.old_price) * 100) %>%</span>
-          <% } %>
-          <button class="menu-card-cart add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">
-            <i class="fas fa-plus"></i>
-          </button>
         </div>
-        <div class="menu-card-body">
-          <h3 class="menu-card-title"><%= p.name %></h3>
-          <p class="menu-card-desc"><%= p.description %></p>
-          <div class="menu-card-footer">
-            <div class="menu-card-price">
-              <% if (p.old_price) { %>
-              <span class="price-old"><%= p.old_price.toFixed(2) %> €</span>
-              <% } %>
-              <span class="price-current"><%= p.price.toFixed(2) %> €</span>
+        <% }); %>
+      </div>
+    </div>
+    <div class="align-center">
+      <a href="/speisekarte" class="btn btn-style-2 btn-big">Alle ansehen</a>
+    </div>
+  </div>
+</div>
+
+<!-- Half-Section: Create Your Own -->
+<div class="mad-section no-pd mad-section--stretched-content-no-px">
+  <div class="mad-half-section">
+    <div class="mad-col">
+      <div class="mad-half-section-item" style="background:linear-gradient(135deg,rgba(35,34,35,.7),rgba(35,34,35,.4)),url('/images/revolution/5b6b6-burger.png') center/cover">
+        <div class="mad-half-content">
+          <div class="content-element-6">
+            <h2 class="mad-page-title">Ihre eigene<br>Kreation</h2>
+            <p>Stellen Sie sich Ihre Lieblingspizza oder Ihren Burger selbst zusammen.</p>
+          </div>
+          <a href="/speisekarte" class="btn btn-style-3 btn-big">Jetzt kombinieren</a>
+        </div>
+      </div>
+    </div>
+    <div class="mad-col">
+      <div class="mad-half-section-item" style="background:linear-gradient(135deg,rgba(35,34,35,.7),rgba(35,34,35,.4)),url('/images/384x384_img3.jpg') center/cover">
+        <div class="mad-half-content">
+          <div class="content-element-6">
+            <h2 class="mad-page-title">Angebote &<br>Aktionen</h2>
+            <p>Verpassen Sie nicht unsere aktuellen Angebote und Sparmenüs.</p>
+          </div>
+          <a href="/speisekarte" class="btn btn-style-3 btn-big">Angebote entdecken</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<div class="mad-section">
+  <div class="container">
+    <h2 class="mad-page-title align-center">Das sagen unsere Gäste</h2>
+    <div class="mad-testimonials">
+      <div class="mad-grid mad-grid--cols-2 owl-carousel" id="testimonialCarousel">
+        <% testimonials.forEach(function(t) { %>
+        <div class="mad-grid-item">
+          <div class="mad-testimonial">
+            <div data-estimate="5" class="mad-rating"></div>
+            <div class="mad-testimonial-info">
+              <blockquote><p>"<%= t.message %>"</p></blockquote>
+            </div>
+            <div class="mad-author">
+              <div class="mad-author-img"><span class="material-icons" style="font-size:36px;color:#eb0029">person</span></div>
+              <div class="mad-author-info">
+                <cite><%= t.name %></cite>
+              </div>
             </div>
           </div>
         </div>
+        <% }); %>
       </div>
-      <% }) %>
     </div>
   </div>
-</section>
+</div>
 
-<section class="section about-section">
+<!-- App Download -->
+<div class="mad-section mad-col-img mad-section--stretched mad-colorizer--scheme-" style="background:linear-gradient(135deg,rgba(35,34,35,.85),rgba(35,34,35,.7)),url('/images/revolution/6cbea-bg1.jpg') center/cover">
   <div class="container">
-    <div class="about-grid">
-      <div class="about-image">
-        <div class="about-image-frame">
-          <div class="about-image-content">
-            <div class="about-image-icon">✦</div>
-            <p>Seit 2020</p>
-          </div>
-        </div>
-        <div class="about-image-deco"></div>
-      </div>
-      <div class="about-content">
-        <span class="section-tag">ÜBER UNS</span>
-        <h2 class="section-title"><%= typeof settings !== 'undefined' && settings.about_title ? settings.about_title : 'Unsere Philosophie' %></h2>
-        <p class="about-text"><%= typeof settings !== 'undefined' && settings.about_text ? settings.about_text : 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten.' %></p>
-        <div class="about-stats">
-          <div class="about-stat">
-            <span class="stat-number" data-target="15">0</span>
-            <span class="stat-label">Gerichte</span>
-          </div>
-          <div class="about-stat">
-            <span class="stat-number" data-target="100">0</span>
-            <span class="stat-label">% Frische</span>
-          </div>
-          <div class="about-stat">
-            <span class="stat-number" data-target="4.9">0</span>
-            <span class="stat-label">Bewertung</span>
-          </div>
+    <div class="row">
+      <div class="col-lg-5 col-sm-10">
+        <h2 style="color:#fff;font-style:italic">Bestellen & Bezahlen<br>in wenigen Minuten</h2>
+        <p class="content-element-6" style="color:rgba(255,255,255,.7)">Laden Sie unsere App herunter und bestellen Sie ganz einfach von unterwegs. Verfolgen Sie Ihre Bestellung in Echtzeit.</p>
+        <div class="btn-set big-btns">
+          <a href="#" class="app-btn"><i class="fab fa-apple"></i> App Store</a>
+          <a href="#" class="app-btn"><i class="fab fa-google-play"></i> Google Play</a>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<% if (typeof testimonials !== 'undefined' && testimonials.length > 0) { %>
-<section class="section testimonials-section">
+<!-- Latest News -->
+<div class="mad-section mad-section--stretched mad-colorizer--scheme-color-5">
   <div class="container">
-    <div class="section-header">
-      <span class="section-tag">MEINUNGEN</span>
-      <h2 class="section-title">Was unsere Gäste sagen</h2>
-    </div>
-    <div class="testimonials-grid">
-      <% testimonials.forEach(function(t) { %>
-      <div class="testimonial-card">
-        <div class="testimonial-stars">
-          <% for (var i = 0; i < 5; i++) { %>
-          <i class="fas fa-star <%= i < t.rating ? 'active' : '' %>"></i>
-          <% } %>
-        </div>
-        <p class="testimonial-text">"<%= t.text %>"</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar"><%= t.name.charAt(0) %></div>
-          <span><%= t.name %></span>
-        </div>
+    <h2 class="mad-page-title align-center">Neueste Beiträge</h2>
+    <div class="mad-entities item-col-3 type-3">
+      <div class="mad-col">
+        <article class="mad-entity">
+          <div class="mad-entity-media">
+            <img src="/images/448x288_img1.jpg" alt="">
+          </div>
+          <div class="mad-entity-body">
+            <div class="mad-entity-tags">
+              <span>Mai 2026</span>
+              <span class="mad-in">Neuigkeiten</span>
+            </div>
+            <h5 class="mad-entity-title"><a href="#" class="mad-link">Neue Frühlingsgerichte</a></h5>
+            <p>Entdecken Sie unsere neuen saisonalen Gerichte mit frischen Zutaten der Saison.</p>
+            <a href="#" class="mad-read-more small-size">Mehr erfahren</a>
+          </div>
+        </article>
       </div>
-      <% }) %>
+      <div class="mad-col">
+        <article class="mad-entity">
+          <div class="mad-entity-media">
+            <img src="/images/448x288_img2.jpg" alt="">
+          </div>
+          <div class="mad-entity-body">
+            <div class="mad-entity-tags">
+              <span>April 2026</span>
+              <span>Angebote</span>
+            </div>
+            <h5 class="mad-entity-title"><a href="#" class="mad-link">Happy Hour Angebote</a></h5>
+            <p>Jeden Montag und Dienstag: 20% Rabatt auf alle Burger und Getränke.</p>
+            <a href="#" class="mad-read-more small-size">Mehr erfahren</a>
+          </div>
+        </article>
+      </div>
+      <div class="mad-col">
+        <article class="mad-entity">
+          <div class="mad-entity-media">
+            <img src="/images/448x288_img3.jpg" alt="">
+          </div>
+          <div class="mad-entity-body">
+            <div class="mad-entity-tags">
+              <span>März 2026</span>
+              <span>Events</span>
+            </div>
+            <h5 class="mad-entity-title"><a href="#" class="mad-link">Pasta-Wochen bei Ammaya</a></h5>
+            <p>Genießen Sie unsere hausgemachten Pastagerichte zu besonderen Preisen.</p>
+            <a href="#" class="mad-read-more small-size">Mehr erfahren</a>
+          </div>
+        </article>
+      </div>
     </div>
   </div>
-</section>
-<% } %>
+</div>
 
-<section class="section cta-section">
-  <div class="container">
-    <div class="cta-card">
-      <div class="cta-deco">✦</div>
-      <h2 class="cta-title">Bereit für ein Geschmackserlebnis?</h2>
-      <p class="cta-text">Bestellen Sie jetzt bequem online und genießen Sie unsere Köstlichkeiten zu Hause.</p>
-      <a href="/speisekarte" class="btn btn-yellow btn-lg">
-        <span>Jetzt bestellen</span>
-        <i class="fas fa-arrow-right"></i>
-      </a>
+<!-- Instafeed-style grid -->
+<div class="mad-section no-pd mad-section--stretched-content-no-px">
+  <div class="mad-instafeed">
+    <div class="mad-grid item-col-5 no-gutters">
+      <div class="mad-col">
+        <img src="/images/264x264_img1.jpg" alt="">
+      </div>
+      <div class="mad-col">
+        <img src="/images/264x264_img2.jpg" alt="">
+      </div>
+      <div class="mad-col">
+        <img src="/images/448x288_img3.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div class="mad-col">
+        <img src="/images/384x384_img4.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div class="mad-col">
+        <img src="/images/384x384_img5.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
+      </div>
     </div>
   </div>
-</section>
+</div>
 
 <%- include('partials/footer') %>

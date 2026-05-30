@@ -1,50 +1,103 @@
-
-<footer class="footer">
-  <div class="footer-decoration">
-    <span>✦</span><span>✦</span><span>✦</span>
-  </div>
-  <div class="footer-container">
-    <div class="footer-grid">
-      <div class="footer-info">
-        <h3 class="footer-logo"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Feinschmeckerei' %></h3>
-        <p class="footer-desc">Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Frisch zubereitet mit den besten Zutaten – für Ihren Genuss.</p>
-        <div class="footer-social">
-          <a href="<%= typeof settings !== 'undefined' && settings.social_instagram ? settings.social_instagram : '#' %>" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="<%= typeof settings !== 'undefined' && settings.social_facebook ? settings.social_facebook : '#' %>" target="_blank" rel="noopener" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="<%= typeof settings !== 'undefined' && settings.social_tiktok ? settings.social_tiktok : '#' %>" target="_blank" rel="noopener" class="social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+<!--================ Footer ================-->
+<footer id="mad-footer" class="mad-footer">
+  <div class="mad-footer-main">
+    <div class="container">
+      <div class="row vr-size-1">
+        <div class="col-lg-6">
+          <section class="mad-widget">
+            <div class="content-element-5">
+              <a href="/" class="mad-logo"><img src="/images/logo.png" alt="<%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %>"></a>
+            </div>
+            <div class="mad-our-info vr-type">
+              <div class="mad-info"><i class="material-icons-outlined">location_on</i> <span><%= typeof settings !== 'undefined' && settings.address ? settings.address : 'Berlin, Deutschland' %></span></div>
+              <div class="mad-info"><i class="material-icons-outlined">call</i> <span><%= typeof settings !== 'undefined' && settings.phone ? settings.phone : '+49 30 123456789' %></span></div>
+              <div class="mad-info"><i class="material-icons">mail_outline</i> <a href="mailto:<%= typeof settings !== 'undefined' && settings.email ? settings.email : '' %>" class="mad-link"><%= typeof settings !== 'undefined' && settings.email ? settings.email : 'info@ammaya.de' %></a></div>
+              <div class="mad-info"><i class="material-icons">access_time</i> <span><%= typeof settings !== 'undefined' && settings.opening_hours ? settings.opening_hours : 'Mo–So: 11:30 – 22:30' %></span></div>
+            </div>
+          </section>
+        </div>
+        <div class="col-lg-2">
+          <section class="mad-widget">
+            <h5 class="mad-widget-title">Menü</h5>
+            <div class="mad-vr-list">
+              <ul>
+                <li><a href="/speisekarte" class="mad-link">Speisekarte</a></li>
+                <li><a href="/warenkorb" class="mad-link">Warenkorb</a></li>
+                <li><a href="/bestellung" class="mad-link">Zur Kasse</a></li>
+              </ul>
+            </div>
+          </section>
+        </div>
+        <div class="col-lg-2">
+          <section class="mad-widget">
+            <h5 class="mad-widget-title">Unternehmen</h5>
+            <div class="mad-vr-list">
+              <ul>
+                <li><a href="/" class="mad-link">Startseite</a></li>
+                <li><a href="/kontakt" class="mad-link">Kontakt</a></li>
+                <li><a href="/admin" class="mad-link">Admin</a></li>
+              </ul>
+            </div>
+          </section>
+        </div>
+        <div class="col-lg-2">
+          <section class="mad-widget">
+            <h5 class="mad-widget-title">Support</h5>
+            <div class="mad-vr-list">
+              <ul>
+                <li><a href="/kontakt" class="mad-link">Kontakt</a></li>
+                <li><a href="/speisekarte" class="mad-link">Bestellen</a></li>
+                <li><a href="/warenkorb" class="mad-link">FAQ</a></li>
+              </ul>
+            </div>
+          </section>
         </div>
       </div>
-      <div class="footer-links">
-        <h4>Navigation</h4>
-        <a href="/">Startseite</a>
-        <a href="/speisekarte">Speisekarte</a>
-        <a href="/warenkorb">Warenkorb</a>
-        <a href="/kontakt">Kontakt</a>
-      </div>
-      <div class="footer-hours">
-        <h4>Öffnungszeiten</h4>
-        <p><%= typeof settings !== 'undefined' && settings.opening_hours ? settings.opening_hours : 'Mo–So: 11:30 – 22:30' %></p>
-        <p class="footer-note">Küche durchgehend warme Küche</p>
-      </div>
-      <div class="footer-contact">
-        <h4>Kontakt</h4>
-        <p><i class="fas fa-map-marker-alt"></i> <%= typeof settings !== 'undefined' && settings.address ? settings.address : 'Berlin' %></p>
-        <p><i class="fas fa-phone"></i> <a href="tel:<%= typeof settings !== 'undefined' && settings.phone ? settings.phone : '' %>"><%= typeof settings !== 'undefined' && settings.phone ? settings.phone : '' %></a></p>
-        <p><i class="fas fa-envelope"></i> <a href="mailto:<%= typeof settings !== 'undefined' && settings.email ? settings.email : '' %>"><%= typeof settings !== 'undefined' && settings.email ? settings.email : '' %></a></p>
-      </div>
     </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 <%- typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Feinschmeckerei' %>. Alle Rechte vorbehalten. | Mit <span class="footer-heart">❤</span> für Genießer gemacht</p>
+  </div>
+  <div class="mad-footer-bottom">
+    <div class="container">
+      <p class="copyrights">Copyright © 2025 <a href="/" class="mad-link"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %></a>. Alle Rechte vorbehalten.</p>
+      <div class="mad-social-icons">
+        <ul>
+          <li><a href="<%= typeof settings !== 'undefined' && settings.social_facebook ? settings.social_facebook : '#' %>" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a></li>
+          <li><a href="<%= typeof settings !== 'undefined' && settings.social_instagram ? settings.social_instagram : '#' %>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a></li>
+          <li><a href="<%= typeof settings !== 'undefined' && settings.social_tiktok ? settings.social_tiktok : '#' %>" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </footer>
+<!--================ End of Footer ================-->
+
+</div>
+<!--================ End of #mad-page-wrapper ================-->
 
 <div class="cart-toast" id="cartToast">
   <i class="fas fa-check-circle"></i>
   <span id="cartToastMsg">Zum Warenkorb hinzugefügt!</span>
 </div>
 
+<!-- Vendor JS -->
+<script src="/vendors/jquery-3.3.1.min.js"></script>
+<script src="/vendors/owl-carousel/owl.carousel.min.js"></script>
+<!-- Custom JS -->
 <script src="/js/main.js"></script>
 <script src="/js/cart.js"></script>
+
+<!-- Cart overlay / menu toggle -->
+<script>
+// Mobile nav toggle
+document.addEventListener('DOMContentLoaded', function() {
+  // Mobile toggle
+  var toggle = document.querySelector('.mad-navigation-container');
+  // Close mobile menu on link click
+  document.querySelectorAll('.mad-navigation a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.querySelector('.mad-navigation-container').classList.remove('opened');
+    });
+  });
+});
+</script>
 </body>
 </html>

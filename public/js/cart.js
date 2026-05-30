@@ -105,7 +105,8 @@ var Cart = (function() {
   }
 
   function renderCartBadge() {
-    var badge = document.getElementById('cartBadge');
+    var badge = document.getElementById('cartBadgeMad');
+    if (!badge) badge = document.getElementById('cartBadge');
     if (badge) {
       var count = items.reduce(function(s, i) { return s + i.qty; }, 0);
       badge.textContent = count;

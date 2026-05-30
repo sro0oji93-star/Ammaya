@@ -108,6 +108,7 @@ function initialize() {
       active INTEGER DEFAULT 1,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+
   `);
 
   const adminCount = db.prepare('SELECT COUNT(*) as count FROM admins').get();

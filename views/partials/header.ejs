@@ -9,7 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Material+Icons%7CMaterial+Icons+Outlined%7CMaterial+Icons+Two+Tone%7CMaterial+Icons+Round%7CMaterial+Icons+Sharp" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="/css/linearicons.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/yummi-full.css">
+  <link rel="stylesheet" href="/css/responsive.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
   <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Ammaya' %>">
@@ -17,54 +22,65 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
 </head>
-<body class="<%= typeof bodyClass !== 'undefined' ? bodyClass : '' %>">
+<body class="<%= typeof bodyClass !== 'undefined' ? bodyClass : '' %>"<%= typeof activeMenu !== 'undefined' ? ' data-active="' + activeMenu + '"' : '' %>>
 
-<header class="site-header">
-<!-- Pre-header -->
-<div class="pre-header">
-  <div class="container">
-    <div class="pre-header-inner">
-      <div class="pre-header-info">
-        <span class="pre-header-item">
-          <i class="fas fa-map-marker-alt"></i>
-          <span><%= typeof settings !== 'undefined' && settings.address ? settings.address : 'Berlin' %></span>
-        </span>
-        <span class="pre-header-item">
-          <i class="fas fa-clock"></i>
-          <span><%= typeof settings !== 'undefined' && settings.opening_hours ? settings.opening_hours : 'Mo–So: 11:30 – 22:30' %></span>
-        </span>
+<div id="mad-page-wrapper" class="mad-page-wrapper">
+
+<!--================ Header ================-->
+<header id="mad-header" class="mad-header<%= typeof bodyClass !== 'undefined' && bodyClass === 'homepage' ? ' mad-header--transparent' : '' %>">
+  <div class="mad-pre-header">
+    <div class="mad-our-info">
+      <div class="mad-info"><i class="material-icons-outlined">location_on</i> <span><%= typeof settings !== 'undefined' && settings.address ? settings.address : 'Berlin, Deutschland' %></span></div>
+      <div class="mad-info"><i class="material-icons">access_time</i> <span><%= typeof settings !== 'undefined' && settings.opening_hours ? settings.opening_hours : 'Mo–So: 11:30 – 22:30' %></span></div>
+    </div>
+    <div class="mad-quick-links">
+      <a href="/speisekarte">Speisekarte</a>
+      <span>|</span>
+      <a href="/kontakt">Kontakt</a>
+      <span>|</span>
+      <a href="/warenkorb">Warenkorb</a>
+    </div>
+  </div>
+  <div class="mad-header-section--sticky-xl">
+    <div class="mad-header-items">
+      <div class="mad-header-item">
+        <a href="/" class="mad-logo"><span class="mad-logo-text"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %></span></a>
       </div>
-      <div class="pre-header-links">
-        <a href="/speisekarte">Speisekarte</a>
-        <span class="pre-header-sep">|</span>
-        <a href="/kontakt">Kontakt</a>
+      <!--================ Navigation ================-->
+      <nav class="mad-navigation-container">
+        <ul class="mad-navigation mad-navigation--vertical-sm">
+          <li class="menu-item<%= typeof bodyClass !== 'undefined' && bodyClass === 'homepage' ? ' current-menu-item' : '' %>"><a href="/">Start</a></li>
+          <li class="menu-item<%= typeof activeMenu !== 'undefined' && activeMenu === 'speisekarte' ? ' current-menu-item' : '' %>"><a href="/speisekarte">Speisekarte</a></li>
+          <li class="menu-item<%= typeof activeMenu !== 'undefined' && activeMenu === 'kontakt' ? ' current-menu-item' : '' %>"><a href="/kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <!--================ End of Navigation ================-->
+      <button class="mad-mobile-nav-btn"></button>
+      <div class="mad-header-item">
+        <div class="mad-our-info type-2">
+          <div class="mad-info">
+            <i class="material-icons-outlined">call</i>
+            <div class="mad-info-content">
+              <span>Bestellhotline</span>
+              <div class="mad-info-title"><%= typeof settings !== 'undefined' && settings.phone ? settings.phone : '+49 30 123456789' %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mad-header-item">
+        <div class="mad-actions">
+          <div class="mad-item">
+            <a href="/warenkorb" class="mad-item-link cart-link-mad" id="cartLink">
+              <i class="material-icons-outlined">shopping_cart</i>
+              <span class="mad-cart-count" id="cartBadgeMad">0</span>
+            </a>
+          </div>
+          <div class="mad-item">
+            <a href="/speisekarte" class="btn btn-small"><span>Bestellen</span></a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- Navbar -->
-<nav class="navbar" id="navbar">
-  <div class="container">
-    <div class="navbar-inner">
-      <a href="/" class="nav-logo">
-        <span class="nav-logo-icon">A</span>
-        <span class="nav-logo-text"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %></span>
-      </a>
-      <div class="nav-toggle" id="navToggle" aria-label="Menü öffnen">
-        <span></span><span></span><span></span>
-      </div>
-      <div class="nav-menu" id="navMenu">
-        <a href="/" class="nav-link"><i class="fas fa-home"></i> Start</a>
-        <a href="/speisekarte" class="nav-link"><i class="fas fa-utensils"></i> Speisekarte</a>
-        <a href="/warenkorb" class="nav-link cart-link">
-          <i class="fas fa-shopping-bag"></i> Warenkorb
-          <span class="cart-badge" id="cartBadge">0</span>
-        </a>
-        <a href="/kontakt" class="nav-link"><i class="fas fa-envelope"></i> Kontakt</a>
-        <a href="/admin" class="nav-link" style="opacity:.4;font-size:13px"><i class="fas fa-lock"></i></a>
-      </div>
-    </div>
-  </div>
-</nav>
 </header>
+<!--================ End of Header ================-->

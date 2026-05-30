@@ -47,7 +47,8 @@ router.get('/produkt/:slug', (req, res) => {
     title: product.name + ' – ' + settings.site_name,
     product,
     related,
-    settings
+    settings,
+    activeMenu: 'speisekarte'
   });
 });
 

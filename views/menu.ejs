@@ -1,11 +1,11 @@
 <%- include('partials/header') %>
 
-<div class="page-hero menu-hero" style="background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80');background-size:cover;background-position:center;position:relative">
-  <div class="page-hero-overlay" style="position:absolute;inset:0;background:rgba(35,34,35,.5);z-index:1"></div>
-  <div class="page-hero-content" style="position:relative;z-index:2">
+<div class="page-hero menu-hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg');background-size:cover;background-position:center;position:relative">
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
     <div class="page-hero-badge">SPEISEKARTE</div>
     <h1 class="page-hero-title" style="color:#fff">Unsere Speisekarte</h1>
-    <nav class="menu-breadcrumb"><a href="/">Start</a> / <span>Speisekarte</span></nav>
+    <nav class="menu-breadcrumb" style="color:rgba(255,255,255,.6);font-size:13px"><a href="/" style="color:#ebe117">Start</a> / <span>Speisekarte</span></nav>
   </div>
 </div>
 
@@ -33,7 +33,7 @@
           </div>
           <div class="menu-spec-info">
             <div class="menu-spec-header">
-              <h3 class="menu-spec-title"><%= p.name %></h3>
+              <h3 class="menu-spec-title"><a href="/speisekarte/produkt/<%= p.slug %>" style="color:#232223;text-decoration:none;transition:color .3s" onmouseover="this.style.color='#eb0029'" onmouseout="this.style.color='#232223'"><%= p.name %></a></h3>
               <span class="menu-spec-line"></span>
               <span class="menu-spec-price"><%= p.price.toFixed(2) %> €</span>
             </div>

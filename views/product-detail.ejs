@@ -1,93 +1,96 @@
 <%- include('partials/header') %>
 
-<div class="page-hero product-hero">
-  <div class="page-hero-overlay"></div>
-  <div class="page-hero-content">
-    <div class="page-hero-badge"><%= product.category_name %></div>
-    <h1 class="page-hero-title"><%= product.name %></h1>
+<div class="mad-breadcrumb">
+  <div class="container">
+    <nav class="mad-breadcrumb-path"><span><a href="/">Home</a></span> / <span><a href="/speisekarte">Speisekarte</a></span> / <span><%= product.category_name %></span> / <span><%= product.name %></span>
+    </nav>
   </div>
 </div>
 
-<section class="section product-detail-section">
+<div class="mad-content">
   <div class="container">
-    <div class="product-detail">
-      <div class="product-detail-image">
-        <div class="product-detail-img" style="<%= product.image ? 'background-image: url(' + product.image + ');background-size:cover;background-position:center;' : 'background: linear-gradient(135deg, #1a1a2e 0%, #2a1a3e 100%);' %>">
-          <% if (!product.image) { %>
-          <div class="product-detail-placeholder">
-            <i class="fas fa-utensils"></i>
+    <div class="content-element-13">
+      <div class="mad-product mad-product-single">
+        <div class="row">
+          <div class="col-xl-6">
+            <div class="image-preview-container">
+              <div class="image-preview">
+                <a href="<%= product.image || '/images/384x384_img1.jpg' %>" data-fancybox="group">
+                  <img id="zoom-image" src="<%= product.image || '/images/384x384_img1.jpg' %>" alt="<%= product.name %>">
+                </a>
+              </div>
+            </div>
           </div>
-          <% } %>
-        </div>
-        <% if (product.old_price) { %>
-        <span class="product-detail-badge">−<%= Math.round((1 - product.price / product.old_price) * 100) %>% SPAREN</span>
-        <% } %>
-      </div>
-      <div class="product-detail-info">
-        <span class="section-tag"><%= product.category_name %></span>
-        <h2><%= product.name %></h2>
-        <div class="product-detail-price">
-          <% if (product.old_price) { %>
-          <span class="price-old"><%= product.old_price.toFixed(2) %> €</span>
-          <% } %>
-          <span class="price-current"><%= product.price.toFixed(2) %> €</span>
-        </div>
-        <p class="product-detail-desc"><%= product.description %></p>
-        <% if (product.ingredients) { %>
-        <div class="product-detail-ingredients">
-          <h4><i class="fas fa-seedling"></i> Zutaten</h4>
-          <p><%= product.ingredients %></p>
-        </div>
-        <% } %>
-        <div class="product-detail-actions">
-          <div class="quantity-selector">
-            <button class="qty-btn" id="qtyMinus">−</button>
-            <input type="number" id="qtyInput" value="1" min="1" max="20">
-            <button class="qty-btn" id="qtyPlus">+</button>
+          <div class="col-xl-6">
+            <h2 class="mad-product-title"><%= product.name %></h2>
+            <p><%= product.description %></p>
+            <div class="mad-product-calc">
+              <% if (product.old_price) { %>
+                <span class="mad-product-price" style="text-decoration:line-through;color:#999;font-size:16px;margin-right:8px"><%= product.old_price.toFixed(2) %> €</span>
+              <% } %>
+              <span class="mad-product-price"><%= product.price.toFixed(2) %> €</span>
+            </div>
+            <div class="form-control content-element-6">
+              <div class="content-element-2">
+                <p class="mad-text-color-2 content-element">Anzahl:</p>
+                <div class="btn-set big-btns">
+                  <div class="quantity size-2">
+                    <input type="text" id="qtyInput" value="1" readonly>
+                    <button type="button" class="qty-plus"><i class="material-icons">add</i></button>
+                    <button type="button" class="qty-minus"><i class="material-icons">remove</i></button>
+                  </div>
+                  <button class="btn btn-big btn-style-3 add-to-cart" data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>">
+                    <i class="material-icons-outlined">shopping_cart</i><span>In den Warenkorb</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <% if (product.ingredients) { %>
+            <div class="content-element-6">
+              <div class="mad-tabs">
+                <div role="tablist" aria-label="Product Info" class="mad-tabs-nav">
+                  <span class="mad-active"><a id="tab-1-link" href="#tab-1" role="tab" aria-selected="true" aria-controls="tab-1" class="mad-tab-link">Zutaten</a></span>
+                </div>
+                <div class="mad-tabs-container">
+                  <div id="tab-1" tabindex="0" role="tabpanel" aria-labelledby="tab-1-link" class="mad-tab">
+                    <p><%= product.ingredients %></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
           </div>
-          <button class="btn btn-primary btn-lg add-to-cart" data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>">
-            <i class="fas fa-shopping-bag"></i> In den Warenkorb
-          </button>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<% if (related.length > 0) { %>
-<section class="section related-section">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">ÄHNLICHE GERICHTE</span>
-      <h2 class="section-title">Das könnte Ihnen auch gefallen</h2>
-    </div>
-    <div class="featured-grid">
-      <% related.forEach(function(p) { %>
-      <div class="menu-card" data-id="<%= p.id %>">
-        <div class="menu-card-image">
-          <div class="menu-card-img" style="<%= p.image ? 'background-image: url(' + p.image + ');background-size:cover;background-position:center;' : 'background: #f8f5f0;' %>">
-            <% if (!p.image) { %>
-            <div class="menu-card-placeholder"><i class="fas fa-utensils"></i></div>
-            <% } %>
-          </div>
-          <button class="menu-card-cart add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">
-            <i class="fas fa-plus"></i>
-          </button>
-        </div>
-        <div class="menu-card-body">
-          <h3 class="menu-card-title"><%= p.name %></h3>
-          <div class="menu-card-footer">
-            <span class="price-current"><%= p.price.toFixed(2) %> €</span>
-            <% if (p.old_price) { %>
-            <span class="price-old"><%= p.old_price.toFixed(2) %> €</span>
-            <% } %>
+    <% if (related.length > 0) { %>
+    <div class="content-element-13">
+      <h3 class="mad-page-title">Das könnte Ihnen auch gefallen…</h3>
+      <div class="mad-products item-col-4">
+        <% related.forEach(function(p) { %>
+        <div class="mad-col">
+          <div class="mad-product">
+            <figure class="mad-product-image">
+              <a href="/speisekarte/produkt/<%= p.slug %>">
+                <img src="<%= p.image || '/images/264x264_img1.jpg' %>" alt="<%= p.name %>">
+              </a>
+            </figure>
+            <div class="mad-product-description">
+              <h4 class="mad-product-title"><a href="/speisekarte/produkt/<%= p.slug %>" class="mad-link"><%= p.name %></a></h4>
+              <p><%= p.description ? p.description.substring(0, 100) : '' %></p>
+            </div>
+            <div class="mad-product-calc">
+              <span class="mad-product-price"><%= p.price.toFixed(2) %> €</span>
+              <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">In den Warenkorb</button>
+            </div>
           </div>
         </div>
+        <% }); %>
       </div>
-      <% }); %>
     </div>
+    <% } %>
   </div>
-</section>
-<% } %>
+</div>
 
 <%- include('partials/footer') %>
