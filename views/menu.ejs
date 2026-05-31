@@ -18,7 +18,8 @@
       <% }) %>
     </div>
 
-    <% categories.forEach(function(cat) { %>
+    <% var filteredCategories = activeCategory ? categories.filter(function(c) { return c.slug === activeCategory; }) : categories; %>
+    <% filteredCategories.forEach(function(cat) { %>
     <div class="menu-category" data-category="<%= cat.slug %>">
       <div class="menu-category-head">
         <h2 class="menu-category-title"><%= cat.name %></h2>
