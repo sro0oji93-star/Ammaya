@@ -89,19 +89,16 @@
   if (filterBtns.length === 0) return;
 
   filterBtns.forEach(function(btn) {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(e) {
+      var cats = document.querySelectorAll('.menu-category');
+      if (cats.length <= 1) return;
+      e.preventDefault();
       filterBtns.forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
-      const filter = btn.getAttribute('data-filter');
-      const categories = document.querySelectorAll('.menu-category');
-
-      if (filter === 'all') {
-        categories.forEach(function(c) { c.style.display = 'block'; });
-      } else {
-        categories.forEach(function(c) {
-          c.style.display = c.getAttribute('data-category') === filter ? 'block' : 'none';
-        });
-      }
+      var filter = btn.getAttribute('data-filter') || 'all';
+      cats.forEach(function(c) {
+        c.style.display = (filter === 'all' || c.getAttribute('data-category') === filter) ? 'block' : 'none';
+      });
     });
   });
 })();

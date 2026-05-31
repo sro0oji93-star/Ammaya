@@ -12,9 +12,9 @@
 <section class="section menu-section">
   <div class="container">
     <div class="menu-filter">
-      <button class="filter-btn active" data-filter="all">Alle</button>
+      <a href="/speisekarte" class="filter-btn <%= !activeCategory ? 'active' : '' %>" data-filter="all">Alle</a>
       <% categories.forEach(function(c) { %>
-      <button class="filter-btn" data-filter="<%= c.slug %>"><%= c.name %></button>
+      <a href="/speisekarte/kategorie/<%= c.slug %>" class="filter-btn <%= activeCategory === c.slug ? 'active' : '' %>" data-filter="<%= c.slug %>"><%= c.name %></a>
       <% }) %>
     </div>
 
