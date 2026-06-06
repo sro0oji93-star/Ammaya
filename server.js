@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
 const helmet = require('helmet');
 
@@ -17,14 +18,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const sessionStore = new pgSession({
+  conString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/ammaya',
+  tableName: 'session',
+  createTableIfMissing: true
+});
+
 app.use(session({
+  store: sessionStore,
   secret: process.env.SESSION_SECRET || require('crypto').randomBytes(64).toString('hex'),
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
