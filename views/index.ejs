@@ -48,8 +48,7 @@
 <div class="mad-section">
   <div class="container">
     <div class="mad-products mad-grid mad-grid--cols-4">
-      <% var seen = {}; var uniqueProducts = products.filter(function(p) { var key = p.name + p.price; if (seen[key]) return false; seen[key] = true; return true; }); %>
-      <% uniqueProducts.forEach(function(p) { %>
+      <% products.forEach(function(p) { %>
       <div class="mad-grid-item">
         <div class="mad-product">
           <figure class="mad-product-image">

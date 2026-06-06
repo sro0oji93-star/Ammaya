@@ -4,7 +4,7 @@ const db = require('../db');
 
 router.get('/', async (req, res) => {
   const categories = await db.all('SELECT * FROM categories WHERE active = 1 ORDER BY sort_order');
-  const products = await db.all('SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.is_available = 1 ORDER BY c.sort_order, p.sort_order');
+  const products = await db.all("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id IN (SELECT MIN(id) FROM products WHERE is_available = 1 GROUP BY name) ORDER BY c.sort_order, p.sort_order");
   const settingsRows = await db.all('SELECT key, value FROM settings');
   const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
   
@@ -21,7 +21,7 @@ router.get('/kategorie/:slug', async (req, res) => {
   const category = await db.get('SELECT * FROM categories WHERE slug = $1 AND active = 1', [req.params.slug]);
   if (!category) return res.status(404).render('404', { title: 'Kategorie nicht gefunden' });
   
-  const products = await db.all('SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.category_id = $1 AND p.is_available = 1 ORDER BY p.sort_order', [category.id]);
+  const products = await db.all("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id IN (SELECT MIN(id) FROM products WHERE category_id = $1 AND is_available = 1 GROUP BY name) ORDER BY p.sort_order", [category.id]);
   const categories = await db.all('SELECT * FROM categories WHERE active = 1 ORDER BY sort_order');
   const settingsRows = await db.all('SELECT key, value FROM settings');
   const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
