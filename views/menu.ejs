@@ -8,6 +8,18 @@
 </div>
 
 <div class="mad-content no-pd">
+  <% var productImgMap = {
+    'margherita':'/images/products/img1.jpg','salami':'/images/products/img2.jpg','prosciutto':'/images/products/img3.jpg',
+    'classic-burger':'/images/products/img13.jpg','cheese-burger':'/images/products/img14.jpg','chicken-burger':'/images/products/img15.jpg',
+    'croque-monsieur':'/images/products/img7.jpg','croque-madame':'/images/products/img8.jpg','croque-hawaii':'/images/products/img9.jpg',
+    'griechischer-salat':'/images/products/img4.jpg','caesar-salat':'/images/products/img5.jpg',
+    'spaghetti-bolognese':'/images/products/img10.jpg','penne-arrabiata':'/images/products/img11.jpg',
+    'wiener-schnitzel':'/images/products/img16.jpg','jaegerschnitzel':'/images/products/img17.jpg','zigeunerschnitzel':'/images/products/img18.jpg',
+    'pommes-frites':'/images/products/img19.jpg','chicken-nuggets':'/images/products/img20.jpg','nachos':'/images/products/img21.jpg',
+    'coca-cola':'/images/products/img22.jpg','fanta':'/images/products/img23.jpg','wasser':'/images/products/img6.jpg',
+    'fruehlingsrolle':'/images/products/img7.jpg','falafel-wrap':'/images/products/img8.jpg',
+    'ketchup':'/images/products/img9.jpg','mayonnaise':'/images/products/img12.jpg','knoblauchsauce':'/images/products/img3.jpg','chillisauce':'/images/products/img4.jpg'
+  }; %>
   <% categories.forEach(function(cat, ci) { %>
   <% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
   <% if (catProducts.length === 0) return; %>
@@ -21,11 +33,7 @@
             <% catProducts.slice(0, half).forEach(function(p) { %>
             <div class="mad-spec-item" style="display:flex;margin-bottom:2rem">
               <figure style="max-width:88px;min-width:88px;width:100%;margin-right:1.5rem;border-radius:50%;overflow:hidden;height:88px;background:#f8f5f0;display:flex;align-items:center;justify-content:center">
-                <% if (p.image) { %>
-                <img src="<%= p.image %>" alt="<%= p.name %>" style="width:100%;height:100%;object-fit:cover">
-                <% } else { %>
-                <i class="fas fa-utensils" style="font-size:28px;color:#eb0029"></i>
-                <% } %>
+                <img src="<%= p.image || productImgMap[p.slug] || '/images/products/img1.jpg' %>" alt="<%= p.name %>" style="width:100%;height:100%;object-fit:cover">
               </figure>
               <div class="mad-spec-info" style="flex:1">
                 <div class="mad-spec-header" style="display:flex;font-family:'Josefin Sans',sans-serif;font-weight:bold;font-size:1.5rem;line-height:2rem;color:#232223;justify-content:space-between;margin:0 -1.5rem">
@@ -45,11 +53,7 @@
             <% catProducts.slice(half).forEach(function(p) { %>
             <div class="mad-spec-item" style="display:flex;margin-bottom:2rem">
               <figure style="max-width:88px;min-width:88px;width:100%;margin-right:1.5rem;border-radius:50%;overflow:hidden;height:88px;background:#f8f5f0;display:flex;align-items:center;justify-content:center">
-                <% if (p.image) { %>
-                <img src="<%= p.image %>" alt="<%= p.name %>" style="width:100%;height:100%;object-fit:cover">
-                <% } else { %>
-                <i class="fas fa-utensils" style="font-size:28px;color:#eb0029"></i>
-                <% } %>
+                <img src="<%= p.image || productImgMap[p.slug] || '/images/products/img1.jpg' %>" alt="<%= p.name %>" style="width:100%;height:100%;object-fit:cover">
               </figure>
               <div class="mad-spec-info" style="flex:1">
                 <div class="mad-spec-header" style="display:flex;font-family:'Josefin Sans',sans-serif;font-weight:bold;font-size:1.5rem;line-height:2rem;color:#232223;justify-content:space-between;margin:0 -1.5rem">
