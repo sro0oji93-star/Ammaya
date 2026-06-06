@@ -1,90 +1,78 @@
 <%- include('partials/header') %>
 
-<div class="page-hero menu-hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg');background-size:cover;background-position:center;position:relative">
-  <div class="page-hero-overlay"></div>
-  <div class="page-hero-content">
-    <div class="page-hero-badge">SPEISEKARTE</div>
-    <h1 class="page-hero-title" style="color:#fff">Unsere Speisekarte</h1>
-    <nav class="menu-breadcrumb" style="color:rgba(255,255,255,.6);font-size:13px"><a href="/" style="color:#ebe117">Start</a> / <span>Speisekarte</span></nav>
+<div class="mad-breadcrumb with-bg-image" data-bg-image-src="/images/revolution/6cbea-bg1.jpg">
+  <div class="container">
+    <h1 class="mad-page-title" style="color:#fff">Unsere Speisekarte</h1>
+    <nav class="mad-breadcrumb-path"><span><a href="/">Home</a></span> / <span>Unsere Speisekarte</span></nav>
   </div>
 </div>
 
-<% categories.forEach(function(cat, ci) { %>
-<% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
-<% if (catProducts.length > 0) { %>
-<div class="mad-section">
-  <div class="container">
-    <h2 class="mad-page-title align-center"><%= cat.name %></h2>
-    <div class="content-element-7">
-      <div class="row">
-        <% var half = Math.ceil(catProducts.length / 2); %>
-        <div class="col-lg-6">
-          <div class="mad-specs">
+<div class="mad-content no-pd">
+  <% categories.forEach(function(cat, ci) { %>
+  <% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
+  <% if (catProducts.length === 0) return; %>
+  <div class="mad-section">
+    <div class="container">
+      <h2 class="mad-page-title align-center"><%= cat.name %></h2>
+      <div class="content-element-7">
+        <div class="row">
+          <% var half = Math.ceil(catProducts.length / 2); %>
+          <div class="col-lg-6">
             <% catProducts.slice(0, half).forEach(function(p) { %>
-            <div class="mad-col">
-              <div class="mad-spec-item">
-                <figure>
-                  <% if (p.image) { %>
-                  <img src="<%= p.image %>" alt="<%= p.name %>">
-                  <% } else { %>
-                  <i class="fas fa-utensils" style="font-size:32px;color:#eb0029;width:88px;height:88px;display:flex;align-items:center;justify-content:center;background:#f8f5f0;border-radius:50%"></i>
-                  <% } %>
-                </figure>
-                <div class="mad-spec-info">
-                  <div class="mad-spec-header">
-                    <div class="mad-spec-title"><a href="/speisekarte/produkt/<%= p.slug %>" style="color:#232223;text-decoration:none"><%= p.name %></a></div>
-                    <div class="mad-line"></div>
-                    <div class="mad-spec-price"><%= p.price.toFixed(2) %> €</div>
-                  </div>
-                  <div class="mad-spec-tags">
-                    <div class="mad-spec-el"><%= p.description %></div>
-                  </div>
-                  <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" style="margin-top:8px">In den Warenkorb</button>
+            <div class="mad-spec-item" style="display:flex;margin-bottom:2rem">
+              <figure style="max-width:88px;min-width:88px;width:100%;margin-right:1.5rem;border-radius:50%;overflow:hidden;height:88px;background:#f8f5f0;display:flex;align-items:center;justify-content:center">
+                <% if (p.image) { %>
+                <img src="<%= p.image %>" alt="<%= p.name %>" style="width:100%;height:100%;object-fit:cover">
+                <% } else { %>
+                <i class="fas fa-utensils" style="font-size:28px;color:#eb0029"></i>
+                <% } %>
+              </figure>
+              <div class="mad-spec-info" style="flex:1">
+                <div class="mad-spec-header" style="display:flex;font-family:'Josefin Sans',sans-serif;font-weight:bold;font-size:1.5rem;line-height:2rem;color:#232223;justify-content:space-between;margin:0 -1.5rem">
+                  <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
+                  <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:#eb0029;white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
                 </div>
+                <div class="mad-spec-tags" style="font-size:1rem;line-height:1.5rem;color:#7a7879;margin-top:0.25rem">
+                  <div class="mad-spec-el"><%= p.description %></div>
+                </div>
+                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" style="margin-top:8px">In den Warenkorb</button>
               </div>
             </div>
             <% }); %>
           </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="mad-specs">
+          <div class="col-lg-6">
             <% catProducts.slice(half).forEach(function(p) { %>
-            <div class="mad-col">
-              <div class="mad-spec-item">
-                <figure>
-                  <% if (p.image) { %>
-                  <img src="<%= p.image %>" alt="<%= p.name %>">
-                  <% } else { %>
-                  <i class="fas fa-utensils" style="font-size:32px;color:#eb0029;width:88px;height:88px;display:flex;align-items:center;justify-content:center;background:#f8f5f0;border-radius:50%"></i>
-                  <% } %>
-                </figure>
-                <div class="mad-spec-info">
-                  <div class="mad-spec-header">
-                    <div class="mad-spec-title"><a href="/speisekarte/produkt/<%= p.slug %>" style="color:#232223;text-decoration:none"><%= p.name %></a></div>
-                    <div class="mad-line"></div>
-                    <div class="mad-spec-price"><%= p.price.toFixed(2) %> €</div>
-                  </div>
-                  <div class="mad-spec-tags">
-                    <div class="mad-spec-el"><%= p.description %></div>
-                  </div>
-                  <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" style="margin-top:8px">In den Warenkorb</button>
+            <div class="mad-spec-item" style="display:flex;margin-bottom:2rem">
+              <figure style="max-width:88px;min-width:88px;width:100%;margin-right:1.5rem;border-radius:50%;overflow:hidden;height:88px;background:#f8f5f0;display:flex;align-items:center;justify-content:center">
+                <% if (p.image) { %>
+                <img src="<%= p.image %>" alt="<%= p.name %>" style="width:100%;height:100%;object-fit:cover">
+                <% } else { %>
+                <i class="fas fa-utensils" style="font-size:28px;color:#eb0029"></i>
+                <% } %>
+              </figure>
+              <div class="mad-spec-info" style="flex:1">
+                <div class="mad-spec-header" style="display:flex;font-family:'Josefin Sans',sans-serif;font-weight:bold;font-size:1.5rem;line-height:2rem;color:#232223;justify-content:space-between;margin:0 -1.5rem">
+                  <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
+                  <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:#eb0029;white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
                 </div>
+                <div class="mad-spec-tags" style="font-size:1rem;line-height:1.5rem;color:#7a7879;margin-top:0.25rem">
+                  <div class="mad-spec-el"><%= p.description %></div>
+                </div>
+                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" style="margin-top:8px">In den Warenkorb</button>
               </div>
             </div>
             <% }); %>
           </div>
         </div>
       </div>
-    </div>
-    <div class="align-center">
-      <a href="/speisekarte" class="btn btn-style-3 btn-big">Alle ansehen</a>
+      <div class="align-center">
+        <a href="/speisekarte" class="btn btn-style-3 btn-big">Alle ansehen</a>
+      </div>
     </div>
   </div>
+  <% }); %>
 </div>
-<% if (ci < categories.length - 1) { %>
-<div class="mad-section no-pd" style="height:40px"></div>
-<% } %>
-<% } %>
-<% }); %>
 
 <%- include('partials/footer') %>
