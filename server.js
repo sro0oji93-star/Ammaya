@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 const { loadSettings } = require('./middleware/settings');
 app.use(loadSettings);
 
-const { csrfProtection } = require('./middleware/csrf');
+const { csrfProtection, generateToken } = require('./middleware/csrf');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -61,9 +61,15 @@ app.use('/warenkorb', cartRoutes);
 app.use('/bestellung', orderRoutes);
 app.use('/kontakt', contactRoutes);
 
-// Admin routes with CSRF (login POST excluded)
+// Admin routes: login POST skips CSRF validation but still sets the token
 app.use('/admin', (req, res, next) => {
-  if (req.method === 'POST' && req.path === '/login') return next();
+  if (req.method === 'POST' && req.path === '/login') {
+    if (!req.session.csrfToken) {
+      req.session.csrfToken = generateToken();
+    }
+    res.locals.csrfToken = req.session.csrfToken;
+    return next();
+  }
   csrfProtection(req, res, next);
 });
 app.use('/admin', adminRoutes);
