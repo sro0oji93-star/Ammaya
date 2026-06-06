@@ -125,4 +125,27 @@
   </div>
 </div>
 
+<script>
+(function() {
+  var picker = document.querySelector('.size-picker-detail');
+  if (!picker) return;
+  var first = picker.querySelector('input[type="radio"]');
+  if (first) {
+    var label = first.closest('.size-option-detail');
+    if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; }
+  }
+  picker.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      picker.querySelectorAll('.size-option-detail').forEach(function(l) {
+        l.style.borderColor = '#ddd';
+        l.style.background = 'transparent';
+      });
+      var label = this.closest('.size-option-detail');
+      if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; }
+      var priceEl = document.getElementById('detailPrice');
+      if (priceEl) priceEl.textContent = parseFloat(this.value).toFixed(2) + ' €';
+    });
+  });
+})();
+</script>
 <%- include('partials/footer') %>

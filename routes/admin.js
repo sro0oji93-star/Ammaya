@@ -3,18 +3,14 @@ const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const slugify = require('slugify');
 const auth = require('../middleware/auth');
 
-const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+function bufferToDataUri(buffer, mimetype) {
+  return 'data:' + mimetype + ';base64,' + buffer.toString('base64');
+}
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + Math.random().toString(36).substring(7) + path.extname(file.originalname))
-});
+const storage = multer.memoryStorage();
 const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
 const fileFilter = (req, file, cb) => {
   if (allowedMimes.includes(file.mimetype)) {
@@ -68,7 +64,7 @@ router.get('/produkte', auth, async (req, res) => {
 router.post('/produkte', auth, upload.single('image'), async (req, res) => {
   const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order, sizes } = req.body;
   const slug = slugify(name, { lower: true, strict: true });
-  const image = req.file ? '/uploads/' + req.file.filename : null;
+  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : null;
   const existing = await db.get('SELECT id FROM products WHERE name = $1', [name]);
   if (existing) {
     return res.redirect('/admin/produkte?duplicate=1');
@@ -90,7 +86,7 @@ router.post('/produkte/bearbeiten/:id', auth, upload.single('image'), async (req
   const product = await db.get('SELECT * FROM products WHERE id = $1', [req.params.id]);
   if (!product) return res.status(404).send('Produkt nicht gefunden');
   const slug = slugify(name, { lower: true, strict: true }) + '-' + req.params.id;
-  const image = req.file ? '/uploads/' + req.file.filename : product.image;
+  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : product.image;
   let sizesJson = product.sizes;
   if (sizes !== undefined) {
     try { sizesJson = JSON.stringify(JSON.parse(sizes)); } catch (e) { sizesJson = product.sizes; }
@@ -181,7 +177,7 @@ router.get('/banner', auth, async (req, res) => {
 
 router.post('/banner', auth, upload.single('image'), async (req, res) => {
   const { title, subtitle, link, sort_order } = req.body;
-  const image = req.file ? '/uploads/' + req.file.filename : null;
+  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : null;
   await db.run('INSERT INTO banners (title, subtitle, image, link, sort_order) VALUES ($1, $2, $3, $4, $5)',
     [title, subtitle, image, link, sort_order || 0]);
   res.redirect('/admin/banner');
@@ -199,7 +195,7 @@ router.get('/testimonials', auth, async (req, res) => {
 
 router.post('/testimonials', auth, upload.single('image'), async (req, res) => {
   const { name, text, rating } = req.body;
-  const image = req.file ? '/uploads/' + req.file.filename : null;
+  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : null;
   await db.run('INSERT INTO testimonials (name, text, rating, image) VALUES ($1, $2, $3, $4)',
     [name, text, rating || 5, image]);
   res.redirect('/admin/testimonials');
@@ -209,7 +205,7 @@ router.post('/testimonials/bearbeiten/:id', auth, upload.single('image'), async 
   const { name, text, rating, active } = req.body;
   const t = await db.get('SELECT * FROM testimonials WHERE id = $1', [req.params.id]);
   if (!t) return res.status(404).send('Testimonial nicht gefunden');
-  const image = req.file ? '/uploads/' + req.file.filename : t.image;
+  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : t.image;
   await db.run('UPDATE testimonials SET name=$1, text=$2, rating=$3, image=$4, active=$5 WHERE id=$6',
     [name, text, rating || 5, image, active ? 1 : 0, req.params.id]);
   res.redirect('/admin/testimonials');
@@ -236,10 +232,10 @@ router.post('/einstellungen', auth, upload.fields([
     }
   }
   if (req.files && req.files.hero_burger_image && req.files.hero_burger_image[0]) {
-    await db.run('UPDATE settings SET value = $1 WHERE key = $2', ['/uploads/' + req.files.hero_burger_image[0].filename, 'hero_burger_image']);
+    await db.run('UPDATE settings SET value = $1 WHERE key = $2', [bufferToDataUri(req.files.hero_burger_image[0].buffer, req.files.hero_burger_image[0].mimetype), 'hero_burger_image']);
   }
   if (req.files && req.files.hero_pizza_image && req.files.hero_pizza_image[0]) {
-    await db.run('UPDATE settings SET value = $1 WHERE key = $2', ['/uploads/' + req.files.hero_pizza_image[0].filename, 'hero_pizza_image']);
+    await db.run('UPDATE settings SET value = $1 WHERE key = $2', [bufferToDataUri(req.files.hero_pizza_image[0].buffer, req.files.hero_pizza_image[0].mimetype), 'hero_pizza_image']);
   }
   res.redirect('/admin/einstellungen');
 });

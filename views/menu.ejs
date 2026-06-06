@@ -113,4 +113,23 @@
   <% }); %>
 </div>
 
+<script>
+document.querySelectorAll('.size-picker').forEach(function(picker) {
+  var first = picker.querySelector('input[type="radio"]');
+  if (first) {
+    var label = first.closest('.size-option');
+    if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; }
+  }
+  picker.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      picker.querySelectorAll('.size-option').forEach(function(l) {
+        l.style.borderColor = '#ddd';
+        l.style.background = 'transparent';
+      });
+      var label = this.closest('.size-option');
+      if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; }
+    });
+  });
+});
+</script>
 <%- include('partials/footer') %>
