@@ -19,8 +19,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || require('crypto').randomBytes(64).toString('hex'),
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
