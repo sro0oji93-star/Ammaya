@@ -53,15 +53,19 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.get('/produkte', auth, async (req, res) => {
-  const products = await db.all('SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.sort_order');
+  const products = await db.all('SELECT DISTINCT ON (p.name) p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.name, p.id DESC');
   const categories = await db.all('SELECT * FROM categories ORDER BY sort_order');
-  res.render('admin/products', { title: 'Produkte – Admin', products, categories });
+  res.render('admin/products', { title: 'Produkte – Admin', products, categories, duplicate: req.query.duplicate === '1' });
 });
 
 router.post('/produkte', auth, upload.single('image'), async (req, res) => {
   const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order } = req.body;
   const slug = slugify(name, { lower: true, strict: true });
   const image = req.file ? '/uploads/' + req.file.filename : null;
+  const existing = await db.get('SELECT id FROM products WHERE name = $1', [name]);
+  if (existing) {
+    return res.redirect('/admin/produkte?duplicate=1');
+  }
   await db.run(`INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
     [category_id || null, name, slug + '-' + Date.now(), description, price, old_price || null,
