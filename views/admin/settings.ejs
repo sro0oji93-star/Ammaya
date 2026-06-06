@@ -4,6 +4,7 @@
 </div>
 
 <form method="POST" action="/admin/einstellungen" class="settings-form" enctype="multipart/form-data">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
   <div class="settings-card">
     <h3>Allgemein</h3>
     <div class="form-grid">

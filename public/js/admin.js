@@ -25,6 +25,7 @@ function editProduct(product) {
   document.getElementById('edit_sort_order').value = product.sort_order || 0;
   document.getElementById('edit_is_featured').checked = product.is_featured == 1;
   document.getElementById('edit_is_available').checked = product.is_available == 1;
+  document.getElementById('edit_sizes').value = product.sizes || '';
   document.getElementById('editProductForm').action = '/admin/produkte/bearbeiten/' + product.id;
   openModal('editProductModal');
 }

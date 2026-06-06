@@ -21,17 +21,17 @@
       <% banners.forEach(function(b) { %>
       <tr>
         <td>
-          <div class="product-thumb" style="<%= b.image ? 'background-image: url(' + b.image + ')' : 'background: linear-gradient(135deg, #1a1a2e, #2a1a3e)' %>">
+          <div class="product-thumb" style="<% if (b.image) { %>background-image: url(<%= b.image %>)<% } else { %>background: linear-gradient(135deg, #1a1a2e, #2a1a3e)<% } %>">
             <% if (!b.image) { %><i class="fas fa-image"></i><% } %>
           </div>
         </td>
         <td><strong><%= b.title %></strong></td>
         <td><%= b.subtitle || '—' %></td>
-        <td><%= b.link ? '<a href="' + b.link + '" target="_blank">Link</a>' : '—' %></td>
+        <td><% if (b.link) { %><a href="<%= b.link %>" target="_blank">Link</a><% } else { %>—<% } %></td>
         <td><%= b.sort_order %></td>
         <td><span class="status-badge <%= b.active ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= b.active ? 'Aktiv' : 'Inaktiv' %></span></td>
         <td>
-          <form method="POST" action="/admin/banner/loeschen/<%= b.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+          <form method="POST" action="/admin/banner/loeschen/<%= b.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
           </form>
         </td>
@@ -48,6 +48,7 @@
       <button class="modal-close" onclick="closeModal('addBannerModal')">&times;</button>
     </div>
     <form method="POST" action="/admin/banner" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="form-grid">
         <div class="form-group">
           <label>Titel *</label>

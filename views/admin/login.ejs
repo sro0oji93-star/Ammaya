@@ -19,6 +19,7 @@
       <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
       <% } %>
       <form method="POST" action="/admin/login">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div class="form-group">
           <label for="username">Benutzername</label>
           <input type="text" id="username" name="username" required placeholder="admin">

@@ -35,7 +35,7 @@
         <td><span class="status-badge <%= p.is_available ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= p.is_available ? 'Verfügbar' : 'Ausverkauft' %></span></td>
         <td class="actions-cell">
           <button class="btn btn-sm btn-outline" onclick='editProduct(<%= JSON.stringify(p) %>)'><i class="fas fa-edit"></i></button>
-          <form method="POST" action="/admin/produkte/loeschen/<%= p.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+          <form method="POST" action="/admin/produkte/loeschen/<%= p.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
           </form>
         </td>
@@ -53,6 +53,7 @@
       <button class="modal-close" onclick="closeModal('addProductModal')">&times;</button>
     </div>
     <form method="POST" action="/admin/produkte" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="form-grid">
         <div class="form-group">
           <label>Name *</label>
@@ -92,6 +93,11 @@
         <label>Zutaten</label>
         <input type="text" name="ingredients" placeholder="Zutaten, durch Komma getrennt">
       </div>
+      <div class="form-group">
+        <label>Größen (JSON)</label>
+        <textarea name="sizes" rows="3" placeholder='[{"label":"26cm","price":8.00},{"label":"30cm","price":11.00}]' style="font-family:monospace;font-size:13px"></textarea>
+        <small style="color:var(--text-secondary)">Nur für Produkte mit Größen (z.B. Pizza). Leer lassen für einzelne Preise.</small>
+      </div>
       <div class="form-checkboxes">
         <label class="checkbox-label"><input type="checkbox" name="is_featured" value="1"> Empfohlen</label>
         <label class="checkbox-label"><input type="checkbox" name="is_available" value="1" checked> Verfügbar</label>
@@ -109,6 +115,7 @@
       <button class="modal-close" onclick="closeModal('editProductModal')">&times;</button>
     </div>
     <form method="POST" action="" id="editProductForm" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="form-grid">
         <div class="form-group">
           <label>Name *</label>
@@ -147,6 +154,10 @@
       <div class="form-group">
         <label>Zutaten</label>
         <input type="text" name="ingredients" id="edit_ingredients">
+      </div>
+      <div class="form-group">
+        <label>Größen (JSON)</label>
+        <textarea name="sizes" id="edit_sizes" rows="3" placeholder='[{"label":"26cm","price":8.00},{"label":"30cm","price":11.00}]' style="font-family:monospace;font-size:13px"></textarea>
       </div>
       <div class="form-checkboxes">
         <label class="checkbox-label"><input type="checkbox" name="is_featured" id="edit_is_featured" value="1"> Empfohlen</label>

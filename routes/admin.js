@@ -15,7 +15,15 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => cb(null, Date.now() + '-' + Math.random().toString(36).substring(7) + path.extname(file.originalname))
 });
-const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
+const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+const fileFilter = (req, file, cb) => {
+  if (allowedMimes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Nur Bilder (JPEG, PNG, GIF, WebP, SVG) sind erlaubt'), false);
+  }
+};
+const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 }, fileFilter });
 
 router.get('/login', (req, res) => {
   if (req.session.admin) return res.redirect('/admin');
@@ -32,7 +40,7 @@ router.post('/login', async (req, res) => {
   res.render('admin/login', { title: 'Admin Login', error: 'Ungültige Anmeldedaten' });
 });
 
-router.get('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/admin/login');
 });
@@ -47,8 +55,7 @@ router.get('/', auth, async (req, res) => {
     recentOrders: await db.all('SELECT * FROM orders ORDER BY created_at DESC LIMIT 5'),
     unreadMessages: (await db.get("SELECT COUNT(*) as count FROM contact_messages WHERE is_read = 0")).count
   };
-  const settingsRows = await db.all('SELECT key, value FROM settings');
-  const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
+  const settings = res.locals.settings;
   res.render('admin/dashboard', { title: 'Dashboard – Admin', stats, settings });
 });
 
@@ -59,30 +66,38 @@ router.get('/produkte', auth, async (req, res) => {
 });
 
 router.post('/produkte', auth, upload.single('image'), async (req, res) => {
-  const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order } = req.body;
+  const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order, sizes } = req.body;
   const slug = slugify(name, { lower: true, strict: true });
   const image = req.file ? '/uploads/' + req.file.filename : null;
   const existing = await db.get('SELECT id FROM products WHERE name = $1', [name]);
   if (existing) {
     return res.redirect('/admin/produkte?duplicate=1');
   }
-  await db.run(`INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+  let sizesJson = null;
+  if (sizes) {
+    try { sizesJson = JSON.stringify(JSON.parse(sizes)); } catch (e) { sizesJson = null; }
+  }
+  await db.run(`INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
     [category_id || null, name, slug + '-' + Date.now(), description, price, old_price || null,
-    image, ingredients, is_featured ? 1 : 0, is_available ? 1 : 0, sort_order || 0]
+    image, ingredients, is_featured ? 1 : 0, is_available ? 1 : 0, sort_order || 0, sizesJson]
   );
   res.redirect('/admin/produkte');
 });
 
 router.post('/produkte/bearbeiten/:id', auth, upload.single('image'), async (req, res) => {
-  const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order } = req.body;
+  const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order, sizes } = req.body;
   const product = await db.get('SELECT * FROM products WHERE id = $1', [req.params.id]);
   if (!product) return res.status(404).send('Produkt nicht gefunden');
   const slug = slugify(name, { lower: true, strict: true }) + '-' + req.params.id;
   const image = req.file ? '/uploads/' + req.file.filename : product.image;
-  await db.run(`UPDATE products SET category_id=$1, name=$2, slug=$3, description=$4, price=$5, old_price=$6, image=$7, ingredients=$8, is_featured=$9, is_available=$10, sort_order=$11 WHERE id=$12`,
+  let sizesJson = product.sizes;
+  if (sizes !== undefined) {
+    try { sizesJson = JSON.stringify(JSON.parse(sizes)); } catch (e) { sizesJson = product.sizes; }
+  }
+  await db.run(`UPDATE products SET category_id=$1, name=$2, slug=$3, description=$4, price=$5, old_price=$6, image=$7, ingredients=$8, is_featured=$9, is_available=$10, sort_order=$11, sizes=$12 WHERE id=$13`,
     [category_id || null, name, slug, description, price, old_price || null, image, ingredients,
-    is_featured ? 1 : 0, is_available ? 1 : 0, sort_order || 0, req.params.id]
+    is_featured ? 1 : 0, is_available ? 1 : 0, sort_order || 0, sizesJson, req.params.id]
   );
   res.redirect('/admin/produkte');
 });
@@ -138,8 +153,7 @@ router.get('/bestellungen/:id', auth, async (req, res) => {
   const order = await db.get('SELECT * FROM orders WHERE id = $1', [req.params.id]);
   if (!order) return res.status(404).send('Bestellung nicht gefunden');
   order.items = JSON.parse(order.items);
-  const settingsRows = await db.all('SELECT key, value FROM settings');
-  const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
+  const settings = res.locals.settings;
   res.render('admin/order-detail', { title: 'Bestellung ' + order.order_number, order, settings });
 });
 
@@ -207,8 +221,7 @@ router.post('/testimonials/loeschen/:id', auth, async (req, res) => {
 });
 
 router.get('/einstellungen', auth, async (req, res) => {
-  const settingsRows = await db.all('SELECT key, value FROM settings');
-  const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
+  const settings = res.locals.settings;
   res.render('admin/settings', { title: 'Einstellungen – Admin', settings });
 });
 
@@ -262,6 +275,19 @@ router.post('/passwort', auth, async (req, res) => {
   const hash = bcrypt.hashSync(new_password, 10);
   await db.run('UPDATE admins SET password = $1 WHERE id = $2', [hash, req.session.admin.id]);
   res.render('admin/password', { title: 'Passwort ändern – Admin', message: 'Passwort erfolgreich geändert!', error: null });
+});
+
+router.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).send('Datei zu groß. Maximal 5 MB erlaubt.');
+    }
+    return res.status(400).send('Fehler beim Dateiupload: ' + err.message);
+  }
+  if (err) {
+    return res.status(400).send(err.message || 'Ein Fehler ist aufgetreten');
+  }
+  next();
 });
 
 module.exports = router;

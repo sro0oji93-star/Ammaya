@@ -7,8 +7,7 @@ router.get('/', async (req, res) => {
   const categories = await db.all('SELECT * FROM categories WHERE active = 1 ORDER BY sort_order');
   const banners = await db.all('SELECT * FROM banners WHERE active = 1 ORDER BY sort_order');
   const testimonials = await db.all('SELECT * FROM testimonials WHERE active = 1 ORDER BY RANDOM() LIMIT 3');
-  const settingsRows = await db.all('SELECT key, value FROM settings');
-  const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
+  const settings = res.locals.settings;
   
   res.render('index', {
     title: settings.site_name + ' – ' + settings.site_description,

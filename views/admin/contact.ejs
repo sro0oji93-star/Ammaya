@@ -28,11 +28,11 @@
           <td><%= new Date(m.created_at).toLocaleDateString('de-DE') + ' ' + new Date(m.created_at).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) %></td>
           <td class="actions-cell">
             <% if (!m.is_read) { %>
-            <form method="POST" action="/admin/kontakt/gelesen/<%= m.id %>" style="display:inline">
+            <form method="POST" action="/admin/kontakt/gelesen/<%= m.id %>" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button type="submit" class="btn btn-sm btn-outline" title="Als gelesen markieren"><i class="fas fa-check"></i></button>
             </form>
             <% } %>
-            <form method="POST" action="/admin/kontakt/loeschen/<%= m.id %>" style="display:inline" onsubmit="return confirm('Nachricht löschen?')">
+            <form method="POST" action="/admin/kontakt/loeschen/<%= m.id %>" style="display:inline" onsubmit="return confirm('Nachricht löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button type="submit" class="btn btn-sm btn-outline btn-danger" title="Löschen"><i class="fas fa-trash"></i></button>
             </form>
           </td>

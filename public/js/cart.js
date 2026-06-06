@@ -4,6 +4,10 @@ var Cart = (function() {
   var discount = { code: null, value: 0 };
   var settings = window.restaurantSettings || { delivery_fee: 4.50, free_delivery_from: 40.00 };
 
+  function makeKey(id, size) {
+    return size && size.label ? id + '-' + size.label : String(id);
+  }
+
   function init() {
     load();
     renderCartBadge();
@@ -16,6 +20,11 @@ var Cart = (function() {
     try {
       var data = localStorage.getItem('feinCart');
       if (data) items = JSON.parse(data);
+      items.forEach(function(i) {
+        if (!i._key) {
+          i._key = i.size && i.size.label ? i.id + '-' + i.size.label : String(i.id);
+        }
+      });
       var disc = localStorage.getItem('feinDiscount');
       if (disc) discount = JSON.parse(disc);
     } catch(e) { items = []; }
@@ -26,31 +35,32 @@ var Cart = (function() {
     localStorage.setItem('feinDiscount', JSON.stringify(discount));
   }
 
-  function addItem(id, name, price, qty) {
+  function addItem(id, name, price, qty, size) {
     qty = qty || 1;
-    var existing = items.find(function(i) { return i.id == id; });
+    var key = makeKey(id, size);
+    var existing = items.find(function(i) { return i._key === key; });
     if (existing) {
       existing.qty += qty;
     } else {
-      items.push({ id: id, name: name, price: parseFloat(price), qty: qty });
+      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null });
     }
     save();
     renderCartBadge();
-    showToast('"'+ name +'" zum Warenkorb hinzugefügt!');
+    showToast('"' + name + '" zum Warenkorb hinzugefügt!');
     if (document.getElementById('cartList')) renderCartPage();
     if (document.getElementById('checkoutItems')) renderCheckoutSummary();
   }
 
-  function removeItem(id) {
-    items = items.filter(function(i) { return i.id != id; });
+  function removeItem(key) {
+    items = items.filter(function(i) { return i._key !== key; });
     save();
     renderCartBadge();
     if (document.getElementById('cartList')) renderCartPage();
     if (document.getElementById('checkoutItems')) renderCheckoutSummary();
   }
 
-  function updateQty(id, qty) {
-    var item = items.find(function(i) { return i.id == id; });
+  function updateQty(key, qty) {
+    var item = items.find(function(i) { return i._key === key; });
     if (item) {
       item.qty = Math.max(1, Math.min(20, qty));
       save();
@@ -130,10 +140,23 @@ var Cart = (function() {
       if (!btn) return;
       var id = btn.getAttribute('data-id');
       var name = btn.getAttribute('data-name');
-      var price = btn.getAttribute('data-price');
+      var hasSizes = btn.getAttribute('data-has-sizes');
       var qtyInput = document.getElementById('qtyInput');
       var qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
-      addItem(id, name, price, qty);
+
+      if (hasSizes) {
+        var radio = document.querySelector('input[name="size_' + id + '"]:checked') || document.querySelector('input[name="detailSize"]:checked');
+        if (!radio) { showToast('Bitte wählen Sie eine Größe'); return; }
+        var size = {
+          label: radio.getAttribute('data-label'),
+          price: parseFloat(radio.value)
+        };
+        addItem(id, name, size.price, qty, size);
+      } else {
+        var price = btn.getAttribute('data-price');
+        addItem(id, name, price, qty);
+      }
+
       if (qtyInput) qtyInput.value = 1;
     });
   }
@@ -159,16 +182,17 @@ var Cart = (function() {
     summary.style.display = 'block';
 
     list.innerHTML = items.map(function(item) {
+      var nameHtml = item.size ? item.name + ' <small>(' + item.size.label + ')</small>' : item.name;
       return '<div class="cart-item">' +
         '<div class="cart-item-image"><i class="fas fa-utensils"></i></div>' +
-        '<div class="cart-item-info"><h4>' + item.name + '</h4><p>' + item.price.toFixed(2).replace('.',',') + ' €</p></div>' +
+        '<div class="cart-item-info"><h4>' + nameHtml + '</h4><p>' + item.price.toFixed(2).replace('.',',') + ' €</p></div>' +
         '<div class="cart-item-qty">' +
-          '<button onclick="Cart.updateQty(' + item.id + ', ' + (item.qty - 1) + ')">−</button>' +
+          '<button onclick="Cart.updateQty(\'' + item._key + '\', ' + (item.qty - 1) + ')">−</button>' +
           '<span>' + item.qty + '</span>' +
-          '<button onclick="Cart.updateQty(' + item.id + ', ' + (item.qty + 1) + ')">+</button>' +
+          '<button onclick="Cart.updateQty(\'' + item._key + '\', ' + (item.qty + 1) + ')">+</button>' +
         '</div>' +
         '<div class="cart-item-total">' + formatEUR(item.price * item.qty) + '</div>' +
-        '<button class="cart-item-remove" onclick="Cart.removeItem(' + item.id + ')"><i class="fas fa-times"></i></button>' +
+        '<button class="cart-item-remove" onclick="Cart.removeItem(\'' + item._key + '\')"><i class="fas fa-times"></i></button>' +
       '</div>';
     }).join('');
 
@@ -204,8 +228,9 @@ var Cart = (function() {
     }
 
     container.innerHTML = items.map(function(item) {
+      var nameHtml = item.size ? item.name + ' (' + item.size.label + ')' : item.name;
       return '<div class="checkout-item">' +
-        '<div><span class="checkout-item-name">' + item.name + '</span><br><span class="checkout-item-qty">' + item.qty + ' × ' + item.price.toFixed(2).replace('.',',') + ' €</span></div>' +
+        '<div><span class="checkout-item-name">' + nameHtml + '</span><br><span class="checkout-item-qty">' + item.qty + ' × ' + item.price.toFixed(2).replace('.',',') + ' €</span></div>' +
         '<span>' + formatEUR(item.price * item.qty) + '</span>' +
       '</div>';
     }).join('');
@@ -285,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
         zip: formData.get('zip'),
         notes: formData.get('notes'),
         payment: formData.get('payment'),
-        items: items,
+        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size }; }),
         subtotal: Cart.getSubtotal(),
         delivery_fee: Cart.getDeliveryFee(Cart.getSubtotal()),
         discount: Cart.getDiscount().value,

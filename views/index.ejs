@@ -63,8 +63,13 @@
             <p><%= p.description ? p.description.substring(0, 80) + (p.description.length > 80 ? '...' : '') : '' %></p>
           </div>
           <div class="mad-product-calc">
+            <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); %>
+            <span class="mad-product-price">ab <%= minP.toFixed(2) %> €</span>
+            <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1">In den Warenkorb</button>
+            <% } else { %>
             <span class="mad-product-price"><%= p.price.toFixed(2) %> €</span>
             <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">In den Warenkorb</button>
+            <% } %>
           </div>
         </div>
       </div>
@@ -118,7 +123,7 @@
               <blockquote><p>"<%= t.text %>"</p></blockquote>
             </div>
             <div class="mad-author">
-              <div class="mad-author-img"><%= t.image ? '<img src="' + t.image + '" alt="' + t.name + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover">' : '<span class="material-icons" style="font-size:36px;color:#eb0029">person</span>' %></div>
+              <div class="mad-author-img"><% if (t.image) { %><img src="<%= t.image %>" alt="<%= t.name %>" style="width:48px;height:48px;border-radius:50%;object-fit:cover"><% } else { %><span class="material-icons" style="font-size:36px;color:#eb0029">person</span><% } %></div>
               <div class="mad-author-info">
                 <cite><%= t.name %></cite>
               </div>

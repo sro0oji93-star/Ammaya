@@ -26,7 +26,7 @@
         <td><span class="status-badge <%= c.active ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= c.active ? 'Aktiv' : 'Inaktiv' %></span></td>
         <td class="actions-cell">
           <button class="btn btn-sm btn-outline" onclick='editCategory(<%= JSON.stringify(c) %>)'><i class="fas fa-edit"></i></button>
-          <form method="POST" action="/admin/kategorien/loeschen/<%= c.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+          <form method="POST" action="/admin/kategorien/loeschen/<%= c.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
           </form>
         </td>
@@ -44,6 +44,7 @@
       <button class="modal-close" onclick="closeModal('addCategoryModal')">&times;</button>
     </div>
     <form method="POST" action="/admin/kategorien">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="form-group">
         <label>Name *</label>
         <input type="text" name="name" required>
@@ -69,6 +70,7 @@
       <button class="modal-close" onclick="closeModal('editCategoryModal')">&times;</button>
     </div>
     <form method="POST" action="" id="editCategoryForm">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="form-group">
         <label>Name *</label>
         <input type="text" name="name" id="cat_name" required>

@@ -135,6 +135,8 @@ async function initialize() {
       is_read INTEGER DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS sizes TEXT;
   `);
 
   const hash = bcrypt.hashSync('admin123', 10);

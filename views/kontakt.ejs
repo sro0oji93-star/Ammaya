@@ -50,6 +50,7 @@
         <% session.contactFlash = null; %>
         <% } %>
         <form action="/kontakt" method="POST" class="contact-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <h2>Schreiben Sie uns</h2>
           <div class="form-group">
             <label for="name">Name *</label>

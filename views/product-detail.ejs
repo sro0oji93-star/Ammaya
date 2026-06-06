@@ -28,8 +28,39 @@
               <% if (product.old_price) { %>
                 <span class="mad-product-price" style="text-decoration:line-through;color:#999;font-size:16px;margin-right:8px"><%= product.old_price.toFixed(2) %> €</span>
               <% } %>
-              <span class="mad-product-price"><%= product.price.toFixed(2) %> €</span>
+              <% if (product.sizes) { var sizeData = JSON.parse(product.sizes); var minPrice = Math.min.apply(null, sizeData.map(function(s){return s.price})); %>
+              <span class="mad-product-price" id="detailPrice"><%= minPrice.toFixed(2) %> €</span>
+              <% } else { %>
+              <span class="mad-product-price" id="detailPrice"><%= product.price.toFixed(2) %> €</span>
+              <% } %>
             </div>
+            <% if (product.sizes) { var sizeData = JSON.parse(product.sizes); %>
+            <div class="form-control content-element-6">
+              <div class="content-element-2">
+                <p class="mad-text-color-2 content-element">Größe wählen:</p>
+                <div class="size-picker-detail" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+                  <% sizeData.forEach(function(s) { %>
+                  <label class="size-option-detail" style="cursor:pointer;padding:8px 18px;border:2px solid #ddd;border-radius:8px;font-size:15px;transition:all .2s;text-align:center;min-width:80px">
+                    <input type="radio" name="detailSize" value="<%= s.price %>" data-label="<%= s.label %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
+                    <strong style="display:block"><%= s.label %></strong>
+                    <small style="color:#eb0029"><%= s.price.toFixed(2) %> €</small>
+                  </label>
+                  <% }); %>
+                </div>
+                <p class="mad-text-color-2 content-element">Anzahl:</p>
+                <div class="btn-set big-btns">
+                  <div class="quantity size-2">
+                    <input type="text" id="qtyInput" value="1" readonly>
+                    <button type="button" class="qty-plus"><i class="material-icons">add</i></button>
+                    <button type="button" class="qty-minus"><i class="material-icons">remove</i></button>
+                  </div>
+                  <button class="btn btn-big btn-style-3 add-to-cart" data-id="<%= product.id %>" data-name="<%= product.name %>" data-has-sizes="1">
+                    <i class="material-icons-outlined">shopping_cart</i><span>In den Warenkorb</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <% } else { %>
             <div class="form-control content-element-6">
               <div class="content-element-2">
                 <p class="mad-text-color-2 content-element">Anzahl:</p>
@@ -45,6 +76,7 @@
                 </div>
               </div>
             </div>
+            <% } %>
             <% if (product.ingredients) { %>
             <div class="content-element-6">
               <div class="mad-tabs">

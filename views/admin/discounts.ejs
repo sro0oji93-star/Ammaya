@@ -29,7 +29,7 @@
         <td><%= d.expires_at ? new Date(d.expires_at).toLocaleDateString('de-DE') : '∞' %></td>
         <td><span class="status-badge <%= d.active ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= d.active ? 'Aktiv' : 'Inaktiv' %></span></td>
         <td>
-          <form method="POST" action="/admin/rabatte/loeschen/<%= d.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+          <form method="POST" action="/admin/rabatte/loeschen/<%= d.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
           </form>
         </td>
@@ -46,6 +46,7 @@
       <button class="modal-close" onclick="closeModal('addDiscountModal')">&times;</button>
     </div>
     <form method="POST" action="/admin/rabatte">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="form-grid">
         <div class="form-group">
           <label>Code *</label>

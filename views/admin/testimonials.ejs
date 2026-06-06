@@ -20,7 +20,7 @@
       <% testimonials.forEach(function(t) { %>
       <tr>
         <td>
-          <div class="product-thumb" style="<%= t.image ? 'background-image: url(' + t.image + ')' : 'background: linear-gradient(135deg, #1a1a2e, #2a1a3e)' %>">
+          <div class="product-thumb" style="<% if (t.image) { %>background-image: url(<%= t.image %>)<% } else { %>background: linear-gradient(135deg, #1a1a2e, #2a1a3e)<% } %>">
             <% if (!t.image) { %><i class="fas fa-user"></i><% } %>
           </div>
         </td>
@@ -30,7 +30,7 @@
         <td><span class="status-badge <%= t.active ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= t.active ? 'Aktiv' : 'Inaktiv' %></span></td>
         <td>
           <button class="btn btn-sm btn-secondary" onclick='openEdit(<%= JSON.stringify(t) %>)'><i class="fas fa-edit"></i></button>
-          <form method="POST" action="/admin/testimonials/loeschen/<%= t.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+          <form method="POST" action="/admin/testimonials/loeschen/<%= t.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
           </form>
         </td>
@@ -47,6 +47,7 @@
       <button class="modal-close" onclick="closeModal('addModal')">&times;</button>
     </div>
     <form method="POST" action="/admin/testimonials" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="form-grid">
         <div class="form-group">
           <label>Name *</label>
@@ -77,6 +78,7 @@
       <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
     </div>
     <form method="POST" enctype="multipart/form-data" id="editForm">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="form-grid">
         <div class="form-group">
           <label>Name *</label>

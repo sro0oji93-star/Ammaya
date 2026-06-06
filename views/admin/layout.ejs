@@ -28,7 +28,7 @@
         <a href="/admin/passwort" class="nav-item <% if (title.includes('Passwort')) { %>active<% } %>"><i class="fas fa-key"></i> Passwort</a>
         <div class="sidebar-divider"></div>
         <a href="/" class="nav-item" target="_blank"><i class="fas fa-external-link-alt"></i> Website ansehen</a>
-        <a href="/admin/logout" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+        <form method="POST" action="/admin/logout" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="nav-item logout" style="background:none;border:none;cursor:pointer;width:100%;text-align:left;font:inherit;color:inherit"><i class="fas fa-sign-out-alt"></i> Abmelden</button></form>
       </nav>
     </aside>
     <main class="admin-main">

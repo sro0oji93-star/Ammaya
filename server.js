@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(helmet({
   contentSecurityPolicy: false,
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
 
 app.use(express.json());
@@ -17,11 +18,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'geheimnis',
+  secret: process.env.SESSION_SECRET || require('crypto').randomBytes(64).toString('hex'),
   resave: false,
-  saveUninitialized: true,
-  cookie: { 
-    secure: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'strict',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
@@ -31,6 +34,12 @@ app.use((req, res, next) => {
   res.locals.site_url = process.env.SITE_URL || 'http://localhost:3000';
   next();
 });
+
+const { loadSettings } = require('./middleware/settings');
+app.use(loadSettings);
+
+const { csrfProtection } = require('./middleware/csrf');
+app.use(csrfProtection);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
