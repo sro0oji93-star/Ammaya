@@ -9,51 +9,82 @@
   </div>
 </div>
 
-<section class="section menu-section">
+<% categories.forEach(function(cat, ci) { %>
+<% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
+<% if (catProducts.length > 0) { %>
+<div class="mad-section">
   <div class="container">
-    <div class="menu-filter">
-      <a href="/speisekarte" class="filter-btn <%= !activeCategory ? 'active' : '' %>" data-filter="all">Alle</a>
-      <% categories.forEach(function(c) { %>
-      <a href="/speisekarte/kategorie/<%= c.slug %>" class="filter-btn <%= activeCategory === c.slug ? 'active' : '' %>" data-filter="<%= c.slug %>"><%= c.name %></a>
-      <% }) %>
-    </div>
-
-    <% var filteredCategories = activeCategory ? categories.filter(function(c) { return c.slug === activeCategory; }) : categories; %>
-    <% filteredCategories.forEach(function(cat) { %>
-    <div class="menu-category" data-category="<%= cat.slug %>">
-      <div class="menu-category-head">
-        <h2 class="menu-category-title"><%= cat.name %></h2>
-        <% if (cat.description) { %><p class="menu-category-desc"><%= cat.description %></p><% } %>
-      </div>
-      <div class="menu-specs">
-        <% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
-        <% catProducts.forEach(function(p) { %>
-        <div class="menu-spec-item">
-          <div class="menu-spec-img">
-            <i class="fas fa-<%= p.category_id == 8 ? 'wine-glass-alt' : (p.category_id == 4 ? 'leaf' : (p.category_id == 10 ? 'tint' : 'utensils')) %>"></i>
-          </div>
-          <div class="menu-spec-info">
-            <div class="menu-spec-header">
-              <h3 class="menu-spec-title"><a href="/speisekarte/produkt/<%= p.slug %>" style="color:#232223;text-decoration:none;transition:color .3s" onmouseover="this.style.color='#eb0029'" onmouseout="this.style.color='#232223'"><%= p.name %></a></h3>
-              <span class="menu-spec-line"></span>
-              <span class="menu-spec-price"><%= p.price.toFixed(2) %> €</span>
+    <h2 class="mad-page-title align-center"><%= cat.name %></h2>
+    <div class="content-element-7">
+      <div class="row">
+        <% var half = Math.ceil(catProducts.length / 2); %>
+        <div class="col-lg-6">
+          <div class="mad-specs">
+            <% catProducts.slice(0, half).forEach(function(p) { %>
+            <div class="mad-col">
+              <div class="mad-spec-item">
+                <figure>
+                  <% if (p.image) { %>
+                  <img src="<%= p.image %>" alt="<%= p.name %>">
+                  <% } else { %>
+                  <i class="fas fa-utensils" style="font-size:32px;color:#eb0029;width:88px;height:88px;display:flex;align-items:center;justify-content:center;background:#f8f5f0;border-radius:50%"></i>
+                  <% } %>
+                </figure>
+                <div class="mad-spec-info">
+                  <div class="mad-spec-header">
+                    <div class="mad-spec-title"><a href="/speisekarte/produkt/<%= p.slug %>" style="color:#232223;text-decoration:none"><%= p.name %></a></div>
+                    <div class="mad-line"></div>
+                    <div class="mad-spec-price"><%= p.price.toFixed(2) %> €</div>
+                  </div>
+                  <div class="mad-spec-tags">
+                    <div class="mad-spec-el"><%= p.description %></div>
+                  </div>
+                  <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" style="margin-top:8px">In den Warenkorb</button>
+                </div>
+              </div>
             </div>
-            <p class="menu-spec-desc"><%= p.description %></p>
-            <div class="menu-spec-actions">
-              <button class="btn btn-primary btn-sm add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">
-                <i class="fas fa-shopping-bag"></i> In den Warenkorb
-              </button>
-            </div>
+            <% }); %>
           </div>
         </div>
-        <% }); %>
-        <% if (catProducts.length === 0) { %>
-        <p class="menu-empty">In dieser Kategorie sind derzeit keine Gerichte verfügbar.</p>
-        <% } %>
+        <div class="col-lg-6">
+          <div class="mad-specs">
+            <% catProducts.slice(half).forEach(function(p) { %>
+            <div class="mad-col">
+              <div class="mad-spec-item">
+                <figure>
+                  <% if (p.image) { %>
+                  <img src="<%= p.image %>" alt="<%= p.name %>">
+                  <% } else { %>
+                  <i class="fas fa-utensils" style="font-size:32px;color:#eb0029;width:88px;height:88px;display:flex;align-items:center;justify-content:center;background:#f8f5f0;border-radius:50%"></i>
+                  <% } %>
+                </figure>
+                <div class="mad-spec-info">
+                  <div class="mad-spec-header">
+                    <div class="mad-spec-title"><a href="/speisekarte/produkt/<%= p.slug %>" style="color:#232223;text-decoration:none"><%= p.name %></a></div>
+                    <div class="mad-line"></div>
+                    <div class="mad-spec-price"><%= p.price.toFixed(2) %> €</div>
+                  </div>
+                  <div class="mad-spec-tags">
+                    <div class="mad-spec-el"><%= p.description %></div>
+                  </div>
+                  <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" style="margin-top:8px">In den Warenkorb</button>
+                </div>
+              </div>
+            </div>
+            <% }); %>
+          </div>
+        </div>
       </div>
     </div>
-    <% }); %>
+    <div class="align-center">
+      <a href="/speisekarte" class="btn btn-style-3 btn-big">Alle ansehen</a>
+    </div>
   </div>
-</section>
+</div>
+<% if (ci < categories.length - 1) { %>
+<div class="mad-section no-pd" style="height:40px"></div>
+<% } %>
+<% } %>
+<% }); %>
 
 <%- include('partials/footer') %>
