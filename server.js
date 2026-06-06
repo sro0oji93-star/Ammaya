@@ -38,6 +38,8 @@ app.use((req, res, next) => {
 const { loadSettings } = require('./middleware/settings');
 app.use(loadSettings);
 
+const { csrfProtection } = require('./middleware/csrf');
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -48,18 +50,22 @@ const orderRoutes = require('./routes/order');
 const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
 
-// Disabled CSRF temporarily until login works
-// app.use((req, res, next) => {
-//   if (req.path.startsWith('/admin')) return next();
-//   csrfProtection(req, res, next);
-// });
+// CSRF for public routes (admin has its own CSRF handling)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/admin')) return next();
+  csrfProtection(req, res, next);
+});
 app.use('/', indexRoutes);
 app.use('/speisekarte', menuRoutes);
 app.use('/warenkorb', cartRoutes);
 app.use('/bestellung', orderRoutes);
 app.use('/kontakt', contactRoutes);
 
-// Admin routes
+// Admin routes with CSRF (login POST excluded)
+app.use('/admin', (req, res, next) => {
+  if (req.method === 'POST' && req.path === '/login') return next();
+  csrfProtection(req, res, next);
+});
 app.use('/admin', adminRoutes);
 
 app.use((req, res) => {
