@@ -44,52 +44,7 @@
 
 </div>
 
-<!-- Tabbed Menu -->
-<div class="mad-section">
-  <div class="container">
-    <h2 class="mad-page-title align-center">Entdecken Sie unsere Gerichte</h2>
-    <div class="mad-tabs">
-      <div role="tablist" aria-label="Kategorien" class="mad-tabs-nav justify-content-center">
-        <% categories.forEach(function(c, i) { %>
-        <span<%- i === 0 ? ' class="mad-active"' : '' %>><a id="tab-<%= c.id %>-link" href="#tab-<%= c.id %>" role="tab" aria-selected="<%= i === 0 %>" aria-controls="tab-<%= c.id %>" class="mad-tab-link"><%= c.name %></a></span>
-        <% }); %>
-      </div>
-      <div class="mad-tabs-container">
-        <% categories.forEach(function(c, ci) { %>
-        <% var catProducts = products.filter(function(p) { return p.category_id === c.id; }); %>
-        <div id="tab-<%= c.id %>" tabindex="0" role="tabpanel" aria-labelledby="tab-<%= c.id %>-link" class="mad-tab<%- ci === 0 ? ' mad-active' : '' %>">
-          <div class="mad-products mad-grid mad-grid--cols-4">
-            <% catProducts.forEach(function(p) { %>
-            <div class="mad-grid-item">
-              <div class="mad-product">
-                <figure class="mad-product-image">
-                  <% if (p.image) { %>
-                  <a href="/speisekarte/produkt/<%= p.slug %>"><img src="<%= p.image %>" alt="<%= p.name %>"></a>
-                  <% } else { %>
-                  <a href="/speisekarte/produkt/<%= p.slug %>" style="display:flex;align-items:center;justify-content:center;height:200px;background:#f8f5f0"><i class="fas fa-utensils" style="font-size:48px;color:#ccc"></i></a>
-                  <% } %>
-                </figure>
-                <div class="mad-product-description">
-                  <h4 class="mad-product-title"><a href="/speisekarte/produkt/<%= p.slug %>" class="mad-link"><%= p.name %></a></h4>
-                  <p><%= p.description ? p.description.substring(0, 80) + (p.description.length > 80 ? '...' : '') : '' %></p>
-                </div>
-                <div class="mad-product-calc">
-                  <span class="mad-product-price"><%= p.price.toFixed(2) %> €</span>
-                  <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">In den Warenkorb</button>
-                </div>
-              </div>
-            </div>
-            <% }); %>
-          </div>
-        </div>
-        <% }); %>
-      </div>
-    </div>
-    <div class="align-center">
-      <a href="/speisekarte" class="btn btn-style-2 btn-big">Alle ansehen</a>
-    </div>
-  </div>
-</div>
+
 
 <!-- Half-Section: Create Your Own -->
 <div class="mad-section no-pd mad-section--stretched-content-no-px">
