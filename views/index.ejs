@@ -1,24 +1,47 @@
 <%- include('partials/header') %>
 
-<!-- Hero Section -->
-<section class="hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg')">
+<!-- Hero Slider -->
+<section class="hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg');position:relative">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-food-row">
-      <div class="hero-food-text">
-        <% if (settings.hero_text_title) { %><h2 class="hero-text-title"><%= settings.hero_text_title %></h2><% } %>
-        <% if (settings.hero_text_subtitle) { %><p class="hero-text-subtitle"><%= settings.hero_text_subtitle %></p><% } %>
-      </div>
-      <div class="hero-food-right">
-        <div class="hero-food-img-wrap">
-          <img id="heroFoodImg" src="<%= settings.hero_burger_image || '/images/revolution/5b6b6-burger.png' %>" alt="">
+    <% if (heroSlides && heroSlides.length > 0) { %>
+    <% heroSlides.forEach(function(slide, i) { %>
+    <div class="hero-slide" style="display:<%= i === 0 ? 'block' : 'none' %>">
+      <div class="hero-food-row">
+        <div class="hero-food-text">
+          <% if (slide.title) { %><h2 class="hero-text-title"><%= slide.title %></h2><% } %>
+          <% if (slide.subtitle) { %><p class="hero-text-subtitle"><%= slide.subtitle %></p><% } %>
         </div>
-        <div class="hero-food-price">
-          <span class="hero-price"><%= settings.hero_price || '12' %>€</span>
-          <span class="hero-price-label"><%= settings.hero_price_label || 'Nur heute' %></span>
+        <div class="hero-food-right">
+          <div class="hero-food-img-wrap">
+            <img src="<%= slide.image || '/images/revolution/5b6b6-burger.png' %>" alt="" style="max-width:100%;height:auto">
+          </div>
+          <% if (slide.price) { %>
+          <div class="hero-food-price">
+            <span class="hero-price"><%= parseFloat(slide.price).toFixed(2) %>€</span>
+            <% if (slide.price_label) { %><span class="hero-price-label"><%= slide.price_label %></span><% } %>
+          </div>
+          <% } %>
         </div>
       </div>
     </div>
+    <% }); %>
+    <!-- Slider Dots -->
+    <% if (heroSlides.length > 1) { %>
+    <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:10">
+      <% heroSlides.forEach(function(slide, i) { %>
+      <span class="hero-dot" data-index="<%= i %>" style="width:12px;height:12px;border-radius:50%;background:<%= i === 0 ? '#eb0029' : 'rgba(255,255,255,0.5)' %>;cursor:pointer;transition:all .3s"></span>
+      <% }); %>
+    </div>
+    <% } %>
+    <% } else { %>
+    <div class="hero-food-row">
+      <div class="hero-food-text">
+        <h2 class="hero-text-title">Willkommen bei Ammaya</h2>
+        <p class="hero-text-subtitle">Entdecken Sie unsere vielfältigen Gerichte</p>
+      </div>
+    </div>
+    <% } %>
   </div>
 </section>
 
@@ -179,21 +202,19 @@
 
 <script>
 (function() {
-  var img = document.getElementById('heroFoodImg');
-  if (!img) return;
-  var images = [
-    '<%= settings.hero_burger_image || "/images/revolution/5b6b6-burger.png" %>',
-    '<%= settings.hero_pizza_image || "/images/pizza_hero.png" %>'
-  ];
+  var slides = document.querySelectorAll('.hero-slide');
+  var dots = document.querySelectorAll('.hero-dot');
+  if (slides.length < 2) return;
   var current = 0;
-  setInterval(function() {
-    current = (current + 1) % images.length;
-    img.style.opacity = '0';
-    setTimeout(function() {
-      img.src = images[current];
-      img.style.opacity = '1';
-    }, 400);
-  }, 5000);
+  function showSlide(i) {
+    slides.forEach(function(s, idx) { s.style.display = idx === i ? 'block' : 'none'; });
+    dots.forEach(function(d, idx) { d.style.background = idx === i ? '#eb0029' : 'rgba(255,255,255,0.5)'; });
+    current = i;
+  }
+  dots.forEach(function(d) {
+    d.addEventListener('click', function() { showSlide(parseInt(this.getAttribute('data-index'))); });
+  });
+  setInterval(function() { showSlide((current + 1) % slides.length); }, 5000);
 })();
 </script>
 <%- include('partials/footer') %>

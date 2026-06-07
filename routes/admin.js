@@ -284,6 +284,44 @@ router.post('/kontakt/loeschen/:id', auth, async (req, res) => {
   res.redirect('/admin/kontakt');
 });
 
+router.get('/hero', auth, async (req, res) => {
+  const slides = await db.all('SELECT * FROM hero_slides ORDER BY sort_order');
+  res.render('admin/hero', { title: 'Hero Slider – Admin', slides });
+});
+
+router.post('/hero', auth, upload.single('image'), async (req, res) => {
+  const { title, subtitle, price, price_label, sort_order } = req.body;
+  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : null;
+  await db.run('INSERT INTO hero_slides (title, subtitle, price, price_label, image, sort_order) VALUES ($1, $2, $3, $4, $5, $6)',
+    [title, subtitle, price || null, price_label, image, sort_order || 0]);
+  res.redirect('/admin/hero');
+});
+
+router.post('/hero/bearbeiten/:id', auth, upload.single('image'), async (req, res) => {
+  const slide = await db.get('SELECT * FROM hero_slides WHERE id = $1', [req.params.id]);
+  if (!slide) return res.status(404).send('Slide nicht gefunden');
+  const { title, subtitle, price, price_label, sort_order, active } = req.body;
+  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : slide.image;
+  await db.run('UPDATE hero_slides SET title=$1, subtitle=$2, price=$3, price_label=$4, image=$5, sort_order=$6, active=$7 WHERE id=$8',
+    [title, subtitle, price || null, price_label, image, sort_order || 0, active ? 1 : 0, req.params.id]);
+  res.redirect('/admin/hero');
+});
+
+router.post('/hero/loeschen/:id', auth, async (req, res) => {
+  await db.run('DELETE FROM hero_slides WHERE id = $1', [req.params.id]);
+  res.redirect('/admin/hero');
+});
+
+router.post('/hero/reorder', auth, async (req, res) => {
+  const { ids } = req.body;
+  if (Array.isArray(ids)) {
+    for (let i = 0; i < ids.length; i++) {
+      await db.run('UPDATE hero_slides SET sort_order = $1 WHERE id = $2', [i, ids[i]]);
+    }
+  }
+  res.redirect('/admin/hero');
+});
+
 router.get('/passwort', auth, (req, res) => {
   res.render('admin/password', { title: 'Passwort ändern – Admin', message: null, error: null });
 });

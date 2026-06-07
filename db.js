@@ -136,6 +136,18 @@ async function initialize() {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS hero_slides (
+      id SERIAL PRIMARY KEY,
+      title TEXT,
+      subtitle TEXT,
+      price NUMERIC(10,2),
+      price_label TEXT,
+      image TEXT,
+      sort_order INTEGER DEFAULT 0,
+      active INTEGER DEFAULT 1,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
     ALTER TABLE products ADD COLUMN IF NOT EXISTS sizes TEXT;
   `);
 

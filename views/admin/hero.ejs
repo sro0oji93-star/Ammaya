@@ -1,0 +1,144 @@
+<%- include('layout') %>
+<div class="section-header-row">
+  <h2><i class="fas fa-images"></i> Hero Slider</h2>
+  <button class="btn btn-primary" onclick="openModal('addSlideModal')"><i class="fas fa-plus"></i> Neue Folie</button>
+</div>
+
+<div class="table-container">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Bild</th>
+        <th>Titel</th>
+        <th>Preis</th>
+        <th>Status</th>
+        <th>Sortierung</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% slides.forEach(function(s) { %>
+      <tr>
+        <td>
+          <% if (s.image) { %>
+          <img src="<%= s.image %>" style="width:60px;height:60px;object-fit:cover;border-radius:8px">
+          <% } else { %>
+          <div style="width:60px;height:60px;background:#eee;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#999">–</div>
+          <% } %>
+        </td>
+        <td><strong><%= s.title || '–' %></strong></td>
+        <td><%= s.price ? parseFloat(s.price).toFixed(2) + ' €' : '–' %></td>
+        <td><span class="status-badge <%= s.active ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= s.active ? 'Aktiv' : 'Inaktiv' %></span></td>
+        <td><%= s.sort_order %></td>
+        <td class="actions-cell">
+          <button class="btn btn-sm btn-outline" onclick='editSlide(<%= JSON.stringify(s).replace(/'/g, "&#39;") %>)'><i class="fas fa-edit"></i></button>
+          <form method="POST" action="/admin/hero/loeschen/<%= s.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+      <% if (slides.length === 0) { %>
+      <tr><td colspan="6" style="text-align:center;color:#999;padding:30px">Keine Folien vorhanden</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add Modal -->
+<div class="modal" id="addSlideModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Neue Folie</h3>
+      <button class="modal-close" onclick="closeModal('addSlideModal')">&times;</button>
+    </div>
+    <form method="POST" action="/admin/hero" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Titel</label>
+          <input type="text" name="title">
+        </div>
+        <div class="form-group">
+          <label>Untertitel</label>
+          <input type="text" name="subtitle">
+        </div>
+        <div class="form-group">
+          <label>Preis (€)</label>
+          <input type="number" step="0.01" name="price">
+        </div>
+        <div class="form-group">
+          <label>Preis Label</label>
+          <input type="text" name="price_label" placeholder="z.B. Nur heute">
+        </div>
+        <div class="form-group">
+          <label>Bild</label>
+          <input type="file" name="image" accept="image/*">
+        </div>
+        <div class="form-group">
+          <label>Sortierung</label>
+          <input type="number" name="sort_order" value="0">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Speichern</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal" id="editSlideModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Folie bearbeiten</h3>
+      <button class="modal-close" onclick="closeModal('editSlideModal')">&times;</button>
+    </div>
+    <form method="POST" action="" id="editSlideForm" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Titel</label>
+          <input type="text" name="title" id="edit_title">
+        </div>
+        <div class="form-group">
+          <label>Untertitel</label>
+          <input type="text" name="subtitle" id="edit_subtitle">
+        </div>
+        <div class="form-group">
+          <label>Preis (€)</label>
+          <input type="number" step="0.01" name="price" id="edit_price">
+        </div>
+        <div class="form-group">
+          <label>Preis Label</label>
+          <input type="text" name="price_label" id="edit_price_label">
+        </div>
+        <div class="form-group">
+          <label>Bild</label>
+          <input type="file" name="image" accept="image/*">
+        </div>
+        <div class="form-group">
+          <label>Sortierung</label>
+          <input type="number" name="sort_order" id="edit_sort_order" value="0">
+        </div>
+      </div>
+      <div class="form-checkboxes">
+        <label class="checkbox-label"><input type="checkbox" name="active" id="edit_active" value="1" checked> Aktiv</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Aktualisieren</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function editSlide(slide) {
+  document.getElementById('edit_title').value = slide.title || '';
+  document.getElementById('edit_subtitle').value = slide.subtitle || '';
+  document.getElementById('edit_price').value = slide.price || '';
+  document.getElementById('edit_price_label').value = slide.price_label || '';
+  document.getElementById('edit_sort_order').value = slide.sort_order || 0;
+  document.getElementById('edit_active').checked = slide.active == 1;
+  document.getElementById('editSlideForm').action = '/admin/hero/bearbeiten/' + slide.id;
+  openModal('editSlideModal');
+}
+</script>
+<%- include('footer') %>
