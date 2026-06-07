@@ -27,13 +27,22 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  const admin = await db.get('SELECT * FROM admins WHERE username = $1', [username]);
-  if (admin && bcrypt.compareSync(password, admin.password)) {
-    req.session.admin = { id: admin.id, username: admin.username, display_name: admin.display_name };
-    return res.redirect('/admin');
+  try {
+    const { username, password } = req.body;
+    const admin = await db.get('SELECT * FROM admins WHERE username = $1', [username]);
+    if (admin && bcrypt.compareSync(password, admin.password)) {
+      req.session.admin = { id: admin.id, username: admin.username, display_name: admin.display_name };
+      req.session.save(err => {
+        if (err) return res.status(500).send('Session save error');
+        return res.redirect('/admin');
+      });
+    } else {
+      res.render('admin/login', { title: 'Admin Login', error: 'Ungültige Anmeldedaten' });
+    }
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).send('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
   }
-  res.render('admin/login', { title: 'Admin Login', error: 'Ungültige Anmeldedaten' });
 });
 
 router.post('/logout', (req, res) => {
