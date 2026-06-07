@@ -6,7 +6,13 @@
 <% } %>
 <div class="section-header-row">
   <h2><i class="fas fa-utensils"></i> Produkte verwalten</h2>
-  <button class="btn btn-primary" onclick="openModal('addProductModal')"><i class="fas fa-plus"></i> Neues Produkt</button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <form method="POST" action="/admin/produkte/pizza-groesen" style="display:inline">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="btn btn-sm btn-outline"><i class="fas fa-pizza-slice"></i> Pizza-Größen setzen</button>
+    </form>
+    <button class="btn btn-primary" onclick="openModal('addProductModal')"><i class="fas fa-plus"></i> Neues Produkt</button>
+  </div>
 </div>
 
 <div class="table-container">

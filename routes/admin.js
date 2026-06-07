@@ -64,6 +64,17 @@ router.get('/', auth, async (req, res) => {
   res.render('admin/dashboard', { title: 'Dashboard – Admin', stats, settings });
 });
 
+router.post('/produkte/pizza-groesen', auth, async (req, res) => {
+  const sizes = JSON.stringify([
+    { label: '26cm', price: 8.00 },
+    { label: '30cm', price: 11.00 },
+    { label: '45*32', price: 17.00 },
+    { label: '40*60', price: 24.50 }
+  ]);
+  await db.run("UPDATE products SET sizes = $1 WHERE category_id = (SELECT id FROM categories WHERE name = 'Pizza')", [sizes]);
+  res.redirect('/admin/produkte');
+});
+
 router.get('/produkte', auth, async (req, res) => {
   const products = await db.all('SELECT DISTINCT ON (p.name) p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.name, p.id DESC');
   const categories = await db.all('SELECT * FROM categories ORDER BY sort_order');
