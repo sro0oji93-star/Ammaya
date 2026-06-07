@@ -51,8 +51,15 @@ const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
 const { csrfProtection, generateToken } = require('./middleware/csrf');
 
-// CSRF for all routes
-app.use(csrfProtection);
+// CSRF for public routes only (admin routes skip validation)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/admin')) {
+    if (!req.session.csrfToken) req.session.csrfToken = generateToken();
+    res.locals.csrfToken = req.session.csrfToken;
+    return next();
+  }
+  csrfProtection(req, res, next);
+});
 
 app.use('/', indexRoutes);
 app.use('/speisekarte', menuRoutes);
