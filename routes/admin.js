@@ -64,15 +64,24 @@ router.get('/', auth, async (req, res) => {
   res.render('admin/dashboard', { title: 'Dashboard – Admin', stats, settings });
 });
 
+router.get('/produkte/pizza-groesen', auth, async (req, res) => {
+  const products = await db.all("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE c.name = 'Pizza' ORDER BY p.name");
+  res.render('admin/pizza-sizes', { title: 'Pizza-Größen – Admin', products });
+});
+
 router.post('/produkte/pizza-groesen', auth, async (req, res) => {
-  const sizes = JSON.stringify([
-    { label: '26cm', price: 8.00 },
-    { label: '30cm', price: 11.00 },
-    { label: '45*32', price: 17.00 },
-    { label: '40*60', price: 24.50 }
-  ]);
-  await db.run("UPDATE products SET sizes = $1 WHERE category_id = (SELECT id FROM categories WHERE name = 'Pizza')", [sizes]);
-  res.redirect('/admin/produkte');
+  const { size_label, size_price } = req.body;
+  const sizes = [];
+  if (Array.isArray(size_label)) {
+    for (let i = 0; i < size_label.length; i++) {
+      if (size_label[i].trim() && parseFloat(size_price[i])) {
+        sizes.push({ label: size_label[i].trim(), price: parseFloat(size_price[i]) });
+      }
+    }
+  }
+  const sizesJson = sizes.length ? JSON.stringify(sizes) : null;
+  await db.run("UPDATE products SET sizes = $1 WHERE category_id = (SELECT id FROM categories WHERE name = 'Pizza')", [sizesJson]);
+  res.redirect('/admin/produkte/pizza-groesen');
 });
 
 router.get('/produkte', auth, async (req, res) => {

@@ -22,11 +22,13 @@
   }; %>
   <% categories.forEach(function(cat, ci) { %>
   <% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
-  <% if (catProducts.length === 0) return; %>
   <div class="mad-section">
     <div class="container">
       <h2 class="mad-page-title align-center"><%= cat.name %></h2>
       <div class="content-element-7">
+        <% if (catProducts.length === 0) { %>
+        <p class="align-center" style="color:#7a7879;font-size:1.1rem;padding:20px 0">Bald verfügbar</p>
+        <% } else { %>
         <div class="row">
           <% var half = Math.ceil(catProducts.length / 2); %>
           <div class="col-lg-6">
@@ -103,7 +105,7 @@
             </div>
             <% }); %>
           </div>
-        </div>
+        <% } %>
       </div>
       <div class="align-center">
         <a href="/speisekarte" class="btn btn-style-3 btn-big">Alle ansehen</a>
