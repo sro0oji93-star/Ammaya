@@ -33,6 +33,7 @@
     'ketchup':'/images/products/img9.jpg','mayonnaise':'/images/products/img12.jpg','knoblauchsauce':'/images/products/img3.jpg','chillisauce':'/images/products/img4.jpg'
   }; %>
   <% categories.forEach(function(cat, ci) { %>
+  <% if (activeCategory && activeCategory !== cat.slug) return; %>
   <% var catProducts = products.filter(function(p) { return p.category_id === cat.id; }); %>
   <div class="mad-section">
     <div class="container">
