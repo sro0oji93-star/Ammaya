@@ -24,7 +24,6 @@ function csrfProtection(req, res, next) {
     return res.status(403).render('403', { title: 'Anfrage abgelehnt' });
   }
 
-  req.session.csrfToken = generateToken();
   next();
 }
 
