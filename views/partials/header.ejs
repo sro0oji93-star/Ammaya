@@ -21,6 +21,15 @@
   <meta property="og:description" content="<%= typeof settings !== 'undefined' && settings.site_description ? settings.site_description : 'Ammaya Restaurant' %>">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+<style>
+@media (max-width: 767px) {
+  .mad-header-items { display:flex; align-items:center; justify-content:space-between; flex-wrap:nowrap; gap:4px; }
+  .mad-mobile-nav-btn { margin-right:4px !important; flex-shrink:0; }
+  .mad-actions { gap:4px !important; }
+  .mad-actions .mad-item a { padding:6px !important; }
+  .mad-header-item:last-child { margin-left:auto; }
+}
+</style>
 </head>
 <body class="<%= typeof bodyClass !== 'undefined' ? bodyClass : '' %>"<%= typeof activeMenu !== 'undefined' ? ' data-active="' + activeMenu + '"' : '' %>>
 
@@ -55,7 +64,7 @@
         </ul>
       </nav>
       <!--================ End of Navigation ================-->
-      <button class="mad-mobile-nav-btn" style="margin-right:8px"></button>
+      <button class="mad-mobile-nav-btn"></button>
       <div class="mad-header-item">
         <div class="mad-our-info type-2">
           <div class="mad-info">
