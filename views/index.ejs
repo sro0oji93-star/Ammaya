@@ -217,4 +217,9 @@
   setInterval(function() { showSlide((current + 1) % slides.length); }, 5000);
 })();
 </script>
+<style>
+@media (max-width: 767px) {
+  .hero-food-price { align-items: flex-end !important; text-align: right !important; }
+}
+</style>
 <%- include('partials/footer') %>
