@@ -9,19 +9,17 @@
     <div class="hero-slide" style="display:<%= i === 0 ? 'block' : 'none' %>">
       <div class="hero-food-row">
         <div class="hero-food-text">
-          <% if (slide.title) { %><h2 class="hero-text-title"><%= slide.title %></h2><% } %>
-          <% if (slide.subtitle) { %><p class="hero-text-subtitle"><%= slide.subtitle %></p><% } %>
+          <h2 class="hero-text-title"><%= slide.title || settings.hero_text_title || 'Burger & Pizza' %></h2>
+          <p class="hero-text-subtitle"><%= slide.subtitle || settings.hero_text_subtitle || 'Frisch zubereitet mit den besten Zutaten' %></p>
         </div>
         <div class="hero-food-right">
           <div class="hero-food-img-wrap">
-            <img src="<%= slide.image || '/images/revolution/5b6b6-burger.png' %>" alt="" style="max-width:100%;height:auto">
+            <img src="<%= slide.image || settings.hero_burger_image || '/images/revolution/5b6b6-burger.png' %>" alt="" style="max-width:100%;height:auto">
           </div>
-          <% if (slide.price) { %>
           <div class="hero-food-price">
-            <span class="hero-price"><%= parseFloat(slide.price).toFixed(2) %>€</span>
-            <% if (slide.price_label) { %><span class="hero-price-label"><%= slide.price_label %></span><% } %>
+            <span class="hero-price"><%= slide.price ? parseFloat(slide.price).toFixed(2) : (settings.hero_price || '12') %>€</span>
+            <span class="hero-price-label"><%= slide.price_label || settings.hero_price_label || 'Nur heute' %></span>
           </div>
-          <% } %>
         </div>
       </div>
     </div>
@@ -37,8 +35,17 @@
     <% } else { %>
     <div class="hero-food-row">
       <div class="hero-food-text">
-        <h2 class="hero-text-title">Willkommen bei Ammaya</h2>
-        <p class="hero-text-subtitle">Entdecken Sie unsere vielfältigen Gerichte</p>
+        <h2 class="hero-text-title"><%= settings.hero_text_title || 'Burger & Pizza' %></h2>
+        <p class="hero-text-subtitle"><%= settings.hero_text_subtitle || 'Frisch zubereitet mit den besten Zutaten' %></p>
+      </div>
+      <div class="hero-food-right">
+        <div class="hero-food-img-wrap">
+          <img src="<%= settings.hero_burger_image || '/images/revolution/5b6b6-burger.png' %>" alt="" style="max-width:100%;height:auto">
+        </div>
+        <div class="hero-food-price">
+          <span class="hero-price"><%= settings.hero_price || '12' %>€</span>
+          <span class="hero-price-label"><%= settings.hero_price_label || 'Nur heute' %></span>
+        </div>
       </div>
     </div>
     <% } %>
