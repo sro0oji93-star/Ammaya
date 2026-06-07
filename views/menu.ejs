@@ -11,7 +11,7 @@
   <img src="/images/11.png" alt="" style="width:100%;height:auto;display:block">
 </div>
 
-<div class="mad-content no-pd">
+<div class="mad-content no-pd" id="produkte">
   <div class="container">
     <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:30px 0 10px 0">
       <a href="/speisekarte" class="btn btn-small <%= !activeCategory ? 'btn-style-3' : 'btn-outline' %>">Alle</a>
@@ -137,6 +137,14 @@
   .btn-small { font-size:13px !important; padding:6px 14px !important; }
 }
 </style>
+<script>
+<% if (activeCategory) { %>
+window.addEventListener('load', function(){
+  var el = document.getElementById('produkte');
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+});
+<% } %>
+</script>
 <script>
 document.querySelectorAll('.size-picker').forEach(function(picker) {
   var first = picker.querySelector('input[type="radio"]');
