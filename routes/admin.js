@@ -250,21 +250,12 @@ router.get('/einstellungen', auth, async (req, res) => {
   res.render('admin/settings', { title: 'Einstellungen – Admin', settings });
 });
 
-router.post('/einstellungen', auth, upload.fields([
-  { name: 'hero_burger_image', maxCount: 1 },
-  { name: 'hero_pizza_image', maxCount: 1 }
-]), async (req, res) => {
-  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','hero_title','hero_subtitle','about_title','about_text','latitude','longitude','hero_price','hero_price_label','hero_text_title','hero_text_subtitle'];
+router.post('/einstellungen', auth, async (req, res) => {
+  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude'];
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
       await db.run('UPDATE settings SET value = $1 WHERE key = $2', [req.body[key], key]);
     }
-  }
-  if (req.files && req.files.hero_burger_image && req.files.hero_burger_image[0]) {
-    await db.run('UPDATE settings SET value = $1 WHERE key = $2', [bufferToDataUri(req.files.hero_burger_image[0].buffer, req.files.hero_burger_image[0].mimetype), 'hero_burger_image']);
-  }
-  if (req.files && req.files.hero_pizza_image && req.files.hero_pizza_image[0]) {
-    await db.run('UPDATE settings SET value = $1 WHERE key = $2', [bufferToDataUri(req.files.hero_pizza_image[0].buffer, req.files.hero_pizza_image[0].mimetype), 'hero_pizza_image']);
   }
   res.redirect('/admin/einstellungen');
 });
