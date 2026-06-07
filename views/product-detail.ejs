@@ -38,12 +38,12 @@
             <div class="form-control content-element-6">
               <div class="content-element-2">
                 <p class="mad-text-color-2 content-element">Größe wählen:</p>
-                <div class="size-picker-detail" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+                <div class="size-picker-detail" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">
                   <% sizeData.forEach(function(s) { %>
-                  <label class="size-option-detail" style="cursor:pointer;padding:8px 18px;border:2px solid #ddd;border-radius:8px;font-size:15px;transition:all .2s;text-align:center;min-width:80px">
+                  <label class="size-option-detail" style="cursor:pointer;padding:12px 20px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px;transition:all .25s ease;text-align:center;min-width:100px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.04);position:relative;overflow:hidden">
                     <input type="radio" name="detailSize" value="<%= s.price %>" data-label="<%= s.label %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
-                    <strong style="display:block"><%= s.label %></strong>
-                    <small style="color:#eb0029"><%= s.price.toFixed(2) %> €</small>
+                    <span style="display:block;font-weight:600;font-size:16px;margin-bottom:4px"><%= s.label %></span>
+                    <span style="display:block;color:#eb0029;font-weight:700;font-size:15px"><%= s.price.toFixed(2) %> €</span>
                   </label>
                   <% }); %>
                 </div>
@@ -132,18 +132,27 @@
   var first = picker.querySelector('input[type="radio"]');
   if (first) {
     var label = first.closest('.size-option-detail');
-    if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; }
+    if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
   }
   picker.querySelectorAll('input[type="radio"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
       picker.querySelectorAll('.size-option-detail').forEach(function(l) {
-        l.style.borderColor = '#ddd';
-        l.style.background = 'transparent';
+        l.style.borderColor = '#e0e0e0';
+        l.style.background = '#fff';
+        l.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
       });
       var label = this.closest('.size-option-detail');
-      if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; }
+      if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
       var priceEl = document.getElementById('detailPrice');
       if (priceEl) priceEl.textContent = parseFloat(this.value).toFixed(2) + ' €';
+    });
+  });
+  picker.querySelectorAll('.size-option-detail').forEach(function(l) {
+    l.addEventListener('mouseenter', function() {
+      if (this.style.borderColor !== 'rgb(235, 0, 41)') { this.style.borderColor = '#ccc'; }
+    });
+    l.addEventListener('mouseleave', function() {
+      if (this.style.borderColor !== 'rgb(235, 0, 41)') { this.style.borderColor = '#e0e0e0'; }
     });
   });
 })();
