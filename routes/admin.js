@@ -182,6 +182,11 @@ router.get('/bestellungen/:id', auth, async (req, res) => {
   res.render('admin/order-detail', { title: 'Bestellung ' + order.order_number, order, settings });
 });
 
+router.post('/bestellungen/loeschen/:id', auth, async (req, res) => {
+  await db.run('DELETE FROM orders WHERE id = $1', [req.params.id]);
+  res.redirect('/admin/bestellungen');
+});
+
 router.get('/rabatte', auth, async (req, res) => {
   const discounts = await db.all('SELECT * FROM discounts ORDER BY created_at DESC');
   res.render('admin/discounts', { title: 'Rabatte – Admin', discounts });

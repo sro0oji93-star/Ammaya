@@ -44,7 +44,13 @@
           </form>
         </td>
         <td><%= new Date(o.created_at).toLocaleDateString('de-DE') + ' ' + new Date(o.created_at).toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) %></td>
-        <td><a href="/admin/bestellungen/<%= o.id %>" class="btn btn-sm btn-outline"><i class="fas fa-eye"></i></a></td>
+        <td>
+          <a href="/admin/bestellungen/<%= o.id %>" class="btn btn-sm btn-outline"><i class="fas fa-eye"></i></a>
+          <form method="POST" action="/admin/bestellungen/loeschen/<%= o.id %>" style="display:inline" onsubmit="return confirm('Bestellung wirklich löschen?')">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-sm btn-danger" style="padding:4px 8px"><i class="fas fa-trash"></i></button>
+          </form>
+        </td>
       </tr>
       <% }); %>
       <% if (orders.length === 0) { %>
