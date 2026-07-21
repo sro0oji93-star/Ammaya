@@ -51,8 +51,11 @@ const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
 const { csrfProtection, generateToken } = require('./middleware/csrf');
 
-// CSRF protection for all routes
+// CSRF for public routes only (admin routes skip validation)
 app.use((req, res, next) => {
+  if (req.path.startsWith('/admin')) {
+    return next();
+  }
   if (!req.session.csrfToken) {
     req.session.csrfToken = generateToken();
     req.session.save(err => {
