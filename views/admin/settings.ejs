@@ -7,8 +7,7 @@
 <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success %></div>
 <% } %>
 
-<form method="POST" action="/admin/einstellungen" class="settings-form" enctype="multipart/form-data">
-  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<form method="POST" action="/admin/einstellungen" class="settings-form">
   <div class="settings-card">
     <h3>Allgemein</h3>
     <div class="form-grid">
