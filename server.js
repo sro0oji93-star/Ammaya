@@ -51,14 +51,31 @@ const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
 const { csrfProtection, generateToken } = require('./middleware/csrf');
 
-// CSRF for public routes only (admin routes skip validation)
+// CSRF protection for all routes
 app.use((req, res, next) => {
-  if (req.path.startsWith('/admin')) {
-    if (!req.session.csrfToken) req.session.csrfToken = generateToken();
-    res.locals.csrfToken = req.session.csrfToken;
+  if (!req.session.csrfToken) {
+    req.session.csrfToken = generateToken();
+    req.session.save(err => {
+      if (err) console.error('CSRF session save error:', err);
+    });
+  }
+  res.locals.csrfToken = req.session.csrfToken;
+
+  const safeMethods = ['GET', 'HEAD', 'OPTIONS'];
+  if (safeMethods.includes(req.method)) {
     return next();
   }
-  csrfProtection(req, res, next);
+
+  const token = req.body._csrf || req.headers['x-csrf-token'];
+  if (!token || token !== req.session.csrfToken) {
+    console.error('CSRF validation failed for path:', req.path);
+    if (req.xhr || (req.headers['content-type'] && req.headers['content-type'].includes('application/json'))) {
+      return res.status(403).json({ success: false, message: 'Ungültige Anfrage (CSRF)' });
+    }
+    return res.status(403).render('403', { title: 'Anfrage abgelehnt' });
+  }
+
+  next();
 });
 
 app.use('/', indexRoutes);

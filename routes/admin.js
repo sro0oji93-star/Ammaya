@@ -23,7 +23,7 @@ const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 }, fileFilt
 
 router.get('/login', (req, res) => {
   if (req.session.admin) return res.redirect('/admin');
-  res.render('admin/login', { title: 'Admin Login', error: null });
+  res.render('admin/login', { title: 'Admin Login', error: null, csrfToken: req.session.csrfToken || '' });
 });
 
 router.post('/login', async (req, res) => {
@@ -247,7 +247,9 @@ router.post('/testimonials/loeschen/:id', auth, async (req, res) => {
 
 router.get('/einstellungen', auth, async (req, res) => {
   const settings = res.locals.settings;
-  res.render('admin/settings', { title: 'Einstellungen – Admin', settings });
+  const success = req.flash && req.flash.success ? req.flash.success : null;
+  if (req.flash) req.flash.success = null;
+  res.render('admin/settings', { title: 'Einstellungen – Admin', settings, success });
 });
 
 router.post('/einstellungen', auth, async (req, res) => {
@@ -257,7 +259,12 @@ router.post('/einstellungen', auth, async (req, res) => {
       await db.run('UPDATE settings SET value = $1 WHERE key = $2', [req.body[key], key]);
     }
   }
-  res.redirect('/admin/einstellungen');
+  req.flash = req.flash || {};
+  req.flash.success = 'Einstellungen wurden erfolgreich gespeichert!';
+  req.session.save(err => {
+    if (err) console.error('Session save error:', err);
+    res.redirect('/admin/einstellungen');
+  });
 });
 
 router.get('/kontakt', auth, async (req, res) => {
