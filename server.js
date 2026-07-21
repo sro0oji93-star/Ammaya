@@ -54,6 +54,8 @@ const { csrfProtection, generateToken } = require('./middleware/csrf');
 // CSRF for public routes only (admin routes skip validation)
 app.use((req, res, next) => {
   if (req.path.startsWith('/admin')) {
+    if (!req.session.csrfToken) req.session.csrfToken = generateToken();
+    res.locals.csrfToken = req.session.csrfToken;
     return next();
   }
   if (!req.session.csrfToken) {
