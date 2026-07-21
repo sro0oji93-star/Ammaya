@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       fetch('/bestellung', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-csrf-token': cartCsrfToken },
         body: JSON.stringify(data)
       })
       .then(function(r) { return r.json(); })
