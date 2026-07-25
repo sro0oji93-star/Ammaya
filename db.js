@@ -245,6 +245,10 @@ async function initialize() {
     ['hero_pizza_image', '/images/pizza_hero.png'],
     ['about_title', 'Unsere Philosophie'],
     ['about_text', 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschließlich frische Zutaten und legen größten Wert auf Qualität.'],
+    ['primary_color', '#eb0029'],
+    ['secondary_color', '#ff4d4d'],
+    ['logo_url', ''],
+    ['font_family', 'Inter'],
   ];
   for (const [key, value] of defaultSettings) {
     await query(

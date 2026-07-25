@@ -97,6 +97,33 @@
     </div>
   </div>
 
+  <div class="settings-card">
+    <h3>Design</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Primärfarbe (Buttons, Header)</label>
+        <input type="color" name="primary_color" value="<%= settings.primary_color || '#eb0029' %>" style="width:100%;height:40px;padding:2px;cursor:pointer">
+      </div>
+      <div class="form-group">
+        <label>Sekundärfarbe (Hover, Akzente)</label>
+        <input type="color" name="secondary_color" value="<%= settings.secondary_color || '#ff4d4d' %>" style="width:100%;height:40px;padding:2px;cursor:pointer">
+      </div>
+      <div class="form-group">
+        <label>Schriftart</label>
+        <select name="font_family">
+          <option value="Inter" <%= settings.font_family === 'Inter' || !settings.font_family ? 'selected' : '' %>>Inter (Modern)</option>
+          <option value="Playfair Display" <%= settings.font_family === 'Playfair Display' ? 'selected' : '' %>>Playfair Display (Elegant)</option>
+          <option value="Josefin Sans" <%= settings.font_family === 'Josefin Sans' ? 'selected' : '' %>>Josefin Sans (Rund)</option>
+          <option value="Lato" <%= settings.font_family === 'Lato' ? 'selected' : '' %>>Lato (Klassisch)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Logo URL (optional)</label>
+        <input type="text" name="logo_url" value="<%= settings.logo_url || '' %>" placeholder="https://example.com/logo.png">
+      </div>
+    </div>
+  </div>
+
   <button type="submit" class="btn btn-primary btn-lg">Einstellungen speichern</button>
 </form>
 <%- include('footer') %>
