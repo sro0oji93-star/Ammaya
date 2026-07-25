@@ -1,104 +1,172 @@
 <%- include('partials/header') %>
 
-<!-- Animated Hero like Yummi -->
-<section class="mad-section hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg');background-size:cover;background-position:center;position:relative;overflow:hidden;min-height:92vh;display:flex;align-items:center">
+<!-- Animated Revolution Slider-style Hero -->
+<section class="mad-section hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg');background-size:cover;background-position:center;position:relative;overflow:hidden">
   <div class="hero-overlay"></div>
 
-  <div class="container" style="position:relative;z-index:5">
-    <div class="row align-items-center" style="position:relative;min-height:80vh">
-      <div class="col-lg-5 col-md-6">
+  <!-- Revolution Slider Stage -->
+  <div class="rev-stage">
+    <!-- Slide layers - matching original Revolution Slider positioning -->
+    <!-- Layer 1: small5 (flat background pizza base) -->
+    <div class="rev-layer" style="left:41.7%;top:21.5%;width:54.1%;animation-delay:0.1s;z-index:1"><img src="/images/revolution/71681-small5.png" alt=""></div>
+    <!-- Layer 2: small4 (cheese) -->
+    <div class="rev-layer" style="left:44.7%;top:23.8%;width:50.9%;animation-delay:0.2s;z-index:2"><img src="/images/revolution/40800-small4.png" alt=""></div>
+    <!-- Layer 3: small3 (toppings) -->
+    <div class="rev-layer" style="left:45.6%;top:32%;width:54.4%;animation-delay:0.35s;z-index:3"><img src="/images/revolution/d0628-small3.png" alt=""></div>
+    <!-- Layer 4: small1 (toppings) -->
+    <div class="rev-layer" style="left:42.6%;top:19.3%;width:54.2%;animation-delay:0.5s;z-index:4"><img src="/images/revolution/bc959-small1.png" alt=""></div>
+    <!-- Layer 5: small4 (more toppings) -->
+    <div class="rev-layer" style="left:48.1%;top:24.1%;width:48%;animation-delay:0.6s;z-index:5"><img src="/images/revolution/018e7-small4.png" alt=""></div>
+    <!-- Layer 6: big1 (main angled pizza) -->
+    <div class="rev-layer" style="left:46%;top:29.6%;width:50.5%;animation-delay:0.75s;z-index:6"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
+    <!-- Layer 7: big2 (rotating detail) -->
+    <div class="rev-layer" style="left:49.5%;top:33.9%;width:40.9%;animation-delay:0.9s;z-index:7"><img src="/images/revolution/1eb76-big2.png" alt="" style="animation:madRotate 25s linear infinite 1.5s"></div>
 
-        <!-- Left Text -->
-        <div class="mad-hero-text">
-          <div class="mad-hero-line mad-hero-line-1">1 GROSSE</div>
-          <div class="mad-hero-line mad-hero-line-2">PIZZA</div>
-          <div class="mad-hero-line mad-hero-line-3">+ 4 GETRÄNKE</div>
-          <div class="mad-hero-prices">
-            <span class="mad-hero-price-item">19<span class="mad-price-cents">,99€</span><span class="mad-price-tag"> ABHOLUNG</span></span>
-            <span class="mad-hero-price-item">21<span class="mad-price-cents">,99€</span><span class="mad-price-tag"> LIEFERUNG</span></span>
-          </div>
-          <p class="mad-hero-desc">Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!</p>
-          <a href="/speisekarte" class="btn btn-big btn-style-3 mad-order-btn">JETZT BESTELLEN</a>
-        </div>
+    <!-- Drinks positioned around the pizza (matching original Yummi layout) -->
+    <div class="rev-layer" style="left:33%;top:18%;width:16%;animation-delay:0.4s,2s;z-index:8;animation-name:revSlideRight,revPendulum"><img src="/images/revolution/f13af-big3.png" alt=""></div>
+    <div class="rev-layer" style="left:79%;top:15%;width:13%;animation-delay:0.55s,2.3s;z-index:8;animation-name:revSlideRight,revPendulum"><img src="/images/revolution/d70da-big4.png" alt=""></div>
+    <div class="rev-layer" style="left:35%;bottom:8%;width:17%;animation-delay:0.65s,2.6s;z-index:8;animation-name:revSlideRight,revPendulum"><img src="/images/revolution/09e42-big5.png" alt=""></div>
+    <div class="rev-layer" style="left:82%;bottom:5%;width:12%;animation-delay:0.8s,2.9s;z-index:8;animation-name:revSlideRight,revPendulum"><img src="/images/revolution/96fdd-big6.png" alt=""></div>
 
-      </div>
-      <div class="col-lg-7 col-md-6" style="position:relative;min-height:70vh">
-
-        <!-- Pizza Animation Container -->
-        <div class="mad-pizza-world">
-          <!-- Main pizza layers stacked in center -->
-          <div class="mad-pizza-stack">
-            <!-- Background flat layers (top-down ingredients) -->
-            <div class="mad-pizza-layer l1"><img src="/images/revolution/71681-small5.png" alt=""></div>
-            <div class="mad-pizza-layer l2"><img src="/images/revolution/40800-small4.png" alt=""></div>
-            <div class="mad-pizza-layer l3"><img src="/images/revolution/d0628-small3.png" alt=""></div>
-            <div class="mad-pizza-layer l4"><img src="/images/revolution/bc959-small1.png" alt=""></div>
-            <div class="mad-pizza-layer l5"><img src="/images/revolution/018e7-small4.png" alt=""></div>
-            <!-- Main angled pizza base -->
-            <div class="mad-pizza-layer l6"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
-            <!-- Top rotating detail -->
-            <div class="mad-pizza-layer l7"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
-          </div>
-          <!-- Floating drink cans (larger, on top) -->
-          <div class="mad-floating-drink md-tl"><img src="/images/revolution/f13af-big3.png" alt=""></div>
-          <div class="mad-floating-drink md-tr"><img src="/images/revolution/d70da-big4.png" alt=""></div>
-          <div class="mad-floating-drink md-bl"><img src="/images/revolution/09e42-big5.png" alt=""></div>
-          <div class="mad-floating-drink md-br"><img src="/images/revolution/96fdd-big6.png" alt=""></div>
-        </div>
-
-      </div>
+    <!-- Text layers (left side) -->
+    <div class="rev-text rev-t1">1 GROSSE</div>
+    <div class="rev-text rev-t2">PIZZA</div>
+    <div class="rev-text rev-t3">+ 4 GETRÄNKE</div>
+    <div class="rev-prices">
+      <span class="rev-price">19<span class="rev-cents">,99€</span> <span class="rev-tag">ABHOLUNG</span></span>
+      <span class="rev-price">21<span class="rev-cents">,99€</span> <span class="rev-tag">LIEFERUNG</span></span>
     </div>
+    <div class="rev-desc">Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!</div>
+    <a href="/speisekarte" class="rev-btn">JETZT BESTELLEN</a>
   </div>
-
 </section>
 
 <style>
-/* ========== YUMMI-STYLE HERO ========== */
-.mad-hero-text { opacity:0;animation:madFadeIn 1.2s ease-out 0.5s forwards; }
-.mad-hero-line { font-family:'Josefin Sans',sans-serif;font-weight:700;font-style:italic;color:#fff;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029; }
-.mad-hero-line-1 { font-size:clamp(36px,5vw,80px);opacity:0;animation:madSlideLeft 0.8s ease-out 0.8s forwards; }
-.mad-hero-line-2 { font-size:clamp(50px,7vw,115px);text-decoration:underline;opacity:0;animation:madSlideLeft 0.8s ease-out 1.1s forwards; }
-.mad-hero-line-3 { font-size:clamp(32px,4.5vw,72px);opacity:0;animation:madSlideLeft 0.8s ease-out 1.4s forwards; }
-.mad-hero-prices { margin-top:16px;display:flex;gap:30px;opacity:0;animation:madFadeIn 1s ease-out 1.7s forwards; }
-.mad-hero-price-item { display:block; }
-.mad-hero-price-item:first-child { font-family:'Josefin Sans',sans-serif;font-size:clamp(42px,6vw,95px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1; }
-.mad-hero-price-item:last-child { font-family:'Josefin Sans',sans-serif;font-size:clamp(42px,6vw,95px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1; }
-.mad-price-cents { font-size:clamp(24px,3vw,50px); }
-.mad-price-tag { font-size:clamp(10px,1vw,16px);font-weight:700;color:#ebe117;display:block;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029;margin-top:2px; }
-.mad-hero-desc { font-size:16px;color:rgba(255,255,255,.8);margin-top:16px;opacity:0;animation:madFadeIn 1s ease-out 2s forwards; }
-.mad-order-btn { margin-top:20px;opacity:0;animation:madFadeIn 1s ease-out 2.5s forwards;margin-right:8px; }
+/* ========== REVOLUTION SLIDER STAGE ========== */
+.hero { min-height:92vh;display:flex;align-items:center; }
+.rev-stage {
+  position:relative;
+  width:100%;
+  max-width:1400px;
+  margin:0 auto;
+  aspect-ratio:1920/800;
+  pointer-events:none;
+}
 
-/* Pizza Container - right side */
-.mad-pizza-world { position:relative;width:100%;max-width:650px;margin:0 auto;aspect-ratio:1/1;pointer-events:none; }
-/* pizza layers handled by mad-pizza-layer */
+/* Layers slide from right */
+.rev-layer {
+  position:absolute;
+  opacity:0;
+  animation:revSlideRight 0.7s ease-out forwards;
+  pointer-events:none;
+}
+.rev-layer img { width:100%;height:auto;display:block; }
 
-/* Pizza stack - centered in column */
-.mad-pizza-stack { position:relative;width:100%;max-width:600px;margin:0 auto;aspect-ratio:1/1;z-index:1; }
-.mad-pizza-layer { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1; }
-.mad-pizza-layer.l6 { z-index:2; }
-.mad-pizza-layer.l7 { z-index:3; }
-.mad-pizza-layer img { width:100%;height:auto;object-fit:contain; }
-.mad-pizza-layer.l1 img { opacity:0;animation:madSlideRight 0.8s ease-out 0.3s forwards; }
-.mad-pizza-layer.l2 img { opacity:0;animation:madSlideRight 0.8s ease-out 0.5s forwards,madRotate 25s linear infinite 1.5s; }
-.mad-pizza-layer.l3 img { opacity:0;animation:madSlideRight 0.8s ease-out 0.7s forwards; }
-.mad-pizza-layer.l4 img { opacity:0;animation:madSlideRight 0.8s ease-out 0.9s forwards; }
-.mad-pizza-layer.l5 img { opacity:0;animation:madSlideRight 0.8s ease-out 1.1s forwards; }
-.mad-pizza-layer.l6 img { opacity:0;animation:madSlideRight 0.8s ease-out 1.3s forwards; }
-.mad-pizza-layer.l7 img { opacity:0;animation:madSlideRight 0.8s ease-out 1.5s forwards; }
-/* Floating drink cans at 4 corners */
-.mad-floating-drink { position:absolute;width:22%;z-index:10;animation:madSlideRight 0.6s ease-out forwards,madPendulum 3.5s ease-in-out infinite; }
-.mad-floating-drink img { width:100%;height:auto; }
-.md-tl { top:0;left:5%;animation-delay:0.4s,2s; }
-.md-tr { top:0;right:5%;animation-delay:0.5s,2.3s; }
-.md-bl { bottom:5%;left:3%;animation-delay:0.6s,2.6s; }
-.md-br { bottom:5%;right:3%;animation-delay:0.7s,2.9s; }
+@keyframes revSlideRight {
+  0% { transform:translateX(200px) rotate(45deg);opacity:0; }
+  100% { transform:translateX(0) rotate(0);opacity:1; }
+}
+@keyframes revPendulum {
+  0%,100% { transform:rotate(-6deg) translateY(0); }
+  50% { transform:rotate(6deg) translateY(-4px); }
+}
+@keyframes madRotate {
+  0% { transform:rotate(0deg); }
+  100% { transform:rotate(360deg); }
+}
 
-@keyframes madSlideRight { 0% { transform:translateX(150px) rotate(60deg);opacity:0; } 100% { transform:translateX(0) rotate(0);opacity:1; } }
-@keyframes madSlideLeft { 0% { transform:translateX(-60px);opacity:0; } 100% { transform:translateX(0);opacity:1; } }
-@keyframes madFadeIn { 0% { opacity:0; } 100% { opacity:1; } }
-@keyframes madPendulum { 0%,100% { transform:rotate(-8deg) translateY(0); } 50% { transform:rotate(8deg) translateY(-4px); } }
-@keyframes madRotate { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
-@keyframes madSlideUp { 0% { opacity:0;transform:translateY(30px) scale(0.95); } 100% { opacity:1;transform:translateY(0) scale(1); } }
+/* Text on the left - matching original positions */
+.rev-text {
+  position:absolute;
+  left:4%;
+  font-family:'Josefin Sans',sans-serif;
+  font-weight:700;
+  font-style:italic;
+  color:#fff;
+  text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;
+  opacity:0;
+  animation:revFadeLeft 0.7s ease-out forwards;
+}
+.rev-t1 { top:18%;font-size:clamp(24px,4vw,70px);animation-delay:0.6s; }
+.rev-t2 { top:30%;font-size:clamp(32px,5.5vw,100px);text-decoration:underline;animation-delay:0.8s; }
+.rev-t3 { top:40%;font-size:clamp(22px,3.5vw,60px);animation-delay:1s; }
+
+.rev-prices {
+  position:absolute;
+  left:4%;
+  top:50%;
+  display:flex;
+  gap:20px;
+  opacity:0;
+  animation:revFadeLeft 0.7s ease-out 1.2s forwards;
+}
+.rev-price {
+  font-family:'Josefin Sans',sans-serif;
+  font-size:clamp(28px,4.5vw,80px);
+  font-weight:700;
+  font-style:italic;
+  color:#ebe117;
+  text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;
+  line-height:1;
+}
+.rev-cents { font-size:clamp(16px,2.5vw,45px); }
+.rev-tag {
+  display:block;
+  font-size:clamp(9px,0.8vw,14px);
+  font-weight:700;
+  color:#ebe117;
+  text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029;
+}
+
+.rev-desc {
+  position:absolute;
+  left:4%;
+  top:63%;
+  font-size:clamp(12px,1vw,16px);
+  color:rgba(255,255,255,.8);
+  opacity:0;
+  animation:revFadeLeft 0.7s ease-out 1.6s forwards;
+  max-width:40%;
+}
+
+.rev-btn {
+  position:absolute;
+  left:4%;
+  top:70%;
+  display:inline-block;
+  padding:clamp(8px,1vw,16px) clamp(20px,2.5vw,40px);
+  background:#eb0029;
+  color:#fff;
+  font-family:'Josefin Sans',sans-serif;
+  font-weight:700;
+  font-size:clamp(12px,1.2vw,20px);
+  border:2px solid #fff;
+  border-radius:30px;
+  text-transform:uppercase;
+  text-decoration:none;
+  opacity:0;
+  animation:revFadeLeft 0.7s ease-out 2s forwards;
+  transition:all .3s;
+  pointer-events:auto;
+}
+.rev-btn:hover { background:#fff;color:#eb0029;border-color:#eb0029; }
+
+@keyframes revFadeLeft {
+  0% { transform:translateX(-40px);opacity:0; }
+  100% { transform:translateX(0);opacity:1; }
+}
+
+/* Responsive: stack on mobile */
+@media (max-width:768px) {
+  .rev-stage { aspect-ratio:auto;min-height:80vh; }
+  .rev-t1 { top:8%;left:5%; }
+  .rev-t2 { top:16%;left:5%; }
+  .rev-t3 { top:24%;left:5%; }
+  .rev-prices { top:33%;left:5%; }
+  .rev-desc { top:42%;left:5%;max-width:80%; }
+  .rev-btn { top:50%;left:5%; }
+  .rev-layer { display:none; }
+}
 </style>
 
 <div class="container">
@@ -113,9 +181,9 @@
             var icons = { pizza:'fa-pizza-slice', burger:'fa-hamburger', croque:'fa-bread-slice', salat:'fa-leaf', pasta:'fa-utensils', schnitzel:'fa-drumstick-bite', snacks:'fa-cookie', getraenke:'fa-wine-glass-alt', 'snack-rolls':'fa-egg-roll', 'saucen-dips':'fa-tint' };
             var icon = icons[c.slug] || 'fa-utensils';
           %>
-          <i class="fas <%= icon %>" style="font-size:32px;color:#eb0029"></i>
+          <i class="fas <%= icon %>"></i>
         </i>
-        <h6 class="mad-menu-title"><%= c.name %></h6>
+        <span class="mad-menu-title"><%= c.name %></span>
       </a>
     </div>
     <% }); %>
@@ -123,159 +191,4 @@
 
 </div>
 
-<!-- All Products -->
-<div class="mad-section">
-  <div class="container">
-    <div class="mad-products mad-grid mad-grid--cols-4">
-      <% products.forEach(function(p) { %>
-      <div class="mad-grid-item">
-        <div class="mad-product">
-          <figure class="mad-product-image">
-            <% if (p.image) { %>
-            <a href="/speisekarte/produkt/<%= p.slug %>"><img src="<%= p.image %>" alt="<%= p.name %>" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=&quot;fas fa-utensils&quot; style=&quot;font-size:48px;color:#ccc&quot;></i>'"></a>
-            <% } else { %>
-            <a href="/speisekarte/produkt/<%= p.slug %>" style="display:flex;align-items:center;justify-content:center;height:200px;background:#f8f5f0"><i class="fas fa-utensils" style="font-size:48px;color:#ccc"></i></a>
-            <% } %>
-          </figure>
-          <div class="mad-product-description">
-            <h4 class="mad-product-title"><a href="/speisekarte/produkt/<%= p.slug %>" class="mad-link"><%= p.name %></a></h4>
-            <p><%= p.description ? p.description.substring(0, 80) + (p.description.length > 80 ? '...' : '') : '' %></p>
-          </div>
-          <div class="mad-product-calc">
-            <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); %>
-            <span class="mad-product-price">ab <%= minP.toFixed(2) %> €</span>
-            <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1">In den Warenkorb</button>
-            <% } else { %>
-            <span class="mad-product-price"><%= p.price.toFixed(2) %> €</span>
-            <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">In den Warenkorb</button>
-            <% } %>
-          </div>
-        </div>
-      </div>
-      <% }); %>
-    </div>
-    <div class="align-center">
-      <a href="/speisekarte" class="btn btn-style-2 btn-big">Alle ansehen</a>
-    </div>
-  </div>
-</div>
-
-<!-- Half-Section: Create Your Own -->
-<div class="mad-section no-pd mad-section--stretched-content-no-px">
-  <div class="mad-half-section">
-    <div class="mad-col">
-      <div class="mad-half-section-item" style="background:linear-gradient(135deg,rgba(35,34,35,.7),rgba(35,34,35,.4)),url('/images/revolution/5b6b6-burger.png') center/cover">
-        <div class="mad-half-content">
-          <div class="content-element-6">
-            <h2 class="mad-page-title">Ihre eigene<br>Kreation</h2>
-            <p>Stellen Sie sich Ihre Lieblingspizza oder Ihren Burger selbst zusammen.</p>
-          </div>
-          <a href="/speisekarte" class="btn btn-style-3 btn-big">Jetzt kombinieren</a>
-        </div>
-      </div>
-    </div>
-    <div class="mad-col">
-      <div class="mad-half-section-item" style="background:linear-gradient(135deg,rgba(35,34,35,.7),rgba(35,34,35,.4)),url('/images/384x384_img3.jpg') center/cover">
-        <div class="mad-half-content">
-          <div class="content-element-6">
-            <h2 class="mad-page-title">Angebote &<br>Aktionen</h2>
-            <p>Verpassen Sie nicht unsere aktuellen Angebote und Sparmenüs.</p>
-          </div>
-          <a href="/speisekarte" class="btn btn-style-3 btn-big">Angebote entdecken</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Testimonials -->
-<div class="mad-section">
-  <div class="container">
-    <h2 class="mad-page-title align-center">Das sagen unsere Gäste</h2>
-    <div class="mad-testimonials">
-      <div class="mad-grid mad-grid--cols-2 owl-carousel" id="testimonialCarousel">
-        <% testimonials.forEach(function(t) { %>
-        <div class="mad-grid-item">
-          <div class="mad-testimonial">
-            <div data-estimate="5" class="mad-rating"></div>
-            <div class="mad-testimonial-info">
-              <blockquote><p>"<%= t.text %>"</p></blockquote>
-            </div>
-            <div class="mad-author">
-              <div class="mad-author-img"><% if (t.image) { %><img src="<%= t.image %>" alt="<%= t.name %>" style="width:48px;height:48px;border-radius:50%;object-fit:cover"><% } else { %><span class="material-icons" style="font-size:36px;color:#eb0029">person</span><% } %></div>
-              <div class="mad-author-info">
-                <cite><%= t.name %></cite>
-              </div>
-            </div>
-          </div>
-        </div>
-        <% }); %>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- App Download -->
-<div class="mad-section mad-col-img mad-section--stretched mad-colorizer--scheme-" style="background:linear-gradient(135deg,rgba(35,34,35,.85),rgba(35,34,35,.7)),url('/images/revolution/6cbea-bg1.jpg') center/cover">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-5 col-sm-10">
-        <h2 style="color:#fff;font-style:italic">Bestellen & Bezahlen<br>in wenigen Minuten</h2>
-        <p class="content-element-6" style="color:rgba(255,255,255,.7)">Laden Sie unsere App herunter und bestellen Sie ganz einfach von unterwegs. Verfolgen Sie Ihre Bestellung in Echtzeit.</p>
-        <div class="btn-set big-btns">
-          <a href="#" class="app-btn"><i class="fab fa-apple"></i> App Store</a>
-          <a href="#" class="app-btn"><i class="fab fa-google-play"></i> Google Play</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<!-- Instafeed-style grid -->
-<div class="mad-section no-pd mad-section--stretched-content-no-px">
-  <div class="mad-instafeed">
-    <div class="mad-grid item-col-5 no-gutters">
-      <div class="mad-col">
-        <img src="/images/264x264_img1.jpg" alt="">
-      </div>
-      <div class="mad-col">
-        <img src="/images/264x264_img2.jpg" alt="">
-      </div>
-      <div class="mad-col">
-        <img src="/images/448x288_img3.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
-      </div>
-      <div class="mad-col">
-        <img src="/images/384x384_img4.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
-      </div>
-      <div class="mad-col">
-        <img src="/images/384x384_img5.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-(function() {
-  var slides = document.querySelectorAll('.hero-slide');
-  var dots = document.querySelectorAll('.hero-dot');
-  if (slides.length < 2) return;
-  var current = 0;
-  function showSlide(i) {
-    slides.forEach(function(s, idx) { s.style.display = idx === i ? 'block' : 'none'; });
-    dots.forEach(function(d, idx) { d.style.background = idx === i ? '#eb0029' : 'rgba(255,255,255,0.5)'; });
-    current = i;
-  }
-  dots.forEach(function(d) {
-    d.addEventListener('click', function() { showSlide(parseInt(this.getAttribute('data-index'))); });
-  });
-  setInterval(function() { showSlide((current + 1) % slides.length); }, 5000);
-})();
-</script>
-<style>
-@media (max-width: 767px) {
-  .hero-food-price { align-items: flex-end !important; text-align: right !important; }
-}
-</style>
 <%- include('partials/footer') %>
