@@ -310,7 +310,7 @@
             }
 
             .mad-sub-title.style-2 {
-                color: #eb0029;
+                color: var(--primary, #eb0029);
             }
 
             .mad-semi-title {
@@ -362,7 +362,7 @@
             }
 
             .text-color-2 .mad-page-title {
-                color: #eb0029;
+                color: var(--primary, #eb0029);
             }
 
             .text-color-3 .mad-page-title {
@@ -413,7 +413,7 @@
             }
 
             .mad-link.color-2 {
-                color: #eb0029;
+                color: var(--primary, #eb0029);
             }
 
             .mad-dir {
@@ -604,7 +604,7 @@
         .mad-header {
             position: relative;
             z-index: 25;
-            background: #eb0029;
+            background: var(--primary, #eb0029);
             color: #fdf7e6;
         }
 
@@ -626,7 +626,7 @@
             left: 0;
             right: 0;
             z-index: 50;
-            background: #eb0029;
+            background: var(--primary, #eb0029);
         }
         
         .mad-pre-header {
@@ -767,7 +767,7 @@
 
         .mad-header.style-2 .mad-navigation > li:hover > a, 
         .mad-header.style-2 .mad-navigation > li.current-menu-item > a {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-header.style-2 .mad-navigation > li > a {
@@ -776,7 +776,7 @@
 
         .mad-header.style-2 .mad-our-info.type-2 .mad-info-title,
         .mad-header.style-2 .mad-our-info.type-2 .mad-info i {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-header.style-2 .mad-actions .mad-item-link {
@@ -791,7 +791,7 @@
         }
 
         .mad-header.style-2 .mad-item-link.mad-dropdown-title span {
-            background: #eb0029;
+            background: var(--primary, #eb0029);
             color: #fff;
         }
 
@@ -812,7 +812,7 @@
             padding-right: 2rem;
             font-family: 'Josefin Sans', sans-serif;
             font-weight: 600;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             text-align: center;
             background: #fef2f4;
             border-radius: 0 0 1.5rem 1.5rem;
@@ -1131,7 +1131,7 @@
         }
 
         .mad-breadcrumb a {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-breadcrumb.with-bg-image a {
@@ -1350,7 +1350,7 @@
             }
 
             .mad-widget.mad-categories ul li a {
-                color: #eb0029;
+                color: var(--primary, #eb0029);
                 font-weight: bold;
                 padding: 0 2rem;
                 padding-left: 5rem;
@@ -1439,7 +1439,7 @@
 
                 .tagcloud > a:hover {
                     color: #fff;
-                    background: #eb0029;
+                    background: var(--primary, #eb0029);
                 }
                 
                 .tags-wrap {
@@ -1522,7 +1522,7 @@
             }
 
             .mad-banner.with-icon .mad-page-title span {
-                color: #eb0029;
+                color: var(--primary, #eb0029);
             }
 
             .mad-banner.with-icon .mad-banner-icon .svg {
@@ -1530,7 +1530,7 @@
             }
 
             .mad-banner.with-icon .mad-banner-icon .svg path {
-                fill: #eb0029;
+                fill: var(--primary, #eb0029);
                 
             } 
 
@@ -1555,7 +1555,7 @@
             }
 
             .mad-banner.bg-color-2 {
-                background: #eb0029;
+                background: var(--primary, #eb0029);
             }
 
             .mad-banner.bg-color-2 .mad-page-title span {
@@ -1722,7 +1722,7 @@
                 .calendar_wrap table td > div > a:before {
                     content: '';
                     position: absolute;
-                    background: #eb0029;
+                    background: var(--primary, #eb0029);
                     border-radius: 50%;
                     width: 2rem;
                     height: 2rem;
@@ -1957,7 +1957,7 @@
                     left: 0;
                     width: 100%;
                     height: 3px;
-                    background: #eb0029;
+                    background: var(--primary, #eb0029);
                 }
 
                 .calendar_wrap.big-calendar .mad-dropdown-element:before,
@@ -2070,7 +2070,7 @@
                 }
 
                 .mad-widget .recentcomments li a {
-                    color: #eb0029;
+                    color: var(--primary, #eb0029);
                 }
 
                 .mad-widget .recentcomments li a:hover {
@@ -2386,7 +2386,7 @@
         }
 
         .arcticmodal-close:hover {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .arcticmodal-close i {
@@ -2562,7 +2562,7 @@
 
         .mad-text-link {
             font-weight: bold;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             text-transform: uppercase;
         }
 
@@ -2739,7 +2739,7 @@
         }
 
         .mad-social-icons.style-2 ul li a {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-social-icons.style-2 ul li a:hover {
@@ -2753,7 +2753,7 @@
             text-align: center;
             border-radius: 50%;
             display: block;
-            background: #eb0029;
+            background: var(--primary, #eb0029);
             font-size: 1.25rem;
             color: #fff;
         }
@@ -2788,7 +2788,7 @@
             float: left;
             margin-right: 0.5rem;
             margin-top: 1rem;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-dropcap--filled > *:first-child:first-letter {
@@ -2936,7 +2936,7 @@
         }
 
         .mad-alert-box--error {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-alert-box--error .mad-alert-box-inner {
@@ -2964,7 +2964,7 @@
         .mad-entity-content > ul:not(.mad-list--icon):not(.mad-list--unstyled) > li::before,
         .mad-entity-content > ul > li i {
             font-size: 1.125rem;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-entity-content ol {
@@ -3049,7 +3049,7 @@
         }
 
         .mad-vr-list.style-2 ul li a {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-vr-list.style-2 ul li:before {
@@ -3119,7 +3119,7 @@
             font-style: italic;
             font-weight: 600;
             letter-spacing: -0.4px;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         blockquote:not(.mad-blockquote--unstyled) cite,
@@ -3160,7 +3160,7 @@
         }
 
         .mad-testimonial-bg.style-2 {
-            background: #eb0029;
+            background: var(--primary, #eb0029);
         }
 
         .mad-testimonial-bg.style-2 blockquote:not(.mad-blockquote--unstyled) {
@@ -3277,7 +3277,7 @@
         }
 
         [class*="btn"].btn-style-3 {
-            background: #eb0029;
+            background: var(--primary, #eb0029);
             color: #fff;
         }
 
@@ -3420,7 +3420,7 @@
             font-weight: 700;
             letter-spacing: 0.3px;
             text-transform: uppercase;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-read-more:not(.no-arrow):after {
@@ -3430,7 +3430,7 @@
             top: 7px;
             -webkit-mask: url(../yummi_svg_icons/arrow_right.html) no-repeat;
             mask: url(../yummi_svg_icons/arrow_right.html) no-repeat;
-            background-color: #eb0029;
+            background-color: var(--primary, #eb0029);
             width: 13px;
             height: 11px;
         }
@@ -3629,7 +3629,7 @@
             display: flex;
             justify-content: space-between;
             font-weight: bold;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             font-size: 1.125rem;
             cursor: pointer;
         }
@@ -3795,7 +3795,7 @@
             display: inline-block;
             text-align: initial;
             position: relative;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             padding-left: 2rem;
             letter-spacing: -0.25px;
             border-bottom: 2px solid transparent;
@@ -3945,7 +3945,7 @@
         }
 
         .mad-tabs:not(.mad-tabs--unstyled) .mad-tabs-nav a {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             display: block;
             white-space: nowrap;
 
@@ -3977,7 +3977,7 @@
 
         .mad-tabs.mad-tabs--style-2 .mad-tabs-nav a {
             padding: 26px 1.75rem;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             background: #fbf9d1;
             border: 2px solid #ebe117;
             border-radius: 1.5rem 1.5rem 0 0;
@@ -4286,7 +4286,7 @@
         }
 
         .mad-progress-bars--secondary .mad-progress-bar-indicator {
-            background: #eb0029;
+            background: var(--primary, #eb0029);
         }
 
         .mad-progress-bars--secondary .mad-progress-bar-title {
@@ -4329,7 +4329,7 @@
             line-height: 4rem;
             white-space: nowrap;
             font-weight: bold;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-counter-icon {
@@ -4345,7 +4345,7 @@
         }
 
         .mad-counter-icon .svg .cls-1 {
-            fill: #eb0029;
+            fill: var(--primary, #eb0029);
             opacity: 1;
         }
 
@@ -4500,7 +4500,7 @@
         }
 
         table tr.bg .mad-product-price {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             font-size: 1.25rem;
         }
 
@@ -4541,7 +4541,7 @@
         }
 
         .mad-label.red {
-            background: #eb0029;
+            background: var(--primary, #eb0029);
         }
 
         .mad-label.yellow {
@@ -4752,7 +4752,7 @@
         }
 
         .shopping-cart .subtotal span {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .shopping-cart .subtotal span:before {
@@ -4827,7 +4827,7 @@
             font-weight: bold;
             font-size: 1rem;
             text-transform: uppercase;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .shop-cart-form .mad-close-item:hover {
@@ -5542,7 +5542,7 @@
         table tfoot tr.bg td,
         .mad-table.mad-table--vertical tfoot tr th,
         .mad-table.mad-table--vertical tfoot tr td {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             font-weight: bold;
             font-size: 1.25rem;
         }
@@ -5632,7 +5632,7 @@
         .mad-pt-price-num {
             position: relative;
             font-size: 2.25rem;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             line-height: 2rem;
             font-weight: bold;
             letter-spacing: -1px;
@@ -5847,7 +5847,7 @@
         /* Style-3 */
 
         .mad-icon-boxes.style-3 .mad-icon-box .mad-icon-box-icon .svg path {
-            fill: #eb0029;
+            fill: var(--primary, #eb0029);
         }
 
         .mad-icon-boxes.style-3 .mad-icon-box .mad-icon-box-icon .svg .cls-2 {
@@ -6176,7 +6176,7 @@
         }
 
         .mad-entities.type-3 .mad-entity .mad-entity-tags a:hover {
-            background: #eb0029;
+            background: var(--primary, #eb0029);
             color: #fff;
         }
 
@@ -6377,7 +6377,7 @@
             font-size: 1.5rem;
             line-height: 2.5rem;
             background: #ebe117;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             padding: 4.5rem;
             font-weight: 600;
             border-radius: 1rem;
@@ -6837,7 +6837,7 @@
     ---------------------------------------- */
 
         #rev_slider_1_1_wrapper.rev_slider_wrapper {
-            background: #eb0029;
+            background: var(--primary, #eb0029);
         }
 
         .container.wide > #rev_slider_1_1_wrapper.rev_slider_wrapper {
@@ -7115,7 +7115,7 @@
                 bottom: 0;
                 opacity: 1;
                 cursor: pointer;
-                background: #eb0029;
+                background: var(--primary, #eb0029);
             }
 
             .mad-range-slider .ui-slider-handle {
@@ -7344,7 +7344,7 @@
             }
 
             .mad-custom-select .mad-options-list > li:hover, .mad-custom-select .mad-options-list > li.mad-active {
-                color: #eb0029;
+                color: var(--primary, #eb0029);
             }
 
             .mad-custom-select.mad-opened .mad-options-list,
@@ -7451,7 +7451,7 @@
 
             p .req,
             label span {
-                color: #eb0029;
+                color: var(--primary, #eb0029);
             }
 
         /* ----------------------------------------
@@ -7645,7 +7645,7 @@
         }
 
         .mad-colorizer--scheme-color-3 > .mad-colorizer-bg-color {
-            background: #eb0029;
+            background: var(--primary, #eb0029);
         }
 
         .mad-colorizer--scheme-color-4 > .mad-colorizer-bg-color {
@@ -7881,7 +7881,7 @@
             font-weight: bold;
             font-size: 24px;
             line-height: 2rem;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             letter-spacing: -0.3px;
         }
 
@@ -7935,7 +7935,7 @@
         .mad-countdown .countdown-amount {
             font-family: 'Josefin Sans', sans-serif;
             font-size: 4.5rem;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             font-weight: bold;
             line-height: 4rem;
             letter-spacing: -0.3px;
@@ -8089,7 +8089,7 @@
         }
 
         .mad-twitter-feed > li a {
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-twitter-feed > li a:hover {
@@ -8166,7 +8166,7 @@
     .mad-total-section .mad-total-item {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #eb0029;
+        color: var(--primary, #eb0029);
     }
 
     .mad-total-section .mad-total-item span {
@@ -8401,7 +8401,7 @@
         font-family: 'Josefin Sans', sans-serif;
         position: relative;
         display: flex;
-        color: #eb0029;
+        color: var(--primary, #eb0029);
         line-height: 2rem;
         font-weight: bold;
         font-size: 1.5rem;
@@ -8554,7 +8554,7 @@
         font-size: 3rem;
         line-height: 48px;
         font-weight: bold;
-        color: #eb0029;
+        color: var(--primary, #eb0029);
     }
 
     .mad-menu-item .mad-menu-price:before {
@@ -8619,12 +8619,12 @@
             font-size: 22.5rem;
             font-weight: bold;
             line-height: 19rem;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
         }
 
         .mad-404-title + * {
             margin-top: -4rem;
-            color: #eb0029;
+            color: var(--primary, #eb0029);
             font-weight: 500;
         }
 

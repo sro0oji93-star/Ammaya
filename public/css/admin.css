@@ -4,7 +4,7 @@
   --bg2:#fff;
   --bg3:#fff;
   --bg4:#f0ece6;
-  --red:#b8001f;
+  --red:var(--primary, #b8001f);
   --red-dark:#8f0018;
   --yellow:#ebe117;
   --white:#fff;
