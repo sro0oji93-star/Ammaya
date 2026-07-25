@@ -1,49 +1,101 @@
 <%- include('partials/header') %>
 
-<!-- Hero Slider -->
-<section class="hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg');position:relative">
+<!-- Animated Hero -->
+<section class="hero mad-hero-animated" style="background-image:url('/images/revolution/6cbea-bg1.jpg');position:relative;overflow:hidden;min-height:600px">
   <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <% if (heroSlides && heroSlides.length > 0) { %>
-    <% heroSlides.forEach(function(slide, i) { %>
-    <div class="hero-slide" style="display:<%= i === 0 ? 'block' : 'none' %>">
-      <div class="hero-food-row">
-        <div class="hero-food-text">
-          <% if (slide.title) { %><h2 class="hero-text-title"><%= slide.title %></h2><% } %>
-          <% if (slide.subtitle) { %><p class="hero-text-subtitle"><%= slide.subtitle %></p><% } %>
+  <div class="hero-content" style="position:relative;z-index:5">
+
+    <!-- Animated Pizza Layers -->
+    <div class="mad-pizza-layers">
+      <!-- Layer 1: Background pizza base -->
+      <div class="mad-pizza-layer mad-pizza-layer-1"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
+      <!-- Layer 2: Cheese -->
+      <div class="mad-pizza-layer mad-pizza-layer-2"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
+      <!-- Layer 3: Salami/meat -->
+      <div class="mad-pizza-layer mad-pizza-layer-3"><img src="/images/revolution/f13af-big3.png" alt=""></div>
+      <!-- Layer 4: Vegetables -->
+      <div class="mad-pizza-layer mad-pizza-layer-4"><img src="/images/revolution/d70da-big4.png" alt=""></div>
+      <!-- Layer 5: Herbs -->
+      <div class="mad-pizza-layer mad-pizza-layer-5"><img src="/images/revolution/09e42-big5.png" alt=""></div>
+      <!-- Layer 6: Drizzle -->
+      <div class="mad-pizza-layer mad-pizza-layer-6"><img src="/images/revolution/96fdd-big6.png" alt=""></div>
+      <!-- Small decorations -->
+      <div class="mad-pizza-layer mad-pizza-small-1"><img src="/images/revolution/bc959-small1.png" alt=""></div>
+      <div class="mad-pizza-layer mad-pizza-small-2"><img src="/images/revolution/d0628-small3.png" alt=""></div>
+      <div class="mad-pizza-layer mad-pizza-small-3"><img src="/images/revolution/40800-small4.png" alt=""></div>
+      <div class="mad-pizza-layer mad-pizza-small-4"><img src="/images/revolution/71681-small5.png" alt=""></div>
+    </div>
+
+    <!-- Text Content -->
+    <div class="hero-food-row" style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:6">
+      <div class="hero-food-text mad-hero-text">
+        <h2 class="hero-text-title mad-hero-title">1 LARGE<br><span class="mad-hero-highlight">PIZZA</span><br><span class="mad-hero-sub">+ 4 DRINKS</span></h2>
+        <p class="hero-text-subtitle mad-hero-subtitle">Order any large 3 topping pizza and get 4 drinks (330ml) for free!</p>
+      </div>
+      <div class="hero-food-right" style="position:relative">
+        <div class="mad-price-tag mad-price-tag-1">
+          <span class="hero-price mad-price-amount">19.99€</span>
+          <span class="hero-price-label mad-price-label">PICK UP</span>
         </div>
-        <div class="hero-food-right">
-          <div class="hero-food-img-wrap">
-            <img src="<%= slide.image || '/images/revolution/5b6b6-burger.png' %>" alt="" style="max-width:100%;height:auto">
-          </div>
-          <% if (slide.price) { %>
-          <div class="hero-food-price">
-            <span class="hero-price"><%= parseFloat(slide.price).toFixed(2) %>€</span>
-            <% if (slide.price_label) { %><span class="hero-price-label"><%= slide.price_label %></span><% } %>
-          </div>
-          <% } %>
+        <div class="mad-price-tag mad-price-tag-2">
+          <span class="hero-price mad-price-amount">21.99€</span>
+          <span class="hero-price-label mad-price-label">DELIVERY</span>
         </div>
+        <a href="/speisekarte" class="btn btn-style-3 btn-big mad-hero-btn">ORDER NOW!</a>
       </div>
     </div>
-    <% }); %>
-    <!-- Slider Dots -->
-    <% if (heroSlides.length > 1) { %>
+
+    <!-- Slider Dots (static for now) -->
     <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:10">
-      <% heroSlides.forEach(function(slide, i) { %>
-      <span class="hero-dot" data-index="<%= i %>" style="width:12px;height:12px;border-radius:50%;background:<%= i === 0 ? '#eb0029' : 'rgba(255,255,255,0.5)' %>;cursor:pointer;transition:all .3s"></span>
-      <% }); %>
+      <span style="width:12px;height:12px;border-radius:50%;background:#eb0029;cursor:pointer;transition:all .3s"></span>
+      <span style="width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.5);cursor:pointer;transition:all .3s"></span>
     </div>
-    <% } %>
-    <% } else { %>
-    <div class="hero-food-row">
-      <div class="hero-food-text">
-        <h2 class="hero-text-title">Willkommen bei Ammaya</h2>
-        <p class="hero-text-subtitle">Entdecken Sie unsere vielfältigen Gerichte</p>
-      </div>
-    </div>
-    <% } %>
+
   </div>
 </section>
+
+<style>
+.mad-hero-animated { min-height: 600px; }
+.mad-pizza-layers { position:absolute;top:0;right:0;width:100%;height:100%;pointer-events:none;z-index:3; }
+.mad-pizza-layer { position:absolute; }
+.mad-pizza-layer img { max-width:100%;height:auto; }
+
+/* Pizza layers fly in from right with rotation */
+.mad-pizza-layer-1 { top:8%;right:-10%;width:55%;animation:slideInPizza 1.5s ease-out 0.1s forwards,floatPizza 4s ease-in-out 2s infinite; }
+.mad-pizza-layer-2 { top:12%;right:-8%;width:50%;animation:slideInPizza 1.5s ease-out 0.3s forwards,floatPizza 4s ease-in-out 2.5s infinite; }
+.mad-pizza-layer-3 { top:18%;right:-5%;width:52%;animation:slideInPizza 1.5s ease-out 0.5s forwards,swingPizza 3s ease-in-out 2.2s infinite; }
+.mad-pizza-layer-4 { top:15%;right:-6%;width:45%;animation:slideInPizza 1.5s ease-out 0.7s forwards,swingPizza 3.5s ease-in-out 2.7s infinite; }
+.mad-pizza-layer-5 { top:20%;right:-4%;width:42%;animation:slideInPizza 1.5s ease-out 0.9s forwards,swingPizza 4s ease-in-out 3s infinite; }
+.mad-pizza-layer-6 { top:10%;right:-7%;width:48%;animation:slideInPizza 1.5s ease-out 1.1s forwards,swingPizza 3s ease-in-out 2.5s infinite; }
+
+/* Small decorations */
+.mad-pizza-small-1 { top:5%;right:38%;width:18%;animation:slideInPizza 1.5s ease-out 0.15s forwards,swingPizza 4s ease-in-out 2s infinite; }
+.mad-pizza-small-2 { top:50%;right:5%;width:15%;animation:slideInPizza 1.5s ease-out 0.35s forwards,swingPizza 5s ease-in-out 3s infinite; }
+.mad-pizza-small-3 { top:55%;right:12%;width:12%;animation:slideInPizza 1.5s ease-out 0.55s forwards,swingPizza 4.5s ease-in-out 2.8s infinite; }
+.mad-pizza-small-4 { top:58%;right:8%;width:14%;animation:slideInPizza 1.5s ease-out 0.75s forwards,swingPizza 3.5s ease-in-out 2.2s infinite; }
+
+/* Price tags swinging */
+.mad-price-tag { position:absolute;right:20px;animation:swingPrice 2.5s ease-in-out infinite;transform-origin:top center; }
+.mad-price-tag-1 { top:-40px; }
+.mad-price-tag-2 { top:50px;right:11px;animation-delay:0.5s; }
+.mad-price-amount { font-size:clamp(36px,5vw,60px);font-weight:700;color:#ebe117;display:block;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029; }
+.mad-price-label { font-size:14px;font-weight:700;color:#ebe117;display:block;text-align:center;text-shadow:1px 1px 0 #eb0029,2px 2px 0 #eb0029; }
+
+/* Text animations */
+.mad-hero-text { opacity:0;animation:fadeInUp 1s ease-out 1.5s forwards; }
+.mad-hero-title { font-family:'Josefin Sans',sans-serif;font-size:clamp(40px,6vw,90px);font-weight:700;font-style:italic;color:#fff;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1.1; }
+.mad-hero-highlight { text-decoration:underline; }
+.mad-hero-sub { font-size:clamp(28px,4vw,60px); }
+.mad-hero-subtitle { opacity:0;animation:fadeInUp 1s ease-out 2s forwards;font-size:18px;color:rgba(255,255,255,0.8);margin-top:10px; }
+.mad-hero-btn { opacity:0;animation:fadeInUp 1s ease-out 2.5s forwards;margin-top:30px; }
+
+/* Keyframes */
+@keyframes slideInPizza { 0% { transform:translateX(200px) rotate(90deg);opacity:0; } 100% { transform:translateX(0) rotate(0deg);opacity:1; } }
+@keyframes floatPizza { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+@keyframes swingPizza { 0%,100% { transform:rotate(-2deg); } 50% { transform:rotate(2deg); } }
+@keyframes swingPrice { 0%,100% { transform:rotate(-3deg); } 50% { transform:rotate(3deg); } }
+@keyframes fadeInUp { 0% { transform:translateY(30px);opacity:0; } 100% { transform:translateY(0);opacity:1; } }
+</style>
 
 <div class="container">
 
