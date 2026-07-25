@@ -28,15 +28,18 @@
         <div class="mad-pizza-world">
           <!-- Main pizza layers stacked in center -->
           <div class="mad-pizza-stack">
-            <div class="mad-pizza-layer l1"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
-            <div class="mad-pizza-layer l2"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
-            <div class="mad-pizza-layer l3"><img src="/images/revolution/bc959-small1.png" alt=""></div>
-            <div class="mad-pizza-layer l4"><img src="/images/revolution/d0628-small3.png" alt=""></div>
-            <div class="mad-pizza-layer l5"><img src="/images/revolution/40800-small4.png" alt=""></div>
-            <div class="mad-pizza-layer l6"><img src="/images/revolution/71681-small5.png" alt=""></div>
-            <div class="mad-pizza-layer l7"><img src="/images/revolution/018e7-small4.png" alt=""></div>
+            <!-- Background flat layers (top-down ingredients) -->
+            <div class="mad-pizza-layer l1"><img src="/images/revolution/71681-small5.png" alt=""></div>
+            <div class="mad-pizza-layer l2"><img src="/images/revolution/40800-small4.png" alt=""></div>
+            <div class="mad-pizza-layer l3"><img src="/images/revolution/d0628-small3.png" alt=""></div>
+            <div class="mad-pizza-layer l4"><img src="/images/revolution/bc959-small1.png" alt=""></div>
+            <div class="mad-pizza-layer l5"><img src="/images/revolution/018e7-small4.png" alt=""></div>
+            <!-- Main angled pizza base -->
+            <div class="mad-pizza-layer l6"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
+            <!-- Top rotating detail -->
+            <div class="mad-pizza-layer l7"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
           </div>
-          <!-- Floating drink cans -->
+          <!-- Floating drink cans (larger, on top) -->
           <div class="mad-floating-drink md-tl"><img src="/images/revolution/f13af-big3.png" alt=""></div>
           <div class="mad-floating-drink md-tr"><img src="/images/revolution/d70da-big4.png" alt=""></div>
           <div class="mad-floating-drink md-bl"><img src="/images/revolution/09e42-big5.png" alt=""></div>
@@ -70,8 +73,10 @@
 /* pizza layers handled by mad-pizza-layer */
 
 /* Pizza stack - centered in column */
-.mad-pizza-stack { position:relative;width:100%;max-width:600px;margin:0 auto;aspect-ratio:1/1; }
-.mad-pizza-layer { position:absolute;inset:0;display:flex;align-items:center;justify-content:center; }
+.mad-pizza-stack { position:relative;width:100%;max-width:600px;margin:0 auto;aspect-ratio:1/1;z-index:1; }
+.mad-pizza-layer { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1; }
+.mad-pizza-layer.l6 { z-index:2; }
+.mad-pizza-layer.l7 { z-index:3; }
 .mad-pizza-layer img { width:100%;height:auto;object-fit:contain; }
 .mad-pizza-layer.l1 img { opacity:0;animation:madSlideRight 0.8s ease-out 0.3s forwards; }
 .mad-pizza-layer.l2 img { opacity:0;animation:madSlideRight 0.8s ease-out 0.5s forwards,madRotate 25s linear infinite 1.5s; }
@@ -81,7 +86,7 @@
 .mad-pizza-layer.l6 img { opacity:0;animation:madSlideRight 0.8s ease-out 1.3s forwards; }
 .mad-pizza-layer.l7 img { opacity:0;animation:madSlideRight 0.8s ease-out 1.5s forwards; }
 /* Floating drink cans at 4 corners */
-.mad-floating-drink { position:absolute;width:16%;animation:madSlideRight 0.6s ease-out forwards,madPendulum 3.5s ease-in-out infinite; }
+.mad-floating-drink { position:absolute;width:22%;z-index:10;animation:madSlideRight 0.6s ease-out forwards,madPendulum 3.5s ease-in-out infinite; }
 .mad-floating-drink img { width:100%;height:auto; }
 .md-tl { top:0;left:5%;animation-delay:0.4s,2s; }
 .md-tr { top:0;right:5%;animation-delay:0.5s,2.3s; }
