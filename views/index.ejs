@@ -1,37 +1,29 @@
 <%- include('partials/header') %>
 
 <!-- Animated Revolution Slider-style Hero -->
-<section class="mad-section hero" style="background-image:url('/images/revolution/6cbea-bg1.jpg');background-size:cover;background-position:center;position:relative;overflow:hidden">
+<section class="mad-section hero" style="background:url('/images/revolution/6cbea-bg1.jpg') center/cover no-repeat;position:relative;overflow:hidden;min-height:92vh;display:flex;align-items:center">
   <div class="hero-overlay"></div>
 
-  <!-- Revolution Slider Stage -->
   <div class="rev-stage">
-    <!-- Slide layers - matching original Revolution Slider positioning -->
-    <!-- Layer 1: small5 (flat background pizza base) -->
-    <div class="rev-layer" style="left:41.7%;top:21.5%;width:54.1%;animation-delay:0.1s;z-index:1"><img src="/images/revolution/71681-small5.png" alt=""></div>
-    <!-- Layer 2: small4 (cheese) -->
-    <div class="rev-layer" style="left:44.7%;top:23.8%;width:50.9%;animation-delay:0.2s;z-index:2"><img src="/images/revolution/40800-small4.png" alt=""></div>
-    <!-- Layer 3: small3 (toppings) -->
-    <div class="rev-layer" style="left:45.6%;top:32%;width:54.4%;animation-delay:0.35s;z-index:3"><img src="/images/revolution/d0628-small3.png" alt=""></div>
-    <!-- Layer 4: small1 (toppings) -->
-    <div class="rev-layer" style="left:42.6%;top:19.3%;width:54.2%;animation-delay:0.5s;z-index:4"><img src="/images/revolution/bc959-small1.png" alt=""></div>
-    <!-- Layer 5: small4 (more toppings) -->
-    <div class="rev-layer" style="left:48.1%;top:24.1%;width:48%;animation-delay:0.6s;z-index:5"><img src="/images/revolution/018e7-small4.png" alt=""></div>
-    <!-- Layer 6: big1 (main angled pizza) -->
-    <div class="rev-layer" style="left:46%;top:29.6%;width:50.5%;animation-delay:0.75s;z-index:6"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
-    <!-- Layer 7: big2 (rotating detail) -->
-    <div class="rev-layer" style="left:49.5%;top:33.9%;width:40.9%;animation-delay:0.9s;z-index:7"><img src="/images/revolution/1eb76-big2.png" alt="" style="animation:madRotate 25s linear infinite 1.5s"></div>
+    <!-- Pizza layers - slide from right with rotation, staggered delays -->
+    <div class="rev-layer" style="left:41.7%;top:21.5%;width:54.1%;z-index:1;animation:revSlideIn 0.7s ease-out 0.1s forwards"><img src="/images/revolution/71681-small5.png" alt=""></div>
+    <div class="rev-layer" style="left:44.7%;top:23.8%;width:50.9%;z-index:2;animation:revSlideIn 0.7s ease-out 0.2s forwards"><img src="/images/revolution/40800-small4.png" alt=""></div>
+    <div class="rev-layer" style="left:45.6%;top:32%;width:54.4%;z-index:3;animation:revSlideIn 0.7s ease-out 0.35s forwards"><img src="/images/revolution/d0628-small3.png" alt=""></div>
+    <div class="rev-layer" style="left:42.6%;top:19.3%;width:54.2%;z-index:4;animation:revSlideIn 0.7s ease-out 0.5s forwards"><img src="/images/revolution/bc959-small1.png" alt=""></div>
+    <div class="rev-layer" style="left:48.1%;top:24.1%;width:48%;z-index:5;animation:revSlideIn 0.7s ease-out 0.6s forwards"><img src="/images/revolution/018e7-small4.png" alt=""></div>
+    <div class="rev-layer" style="left:46%;top:29.6%;width:50.5%;z-index:6;animation:revSlideIn 0.7s ease-out 0.75s forwards"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
+    <div class="rev-layer" style="left:49.5%;top:33.9%;width:40.9%;z-index:7;animation:revSlideIn 0.7s ease-out 0.9s forwards, madRotate 25s linear infinite 1.5s"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
 
-    <!-- Drinks positioned around the pizza (matching original Yummi layout) -->
-    <div class="rev-layer" style="left:33%;top:18%;width:16%;animation-delay:0.4s,2s;z-index:8;animation-name:revSlideRight,revPendulum"><img src="/images/revolution/f13af-big3.png" alt=""></div>
-    <div class="rev-layer" style="left:79%;top:15%;width:13%;animation-delay:0.55s,2.3s;z-index:8;animation-name:revSlideRight,revPendulum"><img src="/images/revolution/d70da-big4.png" alt=""></div>
-    <div class="rev-layer" style="left:35%;bottom:8%;width:17%;animation-delay:0.65s,2.6s;z-index:8;animation-name:revSlideRight,revPendulum"><img src="/images/revolution/09e42-big5.png" alt=""></div>
-    <div class="rev-layer" style="left:82%;bottom:5%;width:12%;animation-delay:0.8s,2.9s;z-index:8;animation-name:revSlideRight,revPendulum"><img src="/images/revolution/96fdd-big6.png" alt=""></div>
+    <!-- Drinks around the pizza -->
+    <div class="rev-layer" style="left:33%;top:18%;width:16%;z-index:8;animation:revSlideIn 0.6s ease-out 0.4s forwards, revFloat 3.5s ease-in-out 2s infinite"><img src="/images/revolution/f13af-big3.png" alt=""></div>
+    <div class="rev-layer" style="left:79%;top:15%;width:13%;z-index:8;animation:revSlideIn 0.6s ease-out 0.55s forwards, revFloat 3.5s ease-in-out 2.3s infinite"><img src="/images/revolution/d70da-big4.png" alt=""></div>
+    <div class="rev-layer" style="left:35%;bottom:8%;width:17%;z-index:8;animation:revSlideIn 0.6s ease-out 0.65s forwards, revFloat 3.5s ease-in-out 2.6s infinite"><img src="/images/revolution/09e42-big5.png" alt=""></div>
+    <div class="rev-layer" style="left:82%;bottom:5%;width:12%;z-index:8;animation:revSlideIn 0.6s ease-out 0.8s forwards, revFloat 3.5s ease-in-out 2.9s infinite"><img src="/images/revolution/96fdd-big6.png" alt=""></div>
 
-    <!-- Text layers (left side) -->
-    <div class="rev-text rev-t1">1 GROSSE</div>
-    <div class="rev-text rev-t2">PIZZA</div>
-    <div class="rev-text rev-t3">+ 4 GETRÄNKE</div>
+    <!-- Text -->
+    <div class="rev-txt t1">1 GROSSE</div>
+    <div class="rev-txt t2">PIZZA</div>
+    <div class="rev-txt t3">+ 4 GETRÄNKE</div>
     <div class="rev-prices">
       <span class="rev-price">19<span class="rev-cents">,99€</span> <span class="rev-tag">ABHOLUNG</span></span>
       <span class="rev-price">21<span class="rev-cents">,99€</span> <span class="rev-tag">LIEFERUNG</span></span>
@@ -42,130 +34,104 @@
 </section>
 
 <style>
-/* ========== REVOLUTION SLIDER STAGE ========== */
-.hero { min-height:92vh;display:flex;align-items:center; }
+.hero-overlay { position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:1; }
+
+/* Stage: full-width container with aspect ratio matching Revolution Slider */
 .rev-stage {
-  position:relative;
-  width:100%;
-  max-width:1400px;
+  position:relative; z-index:2;
+  width:100%; max-width:1400px;
   margin:0 auto;
   aspect-ratio:1920/800;
   pointer-events:none;
 }
 
-/* Layers slide from right */
-.rev-layer {
-  position:absolute;
-  opacity:0;
-  animation:revSlideRight 0.7s ease-out forwards;
-  pointer-events:none;
-}
-.rev-layer img { width:100%;height:auto;display:block; }
+/* Layer base */
+.rev-layer { position:absolute; opacity:0; pointer-events:none; }
+.rev-layer img { width:100%; height:auto; display:block; }
 
-@keyframes revSlideRight {
-  0% { transform:translateX(200px) rotate(45deg);opacity:0; }
-  100% { transform:translateX(0) rotate(0);opacity:1; }
+/* Slide from right with rotation */
+@keyframes revSlideIn {
+  0% { transform:translateX(250px) rotate(50deg); opacity:0; }
+  100% { transform:translateX(0) rotate(0); opacity:1; }
 }
-@keyframes revPendulum {
-  0%,100% { transform:rotate(-6deg) translateY(0); }
-  50% { transform:rotate(6deg) translateY(-4px); }
+/* Drink float/swing */
+@keyframes revFloat {
+  0%,100% { transform:rotate(-7deg) translateY(0); }
+  50% { transform:rotate(7deg) translateY(-6px); }
 }
+/* Pizza rotate */
 @keyframes madRotate {
   0% { transform:rotate(0deg); }
   100% { transform:rotate(360deg); }
 }
 
-/* Text on the left - matching original positions */
-.rev-text {
-  position:absolute;
-  left:4%;
-  font-family:'Josefin Sans',sans-serif;
-  font-weight:700;
-  font-style:italic;
+/* Text layers */
+.rev-txt {
+  position:absolute; left:4%;
+  font-family:'Josefin Sans',sans-serif; font-weight:700; font-style:italic;
   color:#fff;
   text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;
   opacity:0;
-  animation:revFadeLeft 0.7s ease-out forwards;
 }
-.rev-t1 { top:18%;font-size:clamp(24px,4vw,70px);animation-delay:0.6s; }
-.rev-t2 { top:30%;font-size:clamp(32px,5.5vw,100px);text-decoration:underline;animation-delay:0.8s; }
-.rev-t3 { top:40%;font-size:clamp(22px,3.5vw,60px);animation-delay:1s; }
+.t1 { top:18%; font-size:clamp(24px,4vw,70px); animation:revTextIn 0.7s ease-out 0.6s forwards; }
+.t2 { top:30%; font-size:clamp(32px,5.5vw,100px); text-decoration:underline; animation:revTextIn 0.7s ease-out 0.8s forwards; }
+.t3 { top:40%; font-size:clamp(22px,3.5vw,60px); animation:revTextIn 0.7s ease-out 1s forwards; }
 
 .rev-prices {
-  position:absolute;
-  left:4%;
-  top:50%;
-  display:flex;
-  gap:20px;
+  position:absolute; left:4%; top:50%;
+  display:flex; gap:20px;
   opacity:0;
-  animation:revFadeLeft 0.7s ease-out 1.2s forwards;
+  animation:revTextIn 0.7s ease-out 1.2s forwards;
 }
 .rev-price {
   font-family:'Josefin Sans',sans-serif;
-  font-size:clamp(28px,4.5vw,80px);
-  font-weight:700;
-  font-style:italic;
-  color:#ebe117;
-  text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;
-  line-height:1;
+  font-size:clamp(28px,4.5vw,80px); font-weight:700; font-style:italic;
+  color:#ebe117; text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029; line-height:1;
 }
 .rev-cents { font-size:clamp(16px,2.5vw,45px); }
 .rev-tag {
   display:block;
-  font-size:clamp(9px,0.8vw,14px);
-  font-weight:700;
-  color:#ebe117;
-  text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029;
+  font-size:clamp(9px,0.8vw,14px); font-weight:700;
+  color:#ebe117; text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029;
 }
 
 .rev-desc {
-  position:absolute;
-  left:4%;
-  top:63%;
+  position:absolute; left:4%; top:63%;
   font-size:clamp(12px,1vw,16px);
   color:rgba(255,255,255,.8);
-  opacity:0;
-  animation:revFadeLeft 0.7s ease-out 1.6s forwards;
-  max-width:40%;
+  opacity:0; max-width:40%;
+  animation:revTextIn 0.7s ease-out 1.6s forwards;
 }
-
 .rev-btn {
-  position:absolute;
-  left:4%;
-  top:70%;
+  position:absolute; left:4%; top:70%;
   display:inline-block;
   padding:clamp(8px,1vw,16px) clamp(20px,2.5vw,40px);
-  background:#eb0029;
-  color:#fff;
-  font-family:'Josefin Sans',sans-serif;
-  font-weight:700;
+  background:#eb0029; color:#fff;
+  font-family:'Josefin Sans',sans-serif; font-weight:700;
   font-size:clamp(12px,1.2vw,20px);
-  border:2px solid #fff;
-  border-radius:30px;
-  text-transform:uppercase;
-  text-decoration:none;
-  opacity:0;
-  animation:revFadeLeft 0.7s ease-out 2s forwards;
+  border:2px solid #fff; border-radius:30px;
+  text-transform:uppercase; text-decoration:none;
+  opacity:0; pointer-events:auto;
+  animation:revTextIn 0.7s ease-out 2s forwards;
   transition:all .3s;
-  pointer-events:auto;
 }
-.rev-btn:hover { background:#fff;color:#eb0029;border-color:#eb0029; }
+.rev-btn:hover { background:#fff; color:#eb0029; border-color:#eb0029; }
 
-@keyframes revFadeLeft {
-  0% { transform:translateX(-40px);opacity:0; }
-  100% { transform:translateX(0);opacity:1; }
+@keyframes revTextIn {
+  0% { transform:translateX(-40px); opacity:0; }
+  100% { transform:translateX(0); opacity:1; }
 }
 
-/* Responsive: stack on mobile */
+/* Mobile */
 @media (max-width:768px) {
-  .rev-stage { aspect-ratio:auto;min-height:80vh; }
-  .rev-t1 { top:8%;left:5%; }
-  .rev-t2 { top:16%;left:5%; }
-  .rev-t3 { top:24%;left:5%; }
-  .rev-prices { top:33%;left:5%; }
-  .rev-desc { top:42%;left:5%;max-width:80%; }
-  .rev-btn { top:50%;left:5%; }
+  .rev-stage { aspect-ratio:auto; min-height:80vh; }
   .rev-layer { display:none; }
+  .t1 { top:8%; left:5%; }
+  .t2 { top:16%; left:5%; }
+  .t3 { top:24%; left:5%; }
+  .rev-prices { top:33%; left:5%; }
+  .rev-desc { top:42%; left:5%; max-width:80%; }
+  .rev-btn { top:50%; left:5%; }
 }
 </style>
 
