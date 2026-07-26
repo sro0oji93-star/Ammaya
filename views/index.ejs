@@ -125,4 +125,135 @@
 
 </div>
 
+<!-- All Products -->
+<div class="mad-section">
+  <div class="container">
+    <div class="mad-products mad-grid mad-grid--cols-4">
+      <% products.forEach(function(p) { %>
+      <div class="mad-grid-item">
+        <div class="mad-product">
+          <figure class="mad-product-image">
+            <% if (p.image) { %>
+            <a href="/speisekarte/produkt/<%= p.slug %>"><img src="<%= p.image %>" alt="<%= p.name %>" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=&quot;fas fa-utensils&quot; style=&quot;font-size:48px;color:#ccc&quot;></i>'"></a>
+            <% } else { %>
+            <a href="/speisekarte/produkt/<%= p.slug %>" style="display:flex;align-items:center;justify-content:center;height:200px;background:#f8f5f0"><i class="fas fa-utensils" style="font-size:48px;color:#ccc"></i></a>
+            <% } %>
+          </figure>
+          <div class="mad-product-description">
+            <h4 class="mad-product-title"><a href="/speisekarte/produkt/<%= p.slug %>" class="mad-link"><%= p.name %></a></h4>
+            <p><%= p.description ? p.description.substring(0, 80) + (p.description.length > 80 ? '...' : '') : '' %></p>
+          </div>
+          <div class="mad-product-calc">
+            <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); %>
+            <span class="mad-product-price">ab <%= minP.toFixed(2) %> €</span>
+            <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1">In den Warenkorb</button>
+            <% } else { %>
+            <span class="mad-product-price"><%= p.price.toFixed(2) %> €</span>
+            <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">In den Warenkorb</button>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <div class="align-center">
+      <a href="/speisekarte" class="btn btn-style-2 btn-big">Alle ansehen</a>
+    </div>
+  </div>
+</div>
+
+<!-- Half-Section: Create Your Own -->
+<div class="mad-section no-pd mad-section--stretched-content-no-px">
+  <div class="mad-half-section">
+    <div class="mad-col">
+      <div class="mad-half-section-item" style="background:linear-gradient(135deg,rgba(35,34,35,.7),rgba(35,34,35,.4)),url('/images/revolution/5b6b6-burger.png') center/cover">
+        <div class="mad-half-content">
+          <div class="content-element-6">
+            <h2 class="mad-page-title">Ihre eigene<br>Kreation</h2>
+            <p>Stellen Sie sich Ihre Lieblingspizza oder Ihren Burger selbst zusammen.</p>
+          </div>
+          <a href="/speisekarte" class="btn btn-style-3 btn-big">Jetzt kombinieren</a>
+        </div>
+      </div>
+    </div>
+    <div class="mad-col">
+      <div class="mad-half-section-item" style="background:linear-gradient(135deg,rgba(35,34,35,.7),rgba(35,34,35,.4)),url('/images/384x384_img3.jpg') center/cover">
+        <div class="mad-half-content">
+          <div class="content-element-6">
+            <h2 class="mad-page-title">Angebote &<br>Aktionen</h2>
+            <p>Verpassen Sie nicht unsere aktuellen Angebote und Sparmenüs.</p>
+          </div>
+          <a href="/speisekarte" class="btn btn-style-3 btn-big">Angebote entdecken</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<div class="mad-section">
+  <div class="container">
+    <h2 class="mad-page-title align-center">Das sagen unsere Gäste</h2>
+    <div class="mad-testimonials">
+      <div class="mad-grid mad-grid--cols-2 owl-carousel" id="testimonialCarousel">
+        <% testimonials.forEach(function(t) { %>
+        <div class="mad-grid-item">
+          <div class="mad-testimonial">
+            <div data-estimate="5" class="mad-rating"></div>
+            <div class="mad-testimonial-info">
+              <blockquote><p>"<%= t.text %>"</p></blockquote>
+            </div>
+            <div class="mad-author">
+              <div class="mad-author-img"><% if (t.image) { %><img src="<%= t.image %>" alt="<%= t.name %>" style="width:48px;height:48px;border-radius:50%;object-fit:cover"><% } else { %><span class="material-icons" style="font-size:36px;color:#eb0029">person</span><% } %></div>
+              <div class="mad-author-info">
+                <cite><%= t.name %></cite>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- App Download -->
+<div class="mad-section mad-col-img mad-section--stretched mad-colorizer--scheme-" style="background:linear-gradient(135deg,rgba(35,34,35,.85),rgba(35,34,35,.7)),url('/images/revolution/6cbea-bg1.jpg') center/cover">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-sm-10">
+        <h2 style="color:#fff;font-style:italic">Bestellen & Bezahlen<br>in wenigen Minuten</h2>
+        <p class="content-element-6" style="color:rgba(255,255,255,.7)">Laden Sie unsere App herunter und bestellen Sie ganz einfach von unterwegs. Verfolgen Sie Ihre Bestellung in Echtzeit.</p>
+        <div class="btn-set big-btns">
+          <a href="#" class="app-btn"><i class="fab fa-apple"></i> App Store</a>
+          <a href="#" class="app-btn"><i class="fab fa-google-play"></i> Google Play</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Instafeed-style grid -->
+<div class="mad-section no-pd mad-section--stretched-content-no-px">
+  <div class="mad-instafeed">
+    <div class="mad-grid item-col-5 no-gutters">
+      <div class="mad-col">
+        <img src="/images/264x264_img1.jpg" alt="">
+      </div>
+      <div class="mad-col">
+        <img src="/images/264x264_img2.jpg" alt="">
+      </div>
+      <div class="mad-col">
+        <img src="/images/448x288_img3.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div class="mad-col">
+        <img src="/images/384x384_img4.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div class="mad-col">
+        <img src="/images/384x384_img5.jpg" alt="" style="width:100%;height:100%;object-fit:cover">
+      </div>
+    </div>
+  </div>
+</div>
+
 <%- include('partials/footer') %>
