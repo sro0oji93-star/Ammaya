@@ -19,18 +19,18 @@
       </div>
 
       <!-- Right: Pizza + Drinks -->
-      <div class="mad-pizza-world" style="flex:1;min-width:320px;max-width:600px;position:relative;min-height:500px">
+      <div class="mad-pizza-world" style="flex:1;min-width:350px;max-width:700px;position:relative;min-height:550px">
 
-        <!-- Main pizza layers -->
-        <div class="pz-base"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
-        <div class="pz-layer pz-2"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
-        <div class="pz-layer pz-3"><img src="/images/revolution/bc959-small1.png" alt=""></div>
-        <div class="pz-layer pz-4"><img src="/images/revolution/d0628-small3.png" alt=""></div>
-        <div class="pz-layer pz-5"><img src="/images/revolution/40800-small4.png" alt=""></div>
-        <div class="pz-layer pz-6"><img src="/images/revolution/71681-small5.png" alt=""></div>
-        <div class="pz-layer pz-7"><img src="/images/revolution/018e7-small4.png" alt=""></div>
-
-        <!-- 4 Drinks positioned around the pizza -->
+        <!-- Background flat layers (small = ingredients, behind the pizza) -->
+        <div class="pz-small pz-s1"><img src="/images/revolution/71681-small5.png" alt=""></div>
+        <div class="pz-small pz-s2"><img src="/images/revolution/40800-small4.png" alt=""></div>
+        <div class="pz-small pz-s3"><img src="/images/revolution/d0628-small3.png" alt=""></div>
+        <div class="pz-small pz-s4"><img src="/images/revolution/bc959-small1.png" alt=""></div>
+        <div class="pz-small pz-s5"><img src="/images/revolution/018e7-small4.png" alt=""></div>
+        <!-- Main pizza base (angled, on top of flat ingredients) -->
+        <div class="pz-main"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
+        <div class="pz-main pz-rotate"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
+        <!-- 4 Drinks around the pizza -->
         <div class="pz-drink d-tl"><img src="/images/revolution/f13af-big3.png" alt=""></div>
         <div class="pz-drink d-tr"><img src="/images/revolution/d70da-big4.png" alt=""></div>
         <div class="pz-drink d-bl"><img src="/images/revolution/09e42-big5.png" alt=""></div>
@@ -62,24 +62,28 @@
 
 /* Pizza world - centered with aspect ratio */
 .mad-pizza-world { position:relative;margin:0 auto;width:100%;aspect-ratio:1/1;pointer-events:none; }
-.pz-base { position:absolute;inset:5%;display:flex;align-items:center;justify-content:center;z-index:1;opacity:0;animation:slidePizza 0.8s ease-out 0.1s forwards; }
-.pz-base img { width:100%;height:auto;object-fit:contain; }
-.pz-layer { position:absolute;inset:5%;display:flex;align-items:center;justify-content:center;z-index:2;opacity:0; }
-.pz-layer img { width:100%;height:auto;object-fit:contain; }
-.pz-2 { z-index:3;animation:slidePizza 0.8s ease-out 0.3s forwards,madRotate 25s linear infinite 1.5s; }
-.pz-3 { z-index:4;animation:slidePizza 0.8s ease-out 0.45s forwards; }
-.pz-4 { z-index:5;animation:slidePizza 0.8s ease-out 0.6s forwards; }
-.pz-5 { z-index:6;animation:slidePizza 0.8s ease-out 0.75s forwards; }
-.pz-6 { z-index:7;animation:slidePizza 0.8s ease-out 0.9s forwards; }
-.pz-7 { z-index:8;animation:slidePizza 0.8s ease-out 1.05s forwards; }
 
-/* Drinks positioned in 4 quadrants around the pizza */
+/* Flat background ingredients (behind the pizza) */
+.pz-small { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;z-index:1; }
+.pz-small img { width:100%;height:auto;object-fit:contain; }
+.pz-s1 { z-index:1;animation:slidePizza 0.8s ease-out 0.1s forwards; }
+.pz-s2 { z-index:2;animation:slidePizza 0.8s ease-out 0.2s forwards; }
+.pz-s3 { z-index:3;animation:slidePizza 0.8s ease-out 0.35s forwards; }
+.pz-s4 { z-index:4;animation:slidePizza 0.8s ease-out 0.5s forwards; }
+.pz-s5 { z-index:5;animation:slidePizza 0.8s ease-out 0.6s forwards; }
+
+/* Main pizza (on top of flat ingredients) */
+.pz-main { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;z-index:6; }
+.pz-main img { width:100%;height:auto;object-fit:contain; }
+.pz-rotate { z-index:7;animation:slidePizza 0.8s ease-out 0.9s forwards,madRotate 25s linear infinite 1.5s; }
+
+/* Drinks (on top of everything) */
 .pz-drink { position:absolute;z-index:10;opacity:0;animation:slidePizza 0.6s ease-out forwards,revFloat 3.5s ease-in-out infinite; }
 .pz-drink img { width:100%;height:auto; }
-.d-tl { top:2%;left:5%;width:22%;animation-delay:0.4s,2s; }   /* top left */
-.d-tr { top:0;right:3%;width:18%;animation-delay:0.55s,2.3s; } /* top right */
-.d-bl { bottom:3%;left:3%;width:24%;animation-delay:0.7s,2.6s; } /* bottom left */
-.d-br { bottom:0;right:0;width:16%;animation-delay:0.85s,2.9s; } /* bottom right */
+.d-tl { top:0;left:0;width:28%;animation-delay:0.4s,2s; }
+.d-tr { top:-2%;right:-2%;width:24%;animation-delay:0.55s,2.3s; }
+.d-bl { bottom:0;left:0;width:30%;animation-delay:0.7s,2.6s; }
+.d-br { bottom:-2%;right:-2%;width:22%;animation-delay:0.85s,2.9s; }
 
 @keyframes slidePizza {
   0% { transform:translateX(200px) rotate(60deg);opacity:0; }
