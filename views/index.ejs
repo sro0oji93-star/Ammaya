@@ -6,9 +6,7 @@
 
   <% if (heroSlides && heroSlides.length > 0) { %>
   <% heroSlides.forEach(function(slide, idx) { %>
-  <!-- slide <%= idx %> -->
-  <% if (idx === 0) { %>
-  <div class="hero-slide-items" style="width:100%;z-index:2;background:url('<%= slide.bg_image || '/images/revolution/6cbea-bg1.jpg' %>') center/cover no-repeat;display:flex;align-items:center;min-height:92vh" data-slide-idx="<%= idx %>">
+  <div class="hero-slide-items" style="width:100%;z-index:2;background:url('<%= slide.bg_image || '/images/revolution/6cbea-bg1.jpg' %>') center/cover no-repeat;display:<%= idx === 0 ? 'flex' : 'none' %>;align-items:center;min-height:92vh" data-slide-idx="<%= idx %>">
     <div class="hero-inner" style="width:100%;max-width:1400px;margin:0 auto;padding:120px 20px 60px">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px">
         <div class="mad-hero-text" style="flex:1;min-width:320px;max-width:600px">
@@ -35,10 +33,6 @@
       </div>
     </div>
   </div>
-  <% } else { %>
-  <!-- additional slides hidden on mobile, shown on desktop with carousel -->
-  <div class="hero-slide-items" style="display:none" data-slide-idx="<%= idx %>"></div>
-  <% } %>
   <% }); } %>
 </section>
 
@@ -69,20 +63,11 @@
   var interval;
   function showSlide(i) {
     slides.forEach(function(s, idx) {
-      if (idx === i) {
-        s.style.display = 'flex';
-        if (window.innerWidth > 767) s.style.minHeight = '92vh';
-      } else {
-        s.style.display = 'none';
-      }
+      s.style.display = idx === i ? 'flex' : 'none';
     });
     current = i;
   }
   interval = setInterval(function() { showSlide((current + 1) % slides.length); }, 6000);
-  slides.forEach(function(s, idx) {
-    s.style.cursor = 'pointer';
-  });
-  if (window.innerWidth <= 767) { clearInterval(interval); }
 })();
 </script>
 
