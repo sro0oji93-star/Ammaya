@@ -1,157 +1,88 @@
 <%- include('partials/header') %>
 
 <!-- Animated Hero Slider -->
-<section class="hero mad-hero-animated" style="position:relative;overflow:hidden;min-height:92vh;display:flex;align-items:center">
-  <div class="hero-overlay"></div>
+<section class="hero mad-hero-animated" style="position:relative;overflow:hidden;display:flex;align-items:center">
+  <div class="hero-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:1"></div>
 
   <% if (heroSlides && heroSlides.length > 0) { %>
   <% heroSlides.forEach(function(slide, idx) { %>
-  <div class="hero-slide-items" style="position:absolute;inset:0;z-index:2;background:url('<%= slide.bg_image || '/images/revolution/6cbea-bg1.jpg' %>') center/cover no-repeat;display:<%= idx === 0 ? 'flex' : 'none' %>;align-items:center">
-    <div class="hero-inner" style="width:100%;max-width:1400px;margin:0 auto;padding:0 20px">
+  <!-- slide <%= idx %> -->
+  <% if (idx === 0) { %>
+  <div class="hero-slide-items" style="width:100%;z-index:2;background:url('<%= slide.bg_image || '/images/revolution/6cbea-bg1.jpg' %>') center/cover no-repeat;display:flex;align-items:center;min-height:92vh" data-slide-idx="<%= idx %>">
+    <div class="hero-inner" style="width:100%;max-width:1400px;margin:0 auto;padding:120px 20px 60px">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px">
-        <!-- Left: Text -->
-        <div class="mad-hero-text" style="flex:1;min-width:320px;max-width:600px;opacity:0;animation:fadeInUp 1s ease-out 0.5s forwards">
-          <div class="mad-hero-title"><span class="t1"><%= slide.line1 || '1 GROSSE' %></span><br><span class="t2"><%= slide.line2 || 'PIZZA' %></span><br><span class="t3"><%= slide.line3 || '+ 4 GETRÄNKE' %></span></div>
-          <div class="mad-hero-prices">
-            <span class="mad-price"><%= slide.price1 || '19' %><span class="cents"><%= slide.price1_cents || ',99€' %></span> <span class="tag"><%= slide.price1_tag || 'ABHOLUNG' %></span></span>
-            <span class="mad-price"><%= slide.price2 || '21' %><span class="cents"><%= slide.price2_cents || ',99€' %></span> <span class="tag"><%= slide.price2_tag || 'LIEFERUNG' %></span></span>
+        <div class="mad-hero-text" style="flex:1;min-width:320px;max-width:600px">
+          <div class="mad-hero-title" style="font-family:'Josefin Sans',sans-serif;font-weight:700;font-style:italic;color:#fff;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;line-height:1.2">
+            <span style="font-size:clamp(36px,5vw,80px);display:inline-block"><%= slide.line1 || '1 GROSSE' %></span><br>
+            <span style="font-size:clamp(50px,7vw,115px);text-decoration:underline;display:inline-block"><%= slide.line2 || 'PIZZA' %></span><br>
+            <span style="font-size:clamp(32px,4.5vw,72px);display:inline-block"><%= slide.line3 || '+ 4 GETRÄNKE' %></span>
           </div>
-          <p class="mad-hero-desc"><%= slide.description || '' %></p>
-          <a href="<%= slide.button_link || '/speisekarte' %>" class="btn btn-big btn-style-3 mad-order-btn"><%= slide.button_text || 'JETZT BESTELLEN' %></a>
+          <div style="margin-top:20px;display:flex;gap:20px;flex-wrap:wrap">
+            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1"><%= slide.price1 || '19' %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price1_cents || ',99€' %></span> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029"><%= slide.price1_tag || 'ABHOLUNG' %></span></span>
+            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1"><%= slide.price2 || '21' %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price2_cents || ',99€' %></span> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029"><%= slide.price2_tag || 'LIEFERUNG' %></span></span>
+          </div>
+          <p style="margin-top:15px;font-size:16px;color:rgba(255,255,255,.85);max-width:80%"><%= slide.description || '' %></p>
+          <a href="<%= slide.button_link || '/speisekarte' %>" class="btn btn-big btn-style-3" style="margin-top:25px;display:inline-block"><%= slide.button_text || 'JETZT BESTELLEN' %></a>
         </div>
-        <!-- Right: Pizza + Drinks -->
-        <div class="mad-pizza-world" style="flex:1;min-width:350px;max-width:700px;position:relative;min-height:550px">
-          <div class="pz-main"><img src="<%= slide.main_image || '/images/revolution/75ec1-big1.png' %>" alt=""></div>
-          <% if (slide.drink_tl) { %><div class="pz-drink d-tl"><img src="<%= slide.drink_tl %>" alt=""></div><% } %>
-          <% if (slide.drink_tr) { %><div class="pz-drink d-tr"><img src="<%= slide.drink_tr %>" alt=""></div><% } %>
-          <% if (slide.drink_br) { %><div class="pz-drink d-br"><img src="<%= slide.drink_br %>" alt=""></div><% } %>
+        <div style="flex:1;min-width:350px;max-width:700px;position:relative;min-height:550px;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+            <img src="<%= slide.main_image || '/images/revolution/75ec1-big1.png' %>" alt="" style="max-width:100%;max-height:550px;object-fit:contain;animation:gentleFloat 3.5s ease-in-out infinite">
+            <% if (slide.drink_tl) { %><img src="<%= slide.drink_tl %>" alt="" style="position:absolute;top:0;left:0;width:28%;animation:revFloat 3.5s ease-in-out infinite"><% } %>
+            <% if (slide.drink_tr) { %><img src="<%= slide.drink_tr %>" alt="" style="position:absolute;top:-2%;right:-2%;width:24%;animation:revFloat 3.5s ease-in-out infinite 0.3s"><% } %>
+            <% if (slide.drink_br) { %><img src="<%= slide.drink_br %>" alt="" style="position:absolute;bottom:-2%;right:-2%;width:22%;animation:revFloat 3.5s ease-in-out infinite 0.6s"><% } %>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <% }); %>
-
-  <!-- Slider Dots -->
-  <% if (heroSlides.length > 1) { %>
-  <div class="hero-dots" style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:10">
-    <% heroSlides.forEach(function(s, idx) { %>
-    <span class="hero-dot" data-index="<%= idx %>" style="width:14px;height:14px;border-radius:50%;background:<%= idx === 0 ? '#eb0029' : 'rgba(255,255,255,0.5)' %>;cursor:pointer;transition:all .3s;border:2px solid rgba(255,255,255,0.3)"></span>
-    <% }); %>
-  </div>
-  <% } %>
   <% } else { %>
-  <!-- Fallback if no slides -->
-  <div class="hero-inner" style="width:100%;max-width:1400px;margin:0 auto;padding:0 20px;position:relative;z-index:2">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px">
-      <div class="mad-hero-text" style="flex:1;min-width:320px;max-width:600px">
-        <div class="mad-hero-title"><span class="t1">Willkommen</span></div>
-        <a href="/speisekarte" class="btn btn-big btn-style-3 mad-order-btn">ZUR SPEISEKARTE</a>
-      </div>
-    </div>
-  </div>
+  <!-- additional slides hidden on mobile, shown on desktop with carousel -->
+  <div class="hero-slide-items" style="display:none" data-slide-idx="<%= idx %>"></div>
   <% } %>
+  <% }); } %>
 </section>
 
 <style>
-.hero-overlay { position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:1; }
-.hero-slide-items { z-index:2; }
-.hero-dot { transition:all .3s; }
-.hero-dot:hover { background:#eb0029 !important; }
-
-/* Text */
-.mad-hero-text { }
-.mad-hero-title { font-family:'Josefin Sans',sans-serif;font-weight:700;font-style:italic;color:#fff;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;line-height:1.2; }
-.t1 { font-size:clamp(36px,5vw,80px);display:inline-block;opacity:0;animation:slideText 0.7s ease-out 0.6s forwards; }
-.t2 { font-size:clamp(50px,7vw,115px);text-decoration:underline;display:inline-block;opacity:0;animation:slideText 0.7s ease-out 0.9s forwards; }
-.t3 { font-size:clamp(32px,4.5vw,72px);display:inline-block;opacity:0;animation:slideText 0.7s ease-out 1.2s forwards; }
-
-.mad-hero-prices { margin-top:20px;display:flex;gap:20px;opacity:0;animation:fadeInUp 0.7s ease-out 1.5s forwards; }
-.mad-price { font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1; }
-.cents { font-size:clamp(20px,2.5vw,48px); }
-.tag { display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029; }
-
-.mad-hero-desc { margin-top:15px;font-size:16px;color:rgba(255,255,255,.85);max-width:80%;opacity:0;animation:fadeInUp 0.7s ease-out 1.8s forwards; }
-.mad-order-btn { margin-top:25px;opacity:0;animation:fadeInUp 0.7s ease-out 2.2s forwards; }
-
-/* Pizza world */
-.mad-pizza-world { position:relative;margin:0 auto;width:100%;aspect-ratio:1/1;pointer-events:none; }
-
-.pz-main { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;z-index:6;animation:slidePizza 0.8s ease-out 0.1s forwards,gentleFloat 3.5s ease-in-out infinite 1.5s; }
-.pz-main img { width:100%;height:auto;object-fit:contain; }
-
-/* Drinks */
-.pz-drink { position:absolute;z-index:10;opacity:0;animation:slidePizza 0.6s ease-out forwards,revFloat 3.5s ease-in-out infinite; }
-.pz-drink img { width:100%;height:auto; }
-.d-tl { top:0;left:0;width:28%;animation-delay:0.4s,2s; }
-.d-tr { top:-2%;right:-2%;width:24%;animation-delay:0.55s,2.3s; }
-.d-br { bottom:-2%;right:-2%;width:22%;animation-delay:0.85s,2.9s; }
-
-@keyframes slidePizza {
-  0% { transform:translateX(200px) rotate(60deg);opacity:0; }
-  100% { transform:translateX(0) rotate(0deg);opacity:1; }
-}
-@keyframes slideText {
-  0% { transform:translateX(-40px);opacity:0; }
-  100% { transform:translateX(0);opacity:1; }
-}
-@keyframes fadeInUp {
-  0% { transform:translateY(20px);opacity:0; }
-  100% { transform:translateY(0);opacity:1; }
-}
-@keyframes revFloat {
-  0%,100% { transform:rotate(-6deg) translateY(0); }
-  50% { transform:rotate(6deg) translateY(-5px); }
-}
-@keyframes gentleFloat {
-  0%,100% { transform:translateY(0); }
-  50% { transform:translateY(-8px); }
-}
-
-/* Mobile */
+@keyframes gentleFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+@keyframes revFloat { 0%,100% { transform:rotate(-6deg) translateY(0); } 50% { transform:rotate(6deg) translateY(-5px); } }
 @media (max-width:767px) {
-  .hero { min-height:auto !important;height:auto !important;padding:80px 0 40px !important; }
-  .hero-slide-items { position:relative !important;inset:auto !important;display:flex !important;background-size:cover !important;min-height:auto !important;padding:60px 0 20px !important; }
-  .hero-overlay { position:absolute;inset:0; }
-  .hero-inner > div { flex-direction:column !important;align-items:center !important; }
-  .mad-hero-text { max-width:100% !important;min-width:auto !important;text-align:center; }
-  .t1 { font-size:clamp(24px,7vw,42px) !important; }
-  .t2 { font-size:clamp(32px,9vw,55px) !important; }
-  .t3 { font-size:clamp(20px,5vw,36px) !important; }
-  .mad-hero-prices { justify-content:center; }
-  .mad-price { font-size:clamp(24px,6vw,42px) !important; }
-  .cents { font-size:clamp(14px,3vw,24px) !important; }
-  .tag { font-size:clamp(8px,2vw,12px) !important; }
-  .mad-hero-desc { max-width:100% !important;text-align:center;font-size:13px; }
-  .mad-order-btn { display:inline-block;margin-top:12px !important; }
-  .mad-pizza-world { width:280px !important;height:280px !important;min-width:auto !important;min-height:auto !important;margin:10px auto 0 !important; }
-  .pz-main img { max-width:260px !important;max-height:260px !important; }
-  .d-tl { width:20% !important;top:2% !important;left:2% !important; }
-  .d-tr { width:18% !important;top:0 !important;right:0 !important; }
-  .d-br { width:16% !important;bottom:0 !important;right:0 !important; }
-  .hero-dots { display:none !important; }
+  .hero-slide-items { min-height:auto !important; }
+  .hero-slide-items > .hero-inner > div { flex-direction:column !important; }
+  .hero-slide-items .mad-hero-text { max-width:100% !important;min-width:auto !important;text-align:center; }
+  .hero-slide-items .mad-hero-text p { max-width:100% !important; }
+  .hero-slide-items .mad-hero-title span { font-size:clamp(24px,7vw,42px) !important; }
+  .hero-slide-items .mad-hero-title span:nth-child(3) { font-size:clamp(32px,9vw,55px) !important; }
+  .hero-slide-items .mad-hero-title br + span { font-size:clamp(20px,5vw,36px) !important; }
+  .hero-slide-items div[style*="flex:1;min-width:350px"] { min-width:auto !important;min-height:auto !important;max-width:300px !important; }
+  .hero-slide-items img[style*="max-width:100%"] { max-height:300px !important; }
+  .hero-slide-items img[style*="position:absolute"] { width:22% !important; }
+  .hero-slide-items img[style*="right:-2%"] { width:18% !important; }
+  .hero-slide-items img[style*="bottom:-2%"] { width:16% !important; }
 }
 </style>
 
 <script>
 (function() {
-  var slides = document.querySelectorAll('.hero-slide-items');
-  var dots = document.querySelectorAll('.hero-dot');
+  var slides = document.querySelectorAll('.hero-slide-items[data-slide-idx]');
   if (slides.length < 2) return;
   var current = 0;
   var interval;
   function showSlide(i) {
-    slides.forEach(function(s, idx) { s.style.display = idx === i ? 'flex' : 'none'; });
-    dots.forEach(function(d, idx) { d.style.background = idx === i ? '#eb0029' : 'rgba(255,255,255,0.5)'; });
+    slides.forEach(function(s, idx) {
+      if (idx === i) {
+        s.style.display = 'flex';
+        if (window.innerWidth > 767) s.style.minHeight = '92vh';
+      } else {
+        s.style.display = 'none';
+      }
+    });
     current = i;
   }
-  dots.forEach(function(d) {
-    d.addEventListener('click', function() {
-      showSlide(parseInt(this.getAttribute('data-index')));
-      clearInterval(interval);
-      interval = setInterval(function() { showSlide((current + 1) % slides.length); }, 6000);
-    });
-  });
   interval = setInterval(function() { showSlide((current + 1) % slides.length); }, 6000);
+  slides.forEach(function(s, idx) {
+    s.style.cursor = 'pointer';
+  });
+  if (window.innerWidth <= 767) { clearInterval(interval); }
 })();
 </script>
 
