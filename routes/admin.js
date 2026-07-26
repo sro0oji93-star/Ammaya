@@ -320,14 +320,19 @@ router.post('/einstellungen/hero-slides', auth, hsUpload, async (req, res) => {
 router.post('/einstellungen/hero-slides/bearbeiten/:id', auth, hsUpload, async (req, res) => {
   const slide = await db.get('SELECT * FROM hero_slides WHERE id = $1', [req.params.id]);
   if (!slide) return res.status(404).send('Slide nicht gefunden');
-  const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, sort_order, active } = req.body;
+  const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, sort_order, active, remove_bg_image, remove_main_image, remove_drink_tl, remove_drink_tr, remove_drink_br } = req.body;
+  function imgValEdit(field, fileField, oldVal, defaultVal) {
+    if (req.files && req.files[fileField] && req.files[fileField][0]) return bufferToDataUri(req.files[fileField][0].buffer, req.files[fileField][0].mimetype);
+    if (req.body['remove_' + field]) return '';
+    return oldVal || defaultVal || '';
+  }
   await db.run(`UPDATE hero_slides SET sort_order=$1, line2=$2, line3=$3, price1=$4, price1_cents=$5, price1_tag=$6, price2=$7, price2_cents=$8, price2_tag=$9, description=$10, button_text=$11, button_link=$12, bg_image=$13, main_image=$14, drink_tl=$15, drink_tr=$16, drink_br=$17, active=$18, line1=$19 WHERE id=$20`,
     [sort_order || 0, line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/speisekarte',
-    imgVal(req.files, 'bg_image_file', req.body.bg_image) || slide.bg_image || '/images/revolution/6cbea-bg1.jpg',
-    imgVal(req.files, 'main_image_file', req.body.main_image) || slide.main_image || '/images/revolution/75ec1-big1.png',
-    imgVal(req.files, 'drink_tl_file', req.body.drink_tl) || slide.drink_tl || '',
-    imgVal(req.files, 'drink_tr_file', req.body.drink_tr) || slide.drink_tr || '',
-    imgVal(req.files, 'drink_br_file', req.body.drink_br) || slide.drink_br || '',
+    imgValEdit('bg_image', 'bg_image_file', slide.bg_image, '/images/revolution/6cbea-bg1.jpg'),
+    imgValEdit('main_image', 'main_image_file', slide.main_image, '/images/revolution/75ec1-big1.png'),
+    imgValEdit('drink_tl', 'drink_tl_file', slide.drink_tl),
+    imgValEdit('drink_tr', 'drink_tr_file', slide.drink_tr),
+    imgValEdit('drink_br', 'drink_br_file', slide.drink_br),
     active ? 1 : 0, line1 || '', req.params.id]);
   req.flash = req.flash || {};
   req.flash.success = 'Slide wurde aktualisiert!';

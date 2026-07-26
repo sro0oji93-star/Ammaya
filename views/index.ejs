@@ -11,13 +11,17 @@
       <div class="hero-slide-inner" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px">
         <div class="mad-hero-text" style="flex:1;min-width:320px;max-width:600px">
           <div class="mad-hero-title" style="font-family:'Josefin Sans',sans-serif;font-weight:700;font-style:italic;color:#fff;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;line-height:1.2">
-            <span style="font-size:clamp(36px,5vw,80px);display:inline-block"><%= slide.line1 || '1 GROSSE' %></span><br>
-            <span style="font-size:clamp(50px,7vw,115px);text-decoration:underline;display:inline-block"><%= slide.line2 || 'PIZZA' %></span><br>
-            <span style="font-size:clamp(32px,4.5vw,72px);display:inline-block"><%= slide.line3 || '+ 4 GETRÄNKE' %></span>
+            <% if (slide.line1) { %><span style="font-size:clamp(36px,5vw,80px);display:inline-block"><%= slide.line1 %></span><br><% } %>
+            <% if (slide.line2) { %><span style="font-size:clamp(50px,7vw,115px);text-decoration:underline;display:inline-block"><%= slide.line2 %></span><br><% } %>
+            <% if (slide.line3) { %><span style="font-size:clamp(32px,4.5vw,72px);display:inline-block"><%= slide.line3 %></span><% } %>
           </div>
           <div style="margin-top:20px;display:flex;gap:20px;flex-wrap:wrap">
-            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1"><%= slide.price1 || '19' %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price1_cents || ',99€' %></span> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029"><%= slide.price1_tag || 'ABHOLUNG' %></span></span>
-            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1"><%= slide.price2 || '21' %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price2_cents || ',99€' %></span> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029"><%= slide.price2_tag || 'LIEFERUNG' %></span></span>
+            <% if (slide.price1) { %>
+            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1"><%= slide.price1 %><% if (slide.price1_cents) { %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price1_cents %></span><% } %> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029"><%= slide.price1_tag || 'ABHOLUNG' %></span></span>
+            <% } %>
+            <% if (slide.price2) { %>
+            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1"><%= slide.price2 %><% if (slide.price2_cents) { %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price2_cents %></span><% } %> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029"><%= slide.price2_tag || 'LIEFERUNG' %></span></span>
+            <% } %>
           </div>
           <p style="margin-top:15px;font-size:16px;color:rgba(255,255,255,.85);max-width:80%"><%= slide.description || '' %></p>
           <a href="<%= slide.button_link || '/speisekarte' %>" class="btn btn-big btn-style-3" style="margin-top:25px;display:inline-block"><%= slide.button_text || 'JETZT BESTELLEN' %></a>
