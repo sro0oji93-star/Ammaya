@@ -109,26 +109,26 @@
 
 /* Mobile */
 @media (max-width:767px) {
-  .hero { min-height:100vh !important;height:auto !important;padding:120px 0 80px !important; }
-  .hero-inner > div { flex-direction:column !important;align-items:center !important;gap:10px !important; }
-  .mad-hero-text { max-width:100% !important;min-width:auto !important;text-align:center;order:1;padding:0 10px; }
-  .mad-hero-title { margin-bottom:5px; }
+  .hero { min-height:auto !important;height:auto !important;padding:80px 0 40px !important; }
+  .hero-slide-items { position:relative !important;inset:auto !important;display:flex !important;background-size:cover !important;min-height:auto !important;padding:60px 0 20px !important; }
+  .hero-overlay { position:absolute;inset:0; }
+  .hero-inner > div { flex-direction:column !important;align-items:center !important; }
+  .mad-hero-text { max-width:100% !important;min-width:auto !important;text-align:center; }
   .t1 { font-size:clamp(24px,7vw,42px) !important; }
   .t2 { font-size:clamp(32px,9vw,55px) !important; }
   .t3 { font-size:clamp(20px,5vw,36px) !important; }
-  .mad-hero-prices { justify-content:center;gap:12px;margin-top:10px; }
+  .mad-hero-prices { justify-content:center; }
   .mad-price { font-size:clamp(24px,6vw,42px) !important; }
   .cents { font-size:clamp(14px,3vw,24px) !important; }
   .tag { font-size:clamp(8px,2vw,12px) !important; }
-  .mad-hero-desc { max-width:100% !important;text-align:center;font-size:13px;margin-top:8px; }
-  .mad-order-btn { display:inline-block;margin-top:12px !important;font-size:14px !important;padding:10px 24px !important; }
-  .mad-pizza-world { max-width:260px !important;min-width:220px !important;width:65% !important;height:220px !important;order:2;margin:5px auto 0 !important; }
-  .pz-main img { max-height:200px !important;width:auto !important; }
+  .mad-hero-desc { max-width:100% !important;text-align:center;font-size:13px; }
+  .mad-order-btn { display:inline-block;margin-top:12px !important; }
+  .mad-pizza-world { width:280px !important;height:280px !important;min-width:auto !important;min-height:auto !important;margin:10px auto 0 !important; }
+  .pz-main img { max-width:260px !important;max-height:260px !important; }
   .d-tl { width:20% !important;top:2% !important;left:2% !important; }
-  .d-tr { width:16% !important;top:0 !important;right:0 !important; }
-  .d-br { width:14% !important;bottom:0 !important;right:0 !important; }
-  .hero-dots { bottom:20px !important; }
-  .hero-dot { width:10px !important;height:10px !important; }
+  .d-tr { width:18% !important;top:0 !important;right:0 !important; }
+  .d-br { width:16% !important;bottom:0 !important;right:0 !important; }
+  .hero-dots { display:none !important; }
 }
 </style>
 
