@@ -8,7 +8,7 @@
   <% heroSlides.forEach(function(slide, idx) { %>
   <div class="hero-slide-items" style="width:100%;z-index:2;background:url('<%= slide.bg_image || '/images/revolution/6cbea-bg1.jpg' %>') center/cover no-repeat;display:<%= idx === 0 ? 'flex' : 'none' %>;align-items:center;min-height:92vh" data-slide-idx="<%= idx %>">
     <div class="hero-inner" style="width:100%;max-width:1400px;margin:0 auto;padding:120px 20px 60px">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px">
+      <div class="hero-slide-inner" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px">
         <div class="mad-hero-text" style="flex:1;min-width:320px;max-width:600px">
           <div class="mad-hero-title" style="font-family:'Josefin Sans',sans-serif;font-weight:700;font-style:italic;color:#fff;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;line-height:1.2">
             <span style="font-size:clamp(36px,5vw,80px);display:inline-block"><%= slide.line1 || '1 GROSSE' %></span><br>
@@ -39,6 +39,10 @@
 <style>
 @keyframes gentleFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
 @keyframes revFloat { 0%,100% { transform:rotate(-6deg) translateY(0); } 50% { transform:rotate(6deg) translateY(-5px); } }
+.hero-slide-items .hero-slide-inner > div > div:first-child { animation:slideInLeft 0.7s ease-out 0.3s both; }
+.hero-slide-items .hero-slide-inner > div > div:last-child { animation:slideInRight 0.8s ease-out 0.1s both; }
+@keyframes slideInLeft { 0% { transform:translateX(-40px);opacity:0; } 100% { transform:translateX(0);opacity:1; } }
+@keyframes slideInRight { 0% { transform:translateX(200px) rotate(60deg);opacity:0; } 100% { transform:translateX(0) rotate(0deg);opacity:1; } }
 @media (max-width:767px) {
   .hero-slide-items { min-height:auto !important; }
   .hero-slide-items > .hero-inner > div { flex-direction:column !important; }
