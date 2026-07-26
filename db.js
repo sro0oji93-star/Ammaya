@@ -261,13 +261,12 @@ async function initialize() {
     );
   }
 
-  // Drop old hero_slides table and recreate with correct schema
-  const tblCheck = await query(`SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'hero_slides')`);
-  if (tblCheck.rows[0].exists) {
-    const colCheck = await query(`SELECT column_name FROM information_schema.columns WHERE table_name = 'hero_slides' AND column_name = 'line1'`);
-    if (colCheck.rows.length === 0) {
-      await query(`DROP TABLE hero_slides`);
-    }
+  // Ensure hero_slides table has correct schema (migrate from old schema if needed)
+  try {
+    await query(`SELECT line1, bg_image, main_image, drink_tl FROM hero_slides LIMIT 1`);
+  } catch (e) {
+    // Old schema detected or table doesn't exist yet - drop and recreate
+    try { await query(`DROP TABLE IF EXISTS hero_slides CASCADE`); } catch (e2) {}
   }
   await query(`
     CREATE TABLE IF NOT EXISTS hero_slides (
