@@ -109,29 +109,6 @@ async function initialize() {
       value TEXT
     );
 
-    CREATE TABLE IF NOT EXISTS hero_slides (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      sort_order INTEGER DEFAULT 0,
-      line1 TEXT DEFAULT '1 GROSSE',
-      line2 TEXT DEFAULT 'PIZZA',
-      line3 TEXT DEFAULT '+ 4 GETRÄNKE',
-      price1 TEXT DEFAULT '19',
-      price1_cents TEXT DEFAULT ',99€',
-      price1_tag TEXT DEFAULT 'ABHOLUNG',
-      price2 TEXT DEFAULT '21',
-      price2_cents TEXT DEFAULT ',99€',
-      price2_tag TEXT DEFAULT 'LIEFERUNG',
-      description TEXT DEFAULT '',
-      button_text TEXT DEFAULT 'JETZT BESTELLEN',
-      button_link TEXT DEFAULT '/speisekarte',
-      bg_image TEXT DEFAULT '/images/revolution/6cbea-bg1.jpg',
-      main_image TEXT DEFAULT '/images/revolution/75ec1-big1.png',
-      drink_tl TEXT DEFAULT '/images/revolution/f13af-big3.png',
-      drink_tr TEXT DEFAULT '/images/revolution/d70da-big4.png',
-      drink_br TEXT DEFAULT '/images/revolution/96fdd-big6.png',
-      active INTEGER DEFAULT 1
-    );
-
     CREATE TABLE IF NOT EXISTS admins (
       id SERIAL PRIMARY KEY,
       username TEXT UNIQUE NOT NULL,
@@ -161,14 +138,25 @@ async function initialize() {
 
     CREATE TABLE IF NOT EXISTS hero_slides (
       id SERIAL PRIMARY KEY,
-      title TEXT,
-      subtitle TEXT,
-      price NUMERIC(10,2),
-      price_label TEXT,
-      image TEXT,
       sort_order INTEGER DEFAULT 0,
-      active INTEGER DEFAULT 1,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      line1 TEXT DEFAULT '1 GROSSE',
+      line2 TEXT DEFAULT 'PIZZA',
+      line3 TEXT DEFAULT '+ 4 GETRÄNKE',
+      price1 TEXT DEFAULT '19',
+      price1_cents TEXT DEFAULT ',99€',
+      price1_tag TEXT DEFAULT 'ABHOLUNG',
+      price2 TEXT DEFAULT '21',
+      price2_cents TEXT DEFAULT ',99€',
+      price2_tag TEXT DEFAULT 'LIEFERUNG',
+      description TEXT DEFAULT '',
+      button_text TEXT DEFAULT 'JETZT BESTELLEN',
+      button_link TEXT DEFAULT '/speisekarte',
+      bg_image TEXT DEFAULT '/images/revolution/6cbea-bg1.jpg',
+      main_image TEXT DEFAULT '/images/revolution/75ec1-big1.png',
+      drink_tl TEXT DEFAULT '/images/revolution/f13af-big3.png',
+      drink_tr TEXT DEFAULT '/images/revolution/d70da-big4.png',
+      drink_br TEXT DEFAULT '/images/revolution/96fdd-big6.png',
+      active INTEGER DEFAULT 1
     );
 
     ALTER TABLE products ADD COLUMN IF NOT EXISTS sizes TEXT;
@@ -272,6 +260,14 @@ async function initialize() {
       [key, value]
     );
   }
+
+  // Migrate old hero_slides columns if table exists with old schema
+  const columns = ['line1','line2','line3','price1','price1_cents','price1_tag','price2','price2_cents','price2_tag','description','button_text','button_link','bg_image','main_image','drink_tl','drink_tr','drink_br'];
+  for (const col of columns) {
+    try { await query(`ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS ${col} TEXT DEFAULT ''`); } catch (e) { /* column may already exist */ }
+  }
+  try { await query(`ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS button_link TEXT DEFAULT '/speisekarte'`); } catch (e) {}
+  try { await query(`ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS active INTEGER DEFAULT 1`); } catch (e) {}
 
   // Seed default hero slides
   const existingSlides = await query('SELECT COUNT(*) as cnt FROM hero_slides');
