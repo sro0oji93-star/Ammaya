@@ -258,7 +258,7 @@ router.get('/einstellungen', auth, async (req, res) => {
 });
 
 router.post('/einstellungen', auth, async (req, res) => {
-  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude','primary_color','secondary_color','logo_url','font_family','hero_title_1','hero_title_2','hero_title_3','hero_price_1','hero_price_1_cents','hero_price_1_tag','hero_price_2','hero_price_2_cents','hero_price_2_tag','hero_description','hero_button_text'];
+  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude','primary_color','secondary_color','logo_url','font_family','hero_title_1','hero_title_2','hero_title_3','hero_price_1','hero_price_1_cents','hero_price_1_tag','hero_price_2','hero_price_2_cents','hero_price_2_tag','hero_description','hero_button_text','hero_bg_image','hero_main_image','hero_image_drink_tl','hero_image_drink_tr','hero_image_drink_br'];
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
       await db.run('UPDATE settings SET value = $1 WHERE key = $2', [req.body[key], key]);

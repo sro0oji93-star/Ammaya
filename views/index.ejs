@@ -1,7 +1,7 @@
 <%- include('partials/header') %>
 
 <!-- Animated Hero -->
-<section class="hero mad-hero-animated" style="background:url('/images/revolution/6cbea-bg1.jpg') center/cover no-repeat;position:relative;overflow:hidden;min-height:92vh;display:flex;align-items:center">
+<section class="hero mad-hero-animated" style="background:url('<%= settings.hero_bg_image || '/images/revolution/6cbea-bg1.jpg' %>') center/cover no-repeat;position:relative;overflow:hidden;min-height:92vh;display:flex;align-items:center">
   <div class="hero-overlay"></div>
   <div class="hero-inner" style="position:relative;z-index:5;width:100%;max-width:1400px;margin:0 auto;padding:0 20px">
 
@@ -28,13 +28,13 @@
         <div class="pz-small pz-s4"><img src="/images/revolution/bc959-small1.png" alt=""></div>
         <div class="pz-small pz-s5"><img src="/images/revolution/018e7-small4.png" alt=""></div>
         <!-- Main pizza base (angled, on top of flat ingredients) -->
-        <div class="pz-main"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
+        <div class="pz-main"><img src="<%= settings.hero_main_image || '/images/revolution/75ec1-big1.png' %>" alt=""></div>
         <div class="pz-main pz-rotate"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
         <!-- 4 Drinks around the pizza -->
-        <div class="pz-drink d-tl"><img src="/images/revolution/f13af-big3.png" alt=""></div>
-        <div class="pz-drink d-tr"><img src="/images/revolution/d70da-big4.png" alt=""></div>
+        <div class="pz-drink d-tl"><img src="<%= settings.hero_image_drink_tl || '/images/revolution/f13af-big3.png' %>" alt=""></div>
+        <div class="pz-drink d-tr"><img src="<%= settings.hero_image_drink_tr || '/images/revolution/d70da-big4.png' %>" alt=""></div>
         <!-- beer can removed -->
-        <div class="pz-drink d-br"><img src="/images/revolution/96fdd-big6.png" alt=""></div>
+        <div class="pz-drink d-br"><img src="<%= settings.hero_image_drink_br || '/images/revolution/96fdd-big6.png' %>" alt=""></div>
 
       </div>
 
