@@ -288,21 +288,47 @@ router.post('/kontakt/loeschen/:id', auth, async (req, res) => {
   res.redirect('/admin/kontakt');
 });
 
-router.post('/einstellungen/hero-slides', auth, async (req, res) => {
-  const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br, sort_order } = req.body;
+const hsUpload = upload.fields([
+  { name: 'bg_image_file', maxCount: 1 },
+  { name: 'main_image_file', maxCount: 1 },
+  { name: 'drink_tl_file', maxCount: 1 },
+  { name: 'drink_tr_file', maxCount: 1 },
+  { name: 'drink_br_file', maxCount: 1 }
+]);
+
+function imgVal(files, field, textVal) {
+  if (files && files[field] && files[field][0]) {
+    return bufferToDataUri(files[field][0].buffer, files[field][0].mimetype);
+  }
+  return textVal || '';
+}
+
+router.post('/einstellungen/hero-slides', auth, hsUpload, async (req, res) => {
+  const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, sort_order } = req.body;
   await db.run(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)`,
-    [sort_order || 0, line1 || '', line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/speisekarte', bg_image || '/images/revolution/6cbea-bg1.jpg', main_image || '/images/revolution/75ec1-big1.png', drink_tl || '', drink_tr || '', drink_br || '']);
+    [sort_order || 0, line1 || '', line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/speisekarte',
+    imgVal(req.files, 'bg_image_file', req.body.bg_image) || '/images/revolution/6cbea-bg1.jpg',
+    imgVal(req.files, 'main_image_file', req.body.main_image) || '/images/revolution/75ec1-big1.png',
+    imgVal(req.files, 'drink_tl_file', req.body.drink_tl),
+    imgVal(req.files, 'drink_tr_file', req.body.drink_tr),
+    imgVal(req.files, 'drink_br_file', req.body.drink_br)]);
   req.flash = req.flash || {};
   req.flash.success = 'Slide wurde erstellt!';
   req.session.save(() => res.redirect('/admin/einstellungen'));
 });
 
-router.post('/einstellungen/hero-slides/bearbeiten/:id', auth, async (req, res) => {
+router.post('/einstellungen/hero-slides/bearbeiten/:id', auth, hsUpload, async (req, res) => {
   const slide = await db.get('SELECT * FROM hero_slides WHERE id = $1', [req.params.id]);
   if (!slide) return res.status(404).send('Slide nicht gefunden');
-  const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br, sort_order, active } = req.body;
+  const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, sort_order, active } = req.body;
   await db.run(`UPDATE hero_slides SET sort_order=$1, line2=$2, line3=$3, price1=$4, price1_cents=$5, price1_tag=$6, price2=$7, price2_cents=$8, price2_tag=$9, description=$10, button_text=$11, button_link=$12, bg_image=$13, main_image=$14, drink_tl=$15, drink_tr=$16, drink_br=$17, active=$18, line1=$19 WHERE id=$20`,
-    [sort_order || 0, line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/speisekarte', bg_image || '/images/revolution/6cbea-bg1.jpg', main_image || '/images/revolution/75ec1-big1.png', drink_tl || '', drink_tr || '', drink_br || '', active ? 1 : 0, line1 || '', req.params.id]);
+    [sort_order || 0, line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/speisekarte',
+    imgVal(req.files, 'bg_image_file', req.body.bg_image) || slide.bg_image || '/images/revolution/6cbea-bg1.jpg',
+    imgVal(req.files, 'main_image_file', req.body.main_image) || slide.main_image || '/images/revolution/75ec1-big1.png',
+    imgVal(req.files, 'drink_tl_file', req.body.drink_tl) || slide.drink_tl || '',
+    imgVal(req.files, 'drink_tr_file', req.body.drink_tr) || slide.drink_tr || '',
+    imgVal(req.files, 'drink_br_file', req.body.drink_br) || slide.drink_br || '',
+    active ? 1 : 0, line1 || '', req.params.id]);
   req.flash = req.flash || {};
   req.flash.success = 'Slide wurde aktualisiert!';
   req.session.save(() => res.redirect('/admin/einstellungen'));

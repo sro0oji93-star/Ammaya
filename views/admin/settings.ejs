@@ -136,7 +136,7 @@
   <!-- New Slide Form -->
   <div id="newSlideForm" style="display:none;background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:20px">
     <h4>Neuen Slide erstellen</h4>
-    <form method="POST" action="/admin/einstellungen/hero-slides">
+    <form method="POST" action="/admin/einstellungen/hero-slides" enctype="multipart/form-data">
       <div class="form-grid">
         <div class="form-group"><label>Zeile 1</label><input name="line1" value="1 GROSSE"></div>
         <div class="form-group"><label>Zeile 2</label><input name="line2" value="PIZZA"></div>
@@ -157,11 +157,11 @@
         <div class="form-group"><label>Sortierung</label><input type="number" name="sort_order" value="0"></div>
       </div>
       <div class="form-grid">
-        <div class="form-group"><label>Hintergrundbild URL</label><input name="bg_image" value="/images/revolution/6cbea-bg1.jpg"></div>
-        <div class="form-group"><label>Hauptbild URL</label><input name="main_image" value="/images/revolution/75ec1-big1.png"></div>
-        <div class="form-group"><label>Getränk (oben links) URL</label><input name="drink_tl" value="/images/revolution/f13af-big3.png"></div>
-        <div class="form-group"><label>Getränk (oben rechts) URL</label><input name="drink_tr" value="/images/revolution/d70da-big4.png"></div>
-        <div class="form-group"><label>Getränk (unten rechts) URL</label><input name="drink_br" value="/images/revolution/96fdd-big6.png"></div>
+        <div class="form-group"><label>Hintergrundbild URL</label><input name="bg_image" value="/images/revolution/6cbea-bg1.jpg"><br><small>oder Datei:</small> <input type="file" name="bg_image_file" accept="image/*"></div>
+        <div class="form-group"><label>Hauptbild URL</label><input name="main_image" value="/images/revolution/75ec1-big1.png"><br><small>oder Datei:</small> <input type="file" name="main_image_file" accept="image/*"></div>
+        <div class="form-group"><label>Getränk (oben links) URL</label><input name="drink_tl" value="/images/revolution/f13af-big3.png"><br><small>oder Datei:</small> <input type="file" name="drink_tl_file" accept="image/*"></div>
+        <div class="form-group"><label>Getränk (oben rechts) URL</label><input name="drink_tr" value="/images/revolution/d70da-big4.png"><br><small>oder Datei:</small> <input type="file" name="drink_tr_file" accept="image/*"></div>
+        <div class="form-group"><label>Getränk (unten rechts) URL</label><input name="drink_br" value="/images/revolution/96fdd-big6.png"><br><small>oder Datei:</small> <input type="file" name="drink_br_file" accept="image/*"></div>
       </div>
       <button type="submit" class="btn btn-primary">Erstellen</button>
       <button type="button" class="btn btn-secondary" onclick="document.getElementById('newSlideForm').style.display='none'">Abbrechen</button>
@@ -199,7 +199,7 @@
 <% slides.forEach(function(s) { %>
 <div id="editForm<%= s.id %>" style="display:none;background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:20px" class="settings-card">
   <h4>Slide bearbeiten #<%= s.id %></h4>
-  <form method="POST" action="/admin/einstellungen/hero-slides/bearbeiten/<%= s.id %>">
+  <form method="POST" action="/admin/einstellungen/hero-slides/bearbeiten/<%= s.id %>" enctype="multipart/form-data">
     <div class="form-grid">
       <div class="form-group"><label>Zeile 1</label><input name="line1" value="<%= s.line1 || '' %>"></div>
       <div class="form-group"><label>Zeile 2</label><input name="line2" value="<%= s.line2 || '' %>"></div>
@@ -221,11 +221,11 @@
       <div class="form-group"><label>Aktiv</label><input type="checkbox" name="active" value="1" <%= s.active ? 'checked' : '' %>></div>
     </div>
     <div class="form-grid">
-      <div class="form-group"><label>Hintergrundbild URL</label><input name="bg_image" value="<%= s.bg_image || '/images/revolution/6cbea-bg1.jpg' %>"></div>
-      <div class="form-group"><label>Hauptbild URL</label><input name="main_image" value="<%= s.main_image || '/images/revolution/75ec1-big1.png' %>"></div>
-      <div class="form-group"><label>Getränk (oben links) URL</label><input name="drink_tl" value="<%= s.drink_tl || '' %>"></div>
-      <div class="form-group"><label>Getränk (oben rechts) URL</label><input name="drink_tr" value="<%= s.drink_tr || '' %>"></div>
-      <div class="form-group"><label>Getränk (unten rechts) URL</label><input name="drink_br" value="<%= s.drink_br || '' %>"></div>
+      <div class="form-group"><label>Hintergrundbild URL</label><input name="bg_image" value="<%= s.bg_image || '/images/revolution/6cbea-bg1.jpg' %>"><br><small>oder Datei:</small> <input type="file" name="bg_image_file" accept="image/*"></div>
+      <div class="form-group"><label>Hauptbild URL</label><input name="main_image" value="<%= s.main_image || '/images/revolution/75ec1-big1.png' %>"><br><small>oder Datei:</small> <input type="file" name="main_image_file" accept="image/*"></div>
+      <div class="form-group"><label>Getränk (oben links) URL</label><input name="drink_tl" value="<%= s.drink_tl || '' %>"><br><small>oder Datei:</small> <input type="file" name="drink_tl_file" accept="image/*"></div>
+      <div class="form-group"><label>Getränk (oben rechts) URL</label><input name="drink_tr" value="<%= s.drink_tr || '' %>"><br><small>oder Datei:</small> <input type="file" name="drink_tr_file" accept="image/*"></div>
+      <div class="form-group"><label>Getränk (unten rechts) URL</label><input name="drink_br" value="<%= s.drink_br || '' %>"><br><small>oder Datei:</small> <input type="file" name="drink_br_file" accept="image/*"></div>
     </div>
     <button type="submit" class="btn btn-primary">Speichern</button>
     <button type="button" class="btn btn-secondary" onclick="editSlide(<%= s.id %>)">Abbrechen</button>
