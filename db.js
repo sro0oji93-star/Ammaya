@@ -261,11 +261,15 @@ async function initialize() {
     );
   }
 
-  // Ensure hero_slides table has correct schema (migrate from old schema if needed)
+  // Ensure hero_slides table has correct schema and data
   try {
-    await query(`SELECT line1, bg_image, main_image, drink_tl FROM hero_slides LIMIT 1`);
+    const probe = await query(`SELECT COUNT(*) as cnt FROM hero_slides WHERE line1 IS NOT NULL AND line1 != ''`);
+    if (probe.rows[0].cnt === 0) {
+      // Table has old schema or empty data - drop and recreate
+      await query(`DROP TABLE IF EXISTS hero_slides CASCADE`);
+    }
   } catch (e) {
-    // Old schema detected or table doesn't exist yet - drop and recreate
+    // Column doesn't exist - drop and recreate
     try { await query(`DROP TABLE IF EXISTS hero_slides CASCADE`); } catch (e2) {}
   }
   await query(`
