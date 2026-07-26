@@ -258,7 +258,7 @@ router.get('/einstellungen', auth, async (req, res) => {
 });
 
 router.post('/einstellungen', auth, async (req, res) => {
-  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude','primary_color','secondary_color','logo_url','font_family','hero_title_1','hero_title_2','hero_title_3','hero_price_1','hero_price_1_cents','hero_price_1_tag','hero_price_2','hero_price_2_cents','hero_price_2_tag','hero_description','hero_button_text','hero_bg_image','hero_main_image','hero_image_drink_tl','hero_image_drink_tr','hero_image_drink_br'];
+  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude','primary_color','secondary_color','logo_url','font_family'];
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
       await db.run('UPDATE settings SET value = $1 WHERE key = $2', [req.body[key], key]);
@@ -287,42 +287,38 @@ router.post('/kontakt/loeschen/:id', auth, async (req, res) => {
   res.redirect('/admin/kontakt');
 });
 
-router.get('/hero', auth, async (req, res) => {
+router.get('/hero-slides', auth, async (req, res) => {
   const slides = await db.all('SELECT * FROM hero_slides ORDER BY sort_order');
-  res.render('admin/hero', { title: 'Hero Slider – Admin', slides });
+  const success = req.flash && req.flash.success ? req.flash.success : null;
+  if (req.flash) req.flash.success = null;
+  res.render('admin/hero-slides', { title: 'Hero Slider – Admin', slides, success });
 });
 
-router.post('/hero', auth, upload.single('image'), async (req, res) => {
-  const { title, subtitle, price, price_label, sort_order } = req.body;
-  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : null;
-  await db.run('INSERT INTO hero_slides (title, subtitle, price, price_label, image, sort_order) VALUES ($1, $2, $3, $4, $5, $6)',
-    [title, subtitle, price || null, price_label, image, sort_order || 0]);
-  res.redirect('/admin/hero');
+router.post('/hero-slides', auth, async (req, res) => {
+  const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br, sort_order } = req.body;
+  await db.run(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)`,
+    [sort_order || 0, line1 || '', line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/speisekarte', bg_image || '/images/revolution/6cbea-bg1.jpg', main_image || '/images/revolution/75ec1-big1.png', drink_tl || '', drink_tr || '', drink_br || '']);
+  req.flash = req.flash || {};
+  req.flash.success = 'Slide wurde erstellt!';
+  req.session.save(() => res.redirect('/admin/hero-slides'));
 });
 
-router.post('/hero/bearbeiten/:id', auth, upload.single('image'), async (req, res) => {
+router.post('/hero-slides/bearbeiten/:id', auth, async (req, res) => {
   const slide = await db.get('SELECT * FROM hero_slides WHERE id = $1', [req.params.id]);
   if (!slide) return res.status(404).send('Slide nicht gefunden');
-  const { title, subtitle, price, price_label, sort_order, active } = req.body;
-  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : slide.image;
-  await db.run('UPDATE hero_slides SET title=$1, subtitle=$2, price=$3, price_label=$4, image=$5, sort_order=$6, active=$7 WHERE id=$8',
-    [title, subtitle, price || null, price_label, image, sort_order || 0, active ? 1 : 0, req.params.id]);
-  res.redirect('/admin/hero');
+  const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br, sort_order, active } = req.body;
+  await db.run(`UPDATE hero_slides SET sort_order=$1, line1=$2, line2=$3, line3=$4, price1=$5, price1_cents=$6, price1_tag=$7, price2=$8, price2_cents=$9, price2_tag=$10, description=$11, button_text=$12, button_link=$13, bg_image=$14, main_image=$15, drink_tl=$16, drink_tr=$17, drink_br=$18, active=$19 WHERE id=$20`,
+    [sort_order || 0, line1 || '', line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/speisekarte', bg_image || '/images/revolution/6cbea-bg1.jpg', main_image || '/images/revolution/75ec1-big1.png', drink_tl || '', drink_tr || '', drink_br || '', active ? 1 : 0, req.params.id]);
+  req.flash = req.flash || {};
+  req.flash.success = 'Slide wurde aktualisiert!';
+  req.session.save(() => res.redirect('/admin/hero-slides'));
 });
 
-router.post('/hero/loeschen/:id', auth, async (req, res) => {
+router.post('/hero-slides/loeschen/:id', auth, async (req, res) => {
   await db.run('DELETE FROM hero_slides WHERE id = $1', [req.params.id]);
-  res.redirect('/admin/hero');
-});
-
-router.post('/hero/reorder', auth, async (req, res) => {
-  const { ids } = req.body;
-  if (Array.isArray(ids)) {
-    for (let i = 0; i < ids.length; i++) {
-      await db.run('UPDATE hero_slides SET sort_order = $1 WHERE id = $2', [i, ids[i]]);
-    }
-  }
-  res.redirect('/admin/hero');
+  req.flash = req.flash || {};
+  req.flash.success = 'Slide wurde gelöscht!';
+  req.session.save(() => res.redirect('/admin/hero-slides'));
 });
 
 router.get('/passwort', auth, (req, res) => {

@@ -109,6 +109,29 @@ async function initialize() {
       value TEXT
     );
 
+    CREATE TABLE IF NOT EXISTS hero_slides (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sort_order INTEGER DEFAULT 0,
+      line1 TEXT DEFAULT '1 GROSSE',
+      line2 TEXT DEFAULT 'PIZZA',
+      line3 TEXT DEFAULT '+ 4 GETRÄNKE',
+      price1 TEXT DEFAULT '19',
+      price1_cents TEXT DEFAULT ',99€',
+      price1_tag TEXT DEFAULT 'ABHOLUNG',
+      price2 TEXT DEFAULT '21',
+      price2_cents TEXT DEFAULT ',99€',
+      price2_tag TEXT DEFAULT 'LIEFERUNG',
+      description TEXT DEFAULT '',
+      button_text TEXT DEFAULT 'JETZT BESTELLEN',
+      button_link TEXT DEFAULT '/speisekarte',
+      bg_image TEXT DEFAULT '/images/revolution/6cbea-bg1.jpg',
+      main_image TEXT DEFAULT '/images/revolution/75ec1-big1.png',
+      drink_tl TEXT DEFAULT '/images/revolution/f13af-big3.png',
+      drink_tr TEXT DEFAULT '/images/revolution/d70da-big4.png',
+      drink_br TEXT DEFAULT '/images/revolution/96fdd-big6.png',
+      active INTEGER DEFAULT 1
+    );
+
     CREATE TABLE IF NOT EXISTS admins (
       id SERIAL PRIMARY KEY,
       username TEXT UNIQUE NOT NULL,
@@ -235,30 +258,7 @@ async function initialize() {
     ['google_maps_key', 'YOUR_GOOGLE_MAPS_KEY'],
     ['latitude', '52.520008'],
     ['longitude', '13.404954'],
-    ['hero_title', 'Willkommen bei Ammaya'],
-    ['hero_subtitle', 'Entdecken Sie unsere vielfältigen Gerichte – frisch zubereitet mit den besten Zutaten'],
-    ['hero_price', '12'],
-    ['hero_price_label', 'Nur heute'],
-    ['hero_text_title', 'Burger & Pizza'],
-    ['hero_text_subtitle', 'Frisch zubereitet mit den besten Zutaten'],
-    ['hero_burger_image', '/images/revolution/5b6b6-burger.png'],
-    ['hero_pizza_image', '/images/pizza_hero.png'],
-    ['hero_title_1', '1 GROSSE'],
-    ['hero_title_2', 'PIZZA'],
-    ['hero_title_3', '+ 4 GETRÄNKE'],
-    ['hero_price_1', '19'],
-    ['hero_price_1_cents', ',99€'],
-    ['hero_price_1_tag', 'ABHOLUNG'],
-    ['hero_price_2', '21'],
-    ['hero_price_2_cents', ',99€'],
-    ['hero_price_2_tag', 'LIEFERUNG'],
-    ['hero_description', 'Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!'],
-    ['hero_button_text', 'JETZT BESTELLEN'],
-    ['hero_bg_image', '/images/revolution/6cbea-bg1.jpg'],
-    ['hero_main_image', '/images/revolution/75ec1-big1.png'],
-    ['hero_image_drink_tl', '/images/revolution/f13af-big3.png'],
-    ['hero_image_drink_tr', '/images/revolution/d70da-big4.png'],
-    ['hero_image_drink_br', '/images/revolution/96fdd-big6.png'],
+
     ['about_title', 'Unsere Philosophie'],
     ['about_text', 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschließlich frische Zutaten und legen größten Wert auf Qualität.'],
     ['primary_color', '#eb0029'],
@@ -271,6 +271,13 @@ async function initialize() {
       'INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO NOTHING',
       [key, value]
     );
+  }
+
+  // Seed default hero slides
+  const existingSlides = await query('SELECT COUNT(*) as cnt FROM hero_slides');
+  if (existingSlides.rows[0].cnt === 0) {
+    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (0, '1 GROSSE', 'PIZZA', '+ 4 GETRÄNKE', '19', ',99€', 'ABHOLUNG', '21', ',99€', 'LIEFERUNG', 'Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!', 'JETZT BESTELLEN', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/75ec1-big1.png', '/images/revolution/f13af-big3.png', '/images/revolution/d70da-big4.png', '/images/revolution/96fdd-big6.png')`);
+    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (1, 'MIX OR MATCH', 'COMBO DEAL', 'SPECIAL', '9', ',99€', 'ABHOLUNG', '11', ',99€', 'LIEFERUNG', 'Includes 1 burger, 1 small fries, 1 dip and 1 drink (330ml)', 'JETZT BESTELLEN', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/5b6b6-burger.png', '/images/revolution/5fb1e-glass.png', '/images/revolution/6e11b-donut3.png', '/images/revolution/f1de6-donut2.png')`);
   }
 }
 
