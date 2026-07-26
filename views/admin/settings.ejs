@@ -84,7 +84,6 @@
     </div>
   </div>
 
-
   <div class="settings-card">
     <h3>Startseite</h3>
     <div class="form-group">
@@ -96,7 +95,6 @@
       <textarea name="about_text" rows="4"><%= settings.about_text || '' %></textarea>
     </div>
   </div>
-
 
   <div class="settings-card">
     <h3>Design</h3>
@@ -127,4 +125,118 @@
 
   <button type="submit" class="btn btn-primary btn-lg">Einstellungen speichern</button>
 </form>
+
+<!-- Hero Slider Section (inline CRUD) -->
+<div class="settings-card" style="margin-top:30px">
+  <div class="section-header-row">
+    <h3><i class="fas fa-images"></i> Hero Slider</h3>
+    <button class="btn btn-primary" onclick="document.getElementById('newSlideForm').style.display='block'">+ Neuer Slide</button>
+  </div>
+
+  <!-- New Slide Form -->
+  <div id="newSlideForm" style="display:none;background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:20px">
+    <h4>Neuen Slide erstellen</h4>
+    <form method="POST" action="/admin/einstellungen/hero-slides">
+      <div class="form-grid">
+        <div class="form-group"><label>Zeile 1</label><input name="line1" value="1 GROSSE"></div>
+        <div class="form-group"><label>Zeile 2</label><input name="line2" value="PIZZA"></div>
+        <div class="form-group"><label>Zeile 3</label><input name="line3" value="+ 4 GETRÄNKE"></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Preis 1 Zahl</label><input name="price1" value="19"></div>
+        <div class="form-group"><label>Preis 1 Cent</label><input name="price1_cents" value=",99€"></div>
+        <div class="form-group"><label>Preis 1 Label</label><input name="price1_tag" value="ABHOLUNG"></div>
+        <div class="form-group"><label>Preis 2 Zahl</label><input name="price2" value="21"></div>
+        <div class="form-group"><label>Preis 2 Cent</label><input name="price2_cents" value=",99€"></div>
+        <div class="form-group"><label>Preis 2 Label</label><input name="price2_tag" value="LIEFERUNG"></div>
+      </div>
+      <div class="form-group"><label>Beschreibung</label><input name="description" value="Bestellen Sie eine große 3-Belag-Pizza..."></div>
+      <div class="form-grid">
+        <div class="form-group"><label>Button Text</label><input name="button_text" value="JETZT BESTELLEN"></div>
+        <div class="form-group"><label>Button Link</label><input name="button_link" value="/speisekarte"></div>
+        <div class="form-group"><label>Sortierung</label><input type="number" name="sort_order" value="0"></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Hintergrundbild URL</label><input name="bg_image" value="/images/revolution/6cbea-bg1.jpg"></div>
+        <div class="form-group"><label>Hauptbild URL</label><input name="main_image" value="/images/revolution/75ec1-big1.png"></div>
+        <div class="form-group"><label>Getränk (oben links) URL</label><input name="drink_tl" value="/images/revolution/f13af-big3.png"></div>
+        <div class="form-group"><label>Getränk (oben rechts) URL</label><input name="drink_tr" value="/images/revolution/d70da-big4.png"></div>
+        <div class="form-group"><label>Getränk (unten rechts) URL</label><input name="drink_br" value="/images/revolution/96fdd-big6.png"></div>
+      </div>
+      <button type="submit" class="btn btn-primary">Erstellen</button>
+      <button type="button" class="btn btn-secondary" onclick="document.getElementById('newSlideForm').style.display='none'">Abbrechen</button>
+    </form>
+  </div>
+
+  <!-- Slides List -->
+  <% if (!slides || slides.length === 0) { %>
+  <p>Keine Slides vorhanden.</p>
+  <% } else { %>
+  <table class="table">
+    <thead><tr><th>#</th><th>Zeilen</th><th>Preise</th><th>Hintergrund</th><th>Aktiv</th><th>Aktionen</th></tr></thead>
+    <tbody>
+      <% slides.forEach(function(s) { %>
+      <tr>
+        <td><%= s.sort_order %></td>
+        <td><%= s.line1 || '' %> / <%= s.line2 || '' %></td>
+        <td><%= s.price1 || '' %><%= s.price1_cents || '' %> <%= s.price1_tag || '' %></td>
+        <td><img src="<%= s.bg_image || '/images/revolution/6cbea-bg1.jpg' %>" style="width:80px;height:45px;object-fit:cover;border-radius:4px"></td>
+        <td><%= s.active ? '✓' : '✗' %></td>
+        <td>
+          <button class="btn btn-small btn-secondary" onclick="editSlide(<%= s.id %>)">Bearbeiten</button>
+          <form method="POST" action="/admin/einstellungen/hero-slides/loeschen/<%= s.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')">
+            <button class="btn btn-small btn-danger">Löschen</button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } %>
+</div>
+
+<!-- Edit Forms (hidden) -->
+<% slides.forEach(function(s) { %>
+<div id="editForm<%= s.id %>" style="display:none;background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:20px" class="settings-card">
+  <h4>Slide bearbeiten #<%= s.id %></h4>
+  <form method="POST" action="/admin/einstellungen/hero-slides/bearbeiten/<%= s.id %>">
+    <div class="form-grid">
+      <div class="form-group"><label>Zeile 1</label><input name="line1" value="<%= s.line1 || '' %>"></div>
+      <div class="form-group"><label>Zeile 2</label><input name="line2" value="<%= s.line2 || '' %>"></div>
+      <div class="form-group"><label>Zeile 3</label><input name="line3" value="<%= s.line3 || '' %>"></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Preis 1 Zahl</label><input name="price1" value="<%= s.price1 || '' %>"></div>
+      <div class="form-group"><label>Preis 1 Cent</label><input name="price1_cents" value="<%= s.price1_cents || '' %>"></div>
+      <div class="form-group"><label>Preis 1 Label</label><input name="price1_tag" value="<%= s.price1_tag || '' %>"></div>
+      <div class="form-group"><label>Preis 2 Zahl</label><input name="price2" value="<%= s.price2 || '' %>"></div>
+      <div class="form-group"><label>Preis 2 Cent</label><input name="price2_cents" value="<%= s.price2_cents || '' %>"></div>
+      <div class="form-group"><label>Preis 2 Label</label><input name="price2_tag" value="<%= s.price2_tag || '' %>"></div>
+    </div>
+    <div class="form-group"><label>Beschreibung</label><input name="description" value="<%= s.description || '' %>"></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Button Text</label><input name="button_text" value="<%= s.button_text || 'JETZT BESTELLEN' %>"></div>
+      <div class="form-group"><label>Button Link</label><input name="button_link" value="<%= s.button_link || '/speisekarte' %>"></div>
+      <div class="form-group"><label>Sortierung</label><input type="number" name="sort_order" value="<%= s.sort_order || 0 %>"></div>
+      <div class="form-group"><label>Aktiv</label><input type="checkbox" name="active" value="1" <%= s.active ? 'checked' : '' %>></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Hintergrundbild URL</label><input name="bg_image" value="<%= s.bg_image || '/images/revolution/6cbea-bg1.jpg' %>"></div>
+      <div class="form-group"><label>Hauptbild URL</label><input name="main_image" value="<%= s.main_image || '/images/revolution/75ec1-big1.png' %>"></div>
+      <div class="form-group"><label>Getränk (oben links) URL</label><input name="drink_tl" value="<%= s.drink_tl || '' %>"></div>
+      <div class="form-group"><label>Getränk (oben rechts) URL</label><input name="drink_tr" value="<%= s.drink_tr || '' %>"></div>
+      <div class="form-group"><label>Getränk (unten rechts) URL</label><input name="drink_br" value="<%= s.drink_br || '' %>"></div>
+    </div>
+    <button type="submit" class="btn btn-primary">Speichern</button>
+    <button type="button" class="btn btn-secondary" onclick="editSlide(<%= s.id %>)">Abbrechen</button>
+  </form>
+</div>
+<% }); %>
+
+<script>
+function editSlide(id) {
+  var form = document.getElementById('editForm' + id);
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+</script>
 <%- include('footer') %>
