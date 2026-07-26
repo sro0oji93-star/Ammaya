@@ -9,13 +9,13 @@
 
       <!-- Left: Text -->
       <div class="mad-hero-text" style="flex:1;min-width:320px;max-width:600px;opacity:0;animation:fadeInUp 1s ease-out 0.5s forwards">
-        <div class="mad-hero-title"><span class="t1">1 GROSSE</span><br><span class="t2">PIZZA</span><br><span class="t3">+ 4 GETRÄNKE</span></div>
+        <div class="mad-hero-title"><span class="t1"><%= settings.hero_title_1 || '1 GROSSE' %></span><br><span class="t2"><%= settings.hero_title_2 || 'PIZZA' %></span><br><span class="t3"><%= settings.hero_title_3 || '+ 4 GETRÄNKE' %></span></div>
         <div class="mad-hero-prices">
-          <span class="mad-price">19<span class="cents">,99€</span> <span class="tag">ABHOLUNG</span></span>
-          <span class="mad-price">21<span class="cents">,99€</span> <span class="tag">LIEFERUNG</span></span>
+          <span class="mad-price"><%= settings.hero_price_1 || '19' %><span class="cents"><%= settings.hero_price_1_cents || ',99€' %></span> <span class="tag"><%= settings.hero_price_1_tag || 'ABHOLUNG' %></span></span>
+          <span class="mad-price"><%= settings.hero_price_2 || '21' %><span class="cents"><%= settings.hero_price_2_cents || ',99€' %></span> <span class="tag"><%= settings.hero_price_2_tag || 'LIEFERUNG' %></span></span>
         </div>
-        <p class="mad-hero-desc">Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!</p>
-        <a href="/speisekarte" class="btn btn-big btn-style-3 mad-order-btn">JETZT BESTELLEN</a>
+        <p class="mad-hero-desc"><%= settings.hero_description || 'Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!' %></p>
+        <a href="/speisekarte" class="btn btn-big btn-style-3 mad-order-btn"><%= settings.hero_button_text || 'JETZT BESTELLEN' %></a>
       </div>
 
       <!-- Right: Pizza + Drinks -->
