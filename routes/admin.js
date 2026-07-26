@@ -19,7 +19,7 @@ const fileFilter = (req, file, cb) => {
     cb(new Error('Nur Bilder (JPEG, PNG, GIF, WebP, SVG) sind erlaubt'), false);
   }
 };
-const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 }, fileFilter });
+const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024, fieldSize: 10 * 1024 * 1024 }, fileFilter });
 
 router.get('/login', (req, res) => {
   if (req.session.admin) return res.redirect('/admin');
