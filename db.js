@@ -261,19 +261,44 @@ async function initialize() {
     );
   }
 
-  // Migrate old hero_slides columns if table exists with old schema
-  const columns = ['line1','line2','line3','price1','price1_cents','price1_tag','price2','price2_cents','price2_tag','description','button_text','button_link','bg_image','main_image','drink_tl','drink_tr','drink_br'];
-  for (const col of columns) {
-    try { await query(`ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS ${col} TEXT DEFAULT ''`); } catch (e) { /* column may already exist */ }
+  // Drop old hero_slides table and recreate with correct schema
+  const tblCheck = await query(`SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'hero_slides')`);
+  if (tblCheck.rows[0].exists) {
+    const colCheck = await query(`SELECT column_name FROM information_schema.columns WHERE table_name = 'hero_slides' AND column_name = 'line1'`);
+    if (colCheck.rows.length === 0) {
+      await query(`DROP TABLE hero_slides`);
+    }
   }
-  try { await query(`ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS button_link TEXT DEFAULT '/speisekarte'`); } catch (e) {}
-  try { await query(`ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS active INTEGER DEFAULT 1`); } catch (e) {}
+  await query(`
+    CREATE TABLE IF NOT EXISTS hero_slides (
+      id SERIAL PRIMARY KEY,
+      sort_order INTEGER DEFAULT 0,
+      line1 TEXT DEFAULT '',
+      line2 TEXT DEFAULT '',
+      line3 TEXT DEFAULT '',
+      price1 TEXT DEFAULT '',
+      price1_cents TEXT DEFAULT '',
+      price1_tag TEXT DEFAULT '',
+      price2 TEXT DEFAULT '',
+      price2_cents TEXT DEFAULT '',
+      price2_tag TEXT DEFAULT '',
+      description TEXT DEFAULT '',
+      button_text TEXT DEFAULT 'JETZT BESTELLEN',
+      button_link TEXT DEFAULT '/speisekarte',
+      bg_image TEXT DEFAULT '',
+      main_image TEXT DEFAULT '',
+      drink_tl TEXT DEFAULT '',
+      drink_tr TEXT DEFAULT '',
+      drink_br TEXT DEFAULT '',
+      active INTEGER DEFAULT 1
+    );
+  `);
 
   // Seed default hero slides
   const existingSlides = await query('SELECT COUNT(*) as cnt FROM hero_slides');
   if (existingSlides.rows[0].cnt === 0) {
-    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (0, '1 GROSSE', 'PIZZA', '+ 4 GETRÄNKE', '19', ',99€', 'ABHOLUNG', '21', ',99€', 'LIEFERUNG', 'Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!', 'JETZT BESTELLEN', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/75ec1-big1.png', '/images/revolution/f13af-big3.png', '/images/revolution/d70da-big4.png', '/images/revolution/96fdd-big6.png')`);
-    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (1, 'MIX OR MATCH', 'COMBO DEAL', 'SPECIAL', '9', ',99€', 'ABHOLUNG', '11', ',99€', 'LIEFERUNG', 'Includes 1 burger, 1 small fries, 1 dip and 1 drink (330ml)', 'JETZT BESTELLEN', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/5b6b6-burger.png', '/images/revolution/5fb1e-glass.png', '/images/revolution/6e11b-donut3.png', '/images/revolution/f1de6-donut2.png')`);
+    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (0, '1 GROSSE', 'PIZZA', '+ 4 GETRÄNKE', '19', ',99€', 'ABHOLUNG', '21', ',99€', 'LIEFERUNG', 'Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!', 'JETZT BESTELLEN', '/speisekarte', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/75ec1-big1.png', '/images/revolution/f13af-big3.png', '/images/revolution/d70da-big4.png', '/images/revolution/96fdd-big6.png')`);
+    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (1, 'MIX OR MATCH', 'COMBO DEAL', 'SPECIAL', '9', ',99€', 'ABHOLUNG', '11', ',99€', 'LIEFERUNG', 'Includes 1 burger, 1 small fries, 1 dip and 1 drink (330ml)', 'JETZT BESTELLEN', '/speisekarte', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/5b6b6-burger.png', '/images/revolution/5fb1e-glass.png', '/images/revolution/6e11b-donut3.png', '/images/revolution/f1de6-donut2.png')`);
   }
 }
 
