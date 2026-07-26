@@ -1,137 +1,105 @@
 <%- include('partials/header') %>
 
-<!-- Animated Revolution Slider-style Hero -->
-<section class="mad-section hero" style="background:url('/images/revolution/6cbea-bg1.jpg') center/cover no-repeat;position:relative;overflow:hidden;min-height:92vh;display:flex;align-items:center">
+<!-- Animated Hero -->
+<section class="hero mad-hero-animated" style="background:url('/images/revolution/6cbea-bg1.jpg') center/cover no-repeat;position:relative;overflow:hidden;min-height:92vh;display:flex;align-items:center">
   <div class="hero-overlay"></div>
+  <div class="hero-inner" style="position:relative;z-index:5;width:100%;max-width:1400px;margin:0 auto;padding:0 20px">
 
-  <div class="rev-stage">
-    <!-- Pizza layers - slide from right with rotation, staggered delays -->
-    <div class="rev-layer" style="left:41.7%;top:21.5%;width:54.1%;z-index:1;animation:revSlideIn 0.7s ease-out 0.1s forwards"><img src="/images/revolution/71681-small5.png" alt=""></div>
-    <div class="rev-layer" style="left:44.7%;top:23.8%;width:50.9%;z-index:2;animation:revSlideIn 0.7s ease-out 0.2s forwards"><img src="/images/revolution/40800-small4.png" alt=""></div>
-    <div class="rev-layer" style="left:45.6%;top:32%;width:54.4%;z-index:3;animation:revSlideIn 0.7s ease-out 0.35s forwards"><img src="/images/revolution/d0628-small3.png" alt=""></div>
-    <div class="rev-layer" style="left:42.6%;top:19.3%;width:54.2%;z-index:4;animation:revSlideIn 0.7s ease-out 0.5s forwards"><img src="/images/revolution/bc959-small1.png" alt=""></div>
-    <div class="rev-layer" style="left:48.1%;top:24.1%;width:48%;z-index:5;animation:revSlideIn 0.7s ease-out 0.6s forwards"><img src="/images/revolution/018e7-small4.png" alt=""></div>
-    <div class="rev-layer" style="left:46%;top:29.6%;width:50.5%;z-index:6;animation:revSlideIn 0.7s ease-out 0.75s forwards"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
-    <div class="rev-layer" style="left:49.5%;top:33.9%;width:40.9%;z-index:7;animation:revSlideIn 0.7s ease-out 0.9s forwards, madRotate 25s linear infinite 1.5s"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px">
 
-    <!-- Drinks around the pizza -->
-    <div class="rev-layer" style="left:33%;top:18%;width:16%;z-index:8;animation:revSlideIn 0.6s ease-out 0.4s forwards, revFloat 3.5s ease-in-out 2s infinite"><img src="/images/revolution/f13af-big3.png" alt=""></div>
-    <div class="rev-layer" style="left:79%;top:15%;width:13%;z-index:8;animation:revSlideIn 0.6s ease-out 0.55s forwards, revFloat 3.5s ease-in-out 2.3s infinite"><img src="/images/revolution/d70da-big4.png" alt=""></div>
-    <div class="rev-layer" style="left:35%;bottom:8%;width:17%;z-index:8;animation:revSlideIn 0.6s ease-out 0.65s forwards, revFloat 3.5s ease-in-out 2.6s infinite"><img src="/images/revolution/09e42-big5.png" alt=""></div>
-    <div class="rev-layer" style="left:82%;bottom:5%;width:12%;z-index:8;animation:revSlideIn 0.6s ease-out 0.8s forwards, revFloat 3.5s ease-in-out 2.9s infinite"><img src="/images/revolution/96fdd-big6.png" alt=""></div>
+      <!-- Left: Text -->
+      <div class="mad-hero-text" style="flex:1;min-width:320px;max-width:600px;opacity:0;animation:fadeInUp 1s ease-out 0.5s forwards">
+        <div class="mad-hero-title"><span class="t1">1 GROSSE</span><br><span class="t2">PIZZA</span><br><span class="t3">+ 4 GETRÄNKE</span></div>
+        <div class="mad-hero-prices">
+          <span class="mad-price">19<span class="cents">,99€</span> <span class="tag">ABHOLUNG</span></span>
+          <span class="mad-price">21<span class="cents">,99€</span> <span class="tag">LIEFERUNG</span></span>
+        </div>
+        <p class="mad-hero-desc">Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!</p>
+        <a href="/speisekarte" class="btn btn-big btn-style-3 mad-order-btn">JETZT BESTELLEN</a>
+      </div>
 
-    <!-- Text -->
-    <div class="rev-txt t1">1 GROSSE</div>
-    <div class="rev-txt t2">PIZZA</div>
-    <div class="rev-txt t3">+ 4 GETRÄNKE</div>
-    <div class="rev-prices">
-      <span class="rev-price">19<span class="rev-cents">,99€</span> <span class="rev-tag">ABHOLUNG</span></span>
-      <span class="rev-price">21<span class="rev-cents">,99€</span> <span class="rev-tag">LIEFERUNG</span></span>
+      <!-- Right: Pizza + Drinks -->
+      <div class="mad-pizza-world" style="flex:1;min-width:320px;max-width:600px;position:relative;min-height:500px">
+
+        <!-- Main pizza layers -->
+        <div class="pz-base"><img src="/images/revolution/75ec1-big1.png" alt=""></div>
+        <div class="pz-layer pz-2"><img src="/images/revolution/1eb76-big2.png" alt=""></div>
+        <div class="pz-layer pz-3"><img src="/images/revolution/bc959-small1.png" alt=""></div>
+        <div class="pz-layer pz-4"><img src="/images/revolution/d0628-small3.png" alt=""></div>
+        <div class="pz-layer pz-5"><img src="/images/revolution/40800-small4.png" alt=""></div>
+        <div class="pz-layer pz-6"><img src="/images/revolution/71681-small5.png" alt=""></div>
+        <div class="pz-layer pz-7"><img src="/images/revolution/018e7-small4.png" alt=""></div>
+
+        <!-- 4 Drinks positioned around the pizza -->
+        <div class="pz-drink d-tl"><img src="/images/revolution/f13af-big3.png" alt=""></div>
+        <div class="pz-drink d-tr"><img src="/images/revolution/d70da-big4.png" alt=""></div>
+        <div class="pz-drink d-bl"><img src="/images/revolution/09e42-big5.png" alt=""></div>
+        <div class="pz-drink d-br"><img src="/images/revolution/96fdd-big6.png" alt=""></div>
+
+      </div>
+
     </div>
-    <div class="rev-desc">Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!</div>
-    <a href="/speisekarte" class="rev-btn">JETZT BESTELLEN</a>
+
   </div>
 </section>
 
 <style>
 .hero-overlay { position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:1; }
 
-/* Stage: full-width container with aspect ratio matching Revolution Slider */
-.rev-stage {
-  position:relative; z-index:2;
-  width:100%; max-width:1400px;
-  margin:0 auto;
-  aspect-ratio:1920/800;
-  pointer-events:none;
-}
+/* Text */
+.mad-hero-title { font-family:'Josefin Sans',sans-serif;font-weight:700;font-style:italic;color:#fff;text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;line-height:1.2; }
+.t1 { font-size:clamp(36px,5vw,80px);display:inline-block;opacity:0;animation:slideText 0.7s ease-out 0.6s forwards; }
+.t2 { font-size:clamp(50px,7vw,115px);text-decoration:underline;display:inline-block;opacity:0;animation:slideText 0.7s ease-out 0.9s forwards; }
+.t3 { font-size:clamp(32px,4.5vw,72px);display:inline-block;opacity:0;animation:slideText 0.7s ease-out 1.2s forwards; }
 
-/* Layer base */
-.rev-layer { position:absolute; opacity:0; pointer-events:none; }
-.rev-layer img { width:100%; height:auto; display:block; }
+.mad-hero-prices { margin-top:20px;display:flex;gap:20px;opacity:0;animation:fadeInUp 0.7s ease-out 1.5s forwards; }
+.mad-price { font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029;line-height:1; }
+.cents { font-size:clamp(20px,2.5vw,48px); }
+.tag { display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029; }
 
-/* Slide from right with rotation */
-@keyframes revSlideIn {
-  0% { transform:translateX(250px) rotate(50deg); opacity:0; }
-  100% { transform:translateX(0) rotate(0); opacity:1; }
+.mad-hero-desc { margin-top:15px;font-size:16px;color:rgba(255,255,255,.85);max-width:80%;opacity:0;animation:fadeInUp 0.7s ease-out 1.8s forwards; }
+.mad-order-btn { margin-top:25px;opacity:0;animation:fadeInUp 0.7s ease-out 2.2s forwards; }
+
+/* Pizza world - centered with aspect ratio */
+.mad-pizza-world { position:relative;margin:0 auto;width:100%;aspect-ratio:1/1;pointer-events:none; }
+.pz-base { position:absolute;inset:5%;display:flex;align-items:center;justify-content:center;z-index:1;opacity:0;animation:slidePizza 0.8s ease-out 0.1s forwards; }
+.pz-base img { width:100%;height:auto;object-fit:contain; }
+.pz-layer { position:absolute;inset:5%;display:flex;align-items:center;justify-content:center;z-index:2;opacity:0; }
+.pz-layer img { width:100%;height:auto;object-fit:contain; }
+.pz-2 { z-index:3;animation:slidePizza 0.8s ease-out 0.3s forwards,madRotate 25s linear infinite 1.5s; }
+.pz-3 { z-index:4;animation:slidePizza 0.8s ease-out 0.45s forwards; }
+.pz-4 { z-index:5;animation:slidePizza 0.8s ease-out 0.6s forwards; }
+.pz-5 { z-index:6;animation:slidePizza 0.8s ease-out 0.75s forwards; }
+.pz-6 { z-index:7;animation:slidePizza 0.8s ease-out 0.9s forwards; }
+.pz-7 { z-index:8;animation:slidePizza 0.8s ease-out 1.05s forwards; }
+
+/* Drinks positioned in 4 quadrants around the pizza */
+.pz-drink { position:absolute;z-index:10;opacity:0;animation:slidePizza 0.6s ease-out forwards,revFloat 3.5s ease-in-out infinite; }
+.pz-drink img { width:100%;height:auto; }
+.d-tl { top:2%;left:5%;width:22%;animation-delay:0.4s,2s; }   /* top left */
+.d-tr { top:0;right:3%;width:18%;animation-delay:0.55s,2.3s; } /* top right */
+.d-bl { bottom:3%;left:3%;width:24%;animation-delay:0.7s,2.6s; } /* bottom left */
+.d-br { bottom:0;right:0;width:16%;animation-delay:0.85s,2.9s; } /* bottom right */
+
+@keyframes slidePizza {
+  0% { transform:translateX(200px) rotate(60deg);opacity:0; }
+  100% { transform:translateX(0) rotate(0deg);opacity:1; }
 }
-/* Drink float/swing */
+@keyframes slideText {
+  0% { transform:translateX(-40px);opacity:0; }
+  100% { transform:translateX(0);opacity:1; }
+}
+@keyframes fadeInUp {
+  0% { transform:translateY(20px);opacity:0; }
+  100% { transform:translateY(0);opacity:1; }
+}
 @keyframes revFloat {
-  0%,100% { transform:rotate(-7deg) translateY(0); }
-  50% { transform:rotate(7deg) translateY(-6px); }
+  0%,100% { transform:rotate(-6deg) translateY(0); }
+  50% { transform:rotate(6deg) translateY(-5px); }
 }
-/* Pizza rotate */
 @keyframes madRotate {
   0% { transform:rotate(0deg); }
   100% { transform:rotate(360deg); }
-}
-
-/* Text layers */
-.rev-txt {
-  position:absolute; left:4%;
-  font-family:'Josefin Sans',sans-serif; font-weight:700; font-style:italic;
-  color:#fff;
-  text-shadow:3px 3px 0 #eb0029,5px 5px 0 #eb0029;
-  opacity:0;
-}
-.t1 { top:18%; font-size:clamp(24px,4vw,70px); animation:revTextIn 0.7s ease-out 0.6s forwards; }
-.t2 { top:30%; font-size:clamp(32px,5.5vw,100px); text-decoration:underline; animation:revTextIn 0.7s ease-out 0.8s forwards; }
-.t3 { top:40%; font-size:clamp(22px,3.5vw,60px); animation:revTextIn 0.7s ease-out 1s forwards; }
-
-.rev-prices {
-  position:absolute; left:4%; top:50%;
-  display:flex; gap:20px;
-  opacity:0;
-  animation:revTextIn 0.7s ease-out 1.2s forwards;
-}
-.rev-price {
-  font-family:'Josefin Sans',sans-serif;
-  font-size:clamp(28px,4.5vw,80px); font-weight:700; font-style:italic;
-  color:#ebe117; text-shadow:3px 3px 0 #eb0029,4px 4px 0 #eb0029; line-height:1;
-}
-.rev-cents { font-size:clamp(16px,2.5vw,45px); }
-.rev-tag {
-  display:block;
-  font-size:clamp(9px,0.8vw,14px); font-weight:700;
-  color:#ebe117; text-shadow:2px 2px 0 #eb0029,3px 3px 0 #eb0029;
-}
-
-.rev-desc {
-  position:absolute; left:4%; top:63%;
-  font-size:clamp(12px,1vw,16px);
-  color:rgba(255,255,255,.8);
-  opacity:0; max-width:40%;
-  animation:revTextIn 0.7s ease-out 1.6s forwards;
-}
-.rev-btn {
-  position:absolute; left:4%; top:70%;
-  display:inline-block;
-  padding:clamp(8px,1vw,16px) clamp(20px,2.5vw,40px);
-  background:#eb0029; color:#fff;
-  font-family:'Josefin Sans',sans-serif; font-weight:700;
-  font-size:clamp(12px,1.2vw,20px);
-  border:2px solid #fff; border-radius:30px;
-  text-transform:uppercase; text-decoration:none;
-  opacity:0; pointer-events:auto;
-  animation:revTextIn 0.7s ease-out 2s forwards;
-  transition:all .3s;
-}
-.rev-btn:hover { background:#fff; color:#eb0029; border-color:#eb0029; }
-
-@keyframes revTextIn {
-  0% { transform:translateX(-40px); opacity:0; }
-  100% { transform:translateX(0); opacity:1; }
-}
-
-/* Mobile */
-@media (max-width:768px) {
-  .rev-stage { aspect-ratio:auto; min-height:80vh; }
-  .rev-layer { display:none; }
-  .t1 { top:8%; left:5%; }
-  .t2 { top:16%; left:5%; }
-  .t3 { top:24%; left:5%; }
-  .rev-prices { top:33%; left:5%; }
-  .rev-desc { top:42%; left:5%; max-width:80%; }
-  .rev-btn { top:50%; left:5%; }
 }
 </style>
 
@@ -147,9 +115,9 @@
             var icons = { pizza:'fa-pizza-slice', burger:'fa-hamburger', croque:'fa-bread-slice', salat:'fa-leaf', pasta:'fa-utensils', schnitzel:'fa-drumstick-bite', snacks:'fa-cookie', getraenke:'fa-wine-glass-alt', 'snack-rolls':'fa-egg-roll', 'saucen-dips':'fa-tint' };
             var icon = icons[c.slug] || 'fa-utensils';
           %>
-          <i class="fas <%= icon %>"></i>
+          <i class="fas <%= icon %>" style="font-size:32px;color:#eb0029"></i>
         </i>
-        <span class="mad-menu-title"><%= c.name %></span>
+        <h6 class="mad-menu-title"><%= c.name %></h6>
       </a>
     </div>
     <% }); %>
