@@ -61,7 +61,7 @@
       <tbody>
         <% order.items.forEach(function(item) { %>
         <tr>
-          <td><%= item.name %><% if (item.size && item.size.label) { %> <small>(<%= item.size.label %>)</small><% } %><% if (item.extras && item.extras.length) { %><br><small style="color:#666">+ <%= item.extras.map(function(e) { return e.name; }).join(', ') %></small><% } %></td>
+          <td><%= item.name %><% if (item.size && item.size.label) { %> <small>(<%= item.size.label %>)</small><% } %><% if (item.extras && item.extras.length) { %><br><small style="color:#666">+ <%= item.extras.map(function(e) { return e.name; }).join(', ') %></small><% } %><% if (item.note) { %><br><small style="color:#8a6d00">Notiz: <%= item.note %></small><% } %></td>
           <td><%= item.qty %></td>
           <td><%= parseFloat(item.price).toFixed(2) %> €</td>
           <td><%= (item.qty * item.price).toFixed(2) %> €</td>

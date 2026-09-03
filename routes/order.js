@@ -44,6 +44,12 @@ router.post('/', async (req, res) => {
         realPrice = parseFloat(product.price);
         delete item.extras;
       }
+      // Notiz pro Position (aus der Kasse), max. 200 Zeichen
+      if (typeof item.note === 'string' && item.note.trim()) {
+        item.note = item.note.trim().slice(0, 200);
+      } else {
+        delete item.note;
+      }
       const qty = Math.max(1, Math.min(20, parseInt(item.qty) || 1));
       item.price = realPrice;
       item.qty = qty;

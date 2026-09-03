@@ -23,6 +23,15 @@ var Cart = (function() {
     load();
     renderCartBadge();
     bindAddToCart();
+    // Kasse: Extra entfernen + Notiz pro Position (delegiert, einmalig)
+    document.addEventListener('click', function(e) {
+      var x = e.target && e.target.closest ? e.target.closest('.co-extra-x') : null;
+      if (x) removeExtra(x.getAttribute('data-key'), x.getAttribute('data-extra'));
+    });
+    document.addEventListener('input', function(e) {
+      var n = e.target && e.target.closest ? e.target.closest('.co-note') : null;
+      if (n) setItemNote(n.getAttribute('data-key'), n.value);
+    });
     if (document.getElementById('cartList')) renderCartPage();
     if (document.getElementById('checkoutItems')) renderCheckoutSummary();
   }
@@ -189,6 +198,48 @@ var Cart = (function() {
     return amount.toFixed(2).replace('.', ',') + ' €';
   }
 
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // Extra aus einer Position in der Kasse entfernen (Preis wird neu berechnet)
+  function removeExtra(key, extraName) {
+    var item = items.find(function(i) { return i._key === key; });
+    if (!item || !item.extras) return;
+    var removed = 0;
+    item.extras = item.extras.filter(function(e) {
+      if (e.name === extraName) { removed += parseFloat(e.price) || 0; return false; }
+      return true;
+    });
+    item.price = parseFloat((item.price - removed).toFixed(2));
+    var newKey = makeKey(item.id, item.size, item.extras);
+    var other = null;
+    for (var k = 0; k < items.length; k++) {
+      if (items[k]._key === newKey && items[k] !== item) { other = items[k]; break; }
+    }
+    if (other) {
+      other.qty = Math.max(1, Math.min(20, other.qty + item.qty));
+      if (!other.note && item.note) other.note = item.note;
+      items = items.filter(function(i) { return i !== item; });
+    } else {
+      item._key = newKey;
+    }
+    save();
+    renderCartBadge();
+    if (document.getElementById('cartList')) renderCartPage();
+    if (document.getElementById('checkoutItems')) renderCheckoutSummary();
+  }
+
+  // Notiz pro Position (nur Kasse) – speichert ohne Neuzeichnen (Fokus bleibt)
+  function setItemNote(key, text) {
+    var item = items.find(function(i) { return i._key === key; });
+    if (!item) return;
+    text = String(text == null ? '' : text).slice(0, 200);
+    if (text.trim()) item.note = text;
+    else delete item.note;
+    save();
+  }
+
   function renderCartPage() {
     var list = document.getElementById('cartList');
     var empty = document.getElementById('cartEmpty');
@@ -256,13 +307,17 @@ var Cart = (function() {
     }
 
     container.innerHTML = items.map(function(item) {
-      var nameHtml = item.size ? item.name + ' (' + item.size.label + ')' : item.name;
+      var nameHtml = item.size ? escapeHtml(item.name) + ' (' + escapeHtml(item.size.label) + ')' : escapeHtml(item.name);
+      var extrasHtml = '';
       if (item.extras && item.extras.length) {
-        var exNames = item.extras.map(function(e) { return e.name; }).join(', ');
-        nameHtml += '<br><small style="color:#7a7879">+ ' + exNames + '</small>';
+        extrasHtml = '<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px">' + item.extras.map(function(e) {
+          return '<span style="display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1px solid #22c55e;color:#15803d;border-radius:20px;padding:2px 6px 2px 10px;font-size:12px;font-weight:600">+ ' + escapeHtml(e.name) + ' <button type="button" class="co-extra-x" data-key="' + escapeHtml(item._key) + '" data-extra="' + escapeHtml(e.name) + '" title="Extra entfernen" style="border:none;background:#16a34a;color:#fff;border-radius:50%;width:18px;height:18px;line-height:16px;font-size:12px;cursor:pointer;padding:0">×</button></span>';
+        }).join('') + '</div>';
       }
+      var noteVal = item.note ? escapeHtml(item.note) : '';
+      var noteHtml = '<input type="text" class="co-note" data-key="' + escapeHtml(item._key) + '" value="' + noteVal + '" maxlength="200" placeholder="Anmerkung zu diesem Artikel…" style="margin-top:6px;width:100%;padding:6px 10px;border:1px solid #e0e0e0;border-radius:8px;font-size:12px;background:#fffdf7">';
       return '<div class="checkout-item">' +
-        '<div><span class="checkout-item-name">' + nameHtml + '</span><br><span class="checkout-item-qty">' + item.qty + ' × ' + item.price.toFixed(2).replace('.',',') + ' €</span></div>' +
+        '<div style="flex:1"><span class="checkout-item-name">' + nameHtml + '</span>' + extrasHtml + noteHtml + '<br><span class="checkout-item-qty">' + item.qty + ' × ' + item.price.toFixed(2).replace('.',',') + ' €</span></div>' +
         '<span>' + formatEUR(item.price * item.qty) + '</span>' +
       '</div>';
     }).join('');
@@ -290,6 +345,8 @@ var Cart = (function() {
     init: init,
     addItem: addItem,
     removeItem: removeItem,
+    removeExtra: removeExtra,
+    setItemNote: setItemNote,
     updateQty: updateQty,
     getSubtotal: getSubtotal,
     getDeliveryFee: getDeliveryFee,
@@ -342,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
         zip: formData.get('zip'),
         notes: formData.get('notes'),
         payment: formData.get('payment'),
-        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }) }; }),
+        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }), note: i.note || '' }; }),
         subtotal: Cart.getSubtotal(),
         delivery_fee: Cart.getDeliveryFee(Cart.getSubtotal()),
         discount: Cart.getDiscount().value,
