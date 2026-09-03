@@ -6,7 +6,7 @@
         <div class="col-lg-6">
           <section class="mad-widget">
             <div class="content-element-5">
-              <a href="/" class="mad-logo" style="font-family:'Josefin Sans',sans-serif;font-size:clamp(28px,4vw,42px);font-weight:700;font-style:italic;color:#fff;text-decoration:none!important"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %></a>
+              <a href="/" class="mad-logo" style="font-family:'Josefin Sans',sans-serif;font-size:clamp(28px,4vw,42px);font-weight:700;font-style:italic;color:#fff;text-decoration:none!important"><% if (typeof settings !== 'undefined' && settings.logo_url) { %><img src="<%= settings.logo_url %>" alt="<%= settings.site_name || 'Logo' %>" style="height:56px;width:auto;max-width:240px;object-fit:contain"><% } else { %><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %><% } %></a>
             </div>
             <div class="mad-our-info vr-type">
               <div class="mad-info"><i class="material-icons-outlined">location_on</i> <span><%= typeof settings !== 'undefined' && settings.address ? settings.address : 'Berlin, Deutschland' %></span></div>

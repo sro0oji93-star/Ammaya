@@ -30,6 +30,7 @@
   .mad-header-item:last-child { margin-left:auto; }
   .mad-our-info.type-2 { display:none !important; }
   .mad-logo-text { font-size:20px !important; }
+  .mad-logo-img { height:32px !important;max-width:160px !important; }
 }
 </style>
 </head>
@@ -55,7 +56,7 @@
   <div class="mad-header-section--sticky-xl">
     <div class="mad-header-items">
       <div class="mad-header-item">
-        <a href="/" class="mad-logo"><span class="mad-logo-text"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %></span></a>
+        <a href="/" class="mad-logo"><% if (typeof settings !== 'undefined' && settings.logo_url) { %><img src="<%= settings.logo_url %>" alt="<%= settings.site_name || 'Logo' %>" class="mad-logo-img" style="height:44px;width:auto;max-width:220px;object-fit:contain"><% } else { %><span class="mad-logo-text"><%= typeof settings !== 'undefined' && settings.site_name ? settings.site_name : 'Ammaya' %></span><% } %></a>
       </div>
       <!--================ Navigation ================-->
       <nav class="mad-navigation-container">
