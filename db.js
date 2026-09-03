@@ -208,6 +208,7 @@ async function initialize() {
       [2, 'Chicken Smash', 'chicken-smash', '110 g Smash Chicken, Cheddar, Zwiebeln, Gewürzgurken, Chicken Sauce', 10.90, null, '110 g Smash Chicken, Cheddar, Zwiebeln, Gewürzgurken, Chicken Sauce', 0, 13],
       [2, 'BoomBurger', 'boomburger', '3x 110 g Smash Beef, 3x Cheddar, Spiegelei, Champignons, Boom Sauce', 17.90, null, '3x 110 g Smash Beef, 3x Cheddar, Spiegelei, Champignons, Boom Sauce', 1, 14],
       [2, 'Beef & Chicken Smash', 'beef-chicken-smash', '110 g Smash Beef, 110 g Smash Chicken, Cheddar, Zwiebeln, Gewürzgurken, NEXO Sauce', 13.90, null, '110 g Smash Beef, 110 g Smash Chicken, Cheddar, Zwiebeln, Gewürzgurken, NEXO Sauce', 0, 15],
+      // Hinweis: Produktbilder für neue Burger-Slugs stehen in views/menu.ejs (productImgMap), damit kein Pizza-Fallback angezeigt wird
       [3, 'Croque Monsieur', 'croque-monsieur', 'Toast mit Schinken und Käse überbacken mit Béchamelsauce', 8.90, null, 'Toast, Schinken, Käse, Béchamelsauce', 1, 7],
       [3, 'Croque Madame', 'croque-madame', 'Croque Monsieur mit Spiegelei und Trüffelmayo', 10.90, null, 'Toast, Schinken, Käse, Béchamelsauce, Ei, Trüffelmayo', 0, 8],
       [3, 'Croque Hawaii', 'croque-hawaii', 'Toast mit Schinken, Ananas und Käse überbacken', 9.90, null, 'Toast, Schinken, Ananas, Käse', 0, 9],
@@ -251,7 +252,7 @@ async function initialize() {
       const smashBurgers = [
         ['Hamburger Smash', 'hamburger-smash', '110 g Smash Beef, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 8.90, '110 g Smash Beef, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 0, 4, '/images/products/img13.jpg'],
         ['Cheeseburger Smash', 'cheeseburger-smash', '110 g Smash Beef, Cheddar, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 9.90, '110 g Smash Beef, Cheddar, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 1, 5, '/images/products/img14.jpg'],
-        ['Chickenburger', 'chickenburger', 'Crispy Chicken, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Chicken Sauce', 9.90, 'Crispy Chicken, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Chicken Sauce', 0, 6, '/images/products/img15.jpg'],
+        ['Chickenburger', 'chickenburger', 'Crispy Chicken, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Chicken Sauce', 9.90, 'Crispy Chicken, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Chicken Sauce', 0, 6, '/images/products/img13.jpg'],
         ['Fischburger', 'fischburger', 'Fischfilet, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Remoulade', 9.90, 'Fischfilet, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Remoulade', 0, 7, null],
         ['Veggieburger', 'veggieburger', 'Veggie Patty, Salat, Tomate, Veggie Sauce', 8.90, 'Veggie Patty, Salat, Tomate, Veggie Sauce', 0, 8, null],
         ['Double Smash', 'double-smash', '2x 110 g Smash Beef, 2x Cheddar, Zwiebeln, Gewürzgurken, Smash Sauce', 12.90, '2x 110 g Smash Beef, 2x Cheddar, Zwiebeln, Gewürzgurken, Smash Sauce', 1, 9, null],
@@ -266,10 +267,23 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, image=COALESCE(products.image, EXCLUDED.image)`,
           [burgerCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order]
         );
       }
+      // Backfill: falls alte Zeilen noch NULL-Bilder haben (z.B. erste Migration), Burger-Bilder nachtragen
+      const burgerImgFallback = {
+        'fischburger': '/images/products/img13.jpg', 'veggieburger': '/images/products/img14.jpg',
+        'double-smash': '/images/products/img14.jpg', 'triple-smash': '/images/products/img13.jpg',
+        'bacon-bbq-smash': '/images/products/img14.jpg', 'mushroom-smash': '/images/products/img13.jpg',
+        'chicken-smash': '/images/products/img13.jpg', 'boomburger': '/images/products/img14.jpg',
+        'beef-chicken-smash': '/images/products/img14.jpg'
+      };
+      for (const [slug, img] of Object.entries(burgerImgFallback)) {
+        await query('UPDATE products SET image = $1 WHERE slug = $2 AND image IS NULL', [img, slug]);
+      }
+      // Schwarzes Burger-Bild (img15) entfernen: durch normales Burger-Bild ersetzen
+      await query("UPDATE products SET image = '/images/products/img13.jpg' WHERE image = '/images/products/img15.jpg' AND category_id = $1", [burgerCat.id]);
     }
   } catch (e) {
     console.error('Burger Auto-Migration übersprungen:', e.message);
