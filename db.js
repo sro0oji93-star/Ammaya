@@ -414,11 +414,18 @@ async function initialize() {
     console.error('Pizza Auto-Migration übersprungen:', e.message);
   }
 
+  // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)
+  try {
+    await query("UPDATE settings SET value = '04131 4006817' WHERE key = 'phone' AND value = '+49 30 123456789'");
+  } catch (e) {
+    console.error('Phone-Migration übersprungen:', e.message);
+  }
+
   const defaultSettings = [
     ['site_name', 'Ammaya'],
     ['site_description', 'Ihr Restaurant für Pizza, Burger und mehr'],
     ['address', 'Musterstraße 42, 10117 Berlin'],
-    ['phone', '+49 30 123456789'],
+    ['phone', '04131 4006817'],
     ['email', 'info@ammaya.de'],
     ['opening_hours', 'Mo–So: 11:30 – 22:30'],
     ['delivery_fee', '4.50'],
