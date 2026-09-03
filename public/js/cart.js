@@ -312,16 +312,15 @@ var Cart = (function() {
 
     container.innerHTML = items.map(function(item) {
       var nameHtml = item.size ? escapeHtml(item.name) + ' (' + escapeHtml(item.size.label) + ')' : escapeHtml(item.name);
-      var extrasHtml = '';
       if (item.extras && item.extras.length) {
-        extrasHtml = '<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px">' + item.extras.map(function(e) {
-          return '<span style="display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1px solid #22c55e;color:#15803d;border-radius:20px;padding:2px 6px 2px 10px;font-size:12px;font-weight:600">+ ' + escapeHtml(e.name) + ' <button type="button" class="co-extra-x" data-key="' + escapeHtml(item._key) + '" data-extra="' + escapeHtml(e.name) + '" title="Extra entfernen" style="border:none;background:#16a34a;color:#fff;border-radius:50%;width:18px;height:18px;line-height:16px;font-size:12px;cursor:pointer;padding:0">×</button></span>';
-        }).join('') + '</div>';
+        var exNames = item.extras.map(function(e) { return escapeHtml(e.name); }).join(', ');
+        nameHtml += '<br><small style="color:#7a7879">+ ' + exNames + '</small>';
       }
-      var noteVal = item.note ? escapeHtml(item.note) : '';
-      var noteHtml = '<input type="text" class="co-note" data-key="' + escapeHtml(item._key) + '" value="' + noteVal + '" maxlength="200" placeholder="Anmerkung zu diesem Artikel…" style="margin-top:6px;width:100%;padding:6px 10px;border:1px solid #e0e0e0;border-radius:8px;font-size:12px;background:#fffdf7">';
+      if (item.note) {
+        nameHtml += '<br><small style="color:#8a6d00">Notiz: ' + escapeHtml(item.note) + '</small>';
+      }
       return '<div class="checkout-item">' +
-        '<div style="flex:1"><span class="checkout-item-name">' + nameHtml + '</span>' + extrasHtml + noteHtml + '<br><span class="checkout-item-qty">' + item.qty + ' × ' + item.price.toFixed(2).replace('.',',') + ' €</span></div>' +
+        '<div><span class="checkout-item-name">' + nameHtml + '</span><br><span class="checkout-item-qty">' + item.qty + ' × ' + item.price.toFixed(2).replace('.',',') + ' €</span></div>' +
         '<span>' + formatEUR(item.price * item.qty) + '</span>' +
       '</div>';
     }).join('');
