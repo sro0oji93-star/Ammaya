@@ -4,8 +4,19 @@ var Cart = (function() {
   var discount = { code: null, value: 0 };
   var settings = window.restaurantSettings || { delivery_fee: 4.50, free_delivery_from: 40.00 };
 
-  function makeKey(id, size) {
-    return size && size.label ? id + '-' + size.label : String(id);
+  function makeKey(id, size, extras) {
+    var base = size && size.label ? id + '-' + size.label : String(id);
+    if (extras && extras.length) {
+      var names = extras.map(function(e) { return e.name; }).sort();
+      base += '|x:' + names.join('+');
+    }
+    return base;
+  }
+
+  function migrateKeys() {
+    items.forEach(function(i) {
+      i._key = makeKey(i.id, i.size, i.extras);
+    });
   }
 
   function init() {
@@ -21,9 +32,8 @@ var Cart = (function() {
       var data = localStorage.getItem('feinCart');
       if (data) items = JSON.parse(data);
       items.forEach(function(i) {
-        if (!i._key) {
-          i._key = i.size && i.size.label ? i.id + '-' + i.size.label : String(i.id);
-        }
+        if (!i.extras) i.extras = [];
+        i._key = makeKey(i.id, i.size, i.extras);
       });
       var disc = localStorage.getItem('feinDiscount');
       if (disc) discount = JSON.parse(disc);
@@ -35,14 +45,15 @@ var Cart = (function() {
     localStorage.setItem('feinDiscount', JSON.stringify(discount));
   }
 
-  function addItem(id, name, price, qty, size) {
+  function addItem(id, name, price, qty, size, extras) {
     qty = qty || 1;
-    var key = makeKey(id, size);
+    extras = extras || [];
+    var key = makeKey(id, size, extras);
     var existing = items.find(function(i) { return i._key === key; });
     if (existing) {
       existing.qty += qty;
     } else {
-      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null });
+      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras });
     }
     save();
     renderCartBadge();
@@ -151,7 +162,20 @@ var Cart = (function() {
           label: radio.getAttribute('data-label'),
           price: parseFloat(radio.value)
         };
-        addItem(id, name, size.price, qty, size);
+        var extras = [];
+        var extrasBox = document.querySelector('[data-extras-for="' + id + '"]');
+        if (extrasBox) {
+          var checked = extrasBox.querySelectorAll('input[type="checkbox"]:checked');
+          for (var ci = 0; ci < checked.length; ci++) {
+            var nm = checked[ci].getAttribute('data-extra-name');
+            var pr = parseFloat(checked[ci].getAttribute('data-extra-price'));
+            if (nm && !isNaN(pr)) extras.push({ name: nm, price: parseFloat(pr.toFixed(2)) });
+          }
+        }
+        var unit = size.price;
+        extras.forEach(function(e) { unit += e.price; });
+        unit = parseFloat(unit.toFixed(2));
+        addItem(id, name, unit, qty, size, extras);
       } else {
         var price = btn.getAttribute('data-price');
         addItem(id, name, price, qty);
@@ -183,6 +207,10 @@ var Cart = (function() {
 
     list.innerHTML = items.map(function(item) {
       var nameHtml = item.size ? item.name + ' <small>(' + item.size.label + ')</small>' : item.name;
+      if (item.extras && item.extras.length) {
+        var exNames = item.extras.map(function(e) { return e.name; }).join(', ');
+        nameHtml += '<br><small style="color:#7a7879">+ ' + exNames + '</small>';
+      }
       return '<div class="cart-item">' +
         '<div class="cart-item-image"><i class="fas fa-utensils"></i></div>' +
         '<div class="cart-item-info"><h4>' + nameHtml + '</h4><p>' + item.price.toFixed(2).replace('.',',') + ' €</p></div>' +
@@ -229,6 +257,10 @@ var Cart = (function() {
 
     container.innerHTML = items.map(function(item) {
       var nameHtml = item.size ? item.name + ' (' + item.size.label + ')' : item.name;
+      if (item.extras && item.extras.length) {
+        var exNames = item.extras.map(function(e) { return e.name; }).join(', ');
+        nameHtml += '<br><small style="color:#7a7879">+ ' + exNames + '</small>';
+      }
       return '<div class="checkout-item">' +
         '<div><span class="checkout-item-name">' + nameHtml + '</span><br><span class="checkout-item-qty">' + item.qty + ' × ' + item.price.toFixed(2).replace('.',',') + ' €</span></div>' +
         '<span>' + formatEUR(item.price * item.qty) + '</span>' +
@@ -310,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         zip: formData.get('zip'),
         notes: formData.get('notes'),
         payment: formData.get('payment'),
-        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size }; }),
+        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }) }; }),
         subtotal: Cart.getSubtotal(),
         delivery_fee: Cart.getDeliveryFee(Cart.getSubtotal()),
         discount: Cart.getDiscount().value,

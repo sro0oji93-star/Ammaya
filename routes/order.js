@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { validateExtras } = require('../extras');
 
 router.get('/', async (req, res) => {
   const settings = res.locals.settings;
@@ -31,8 +32,17 @@ router.post('/', async (req, res) => {
           return res.status(400).json({ success: false, message: 'Ungültige Größe für: ' + item.name });
         }
         realPrice = parseFloat(matchedSize.price);
+        // Extras & Beläge (Pizza): serverseitig gegen Preisliste prüfen
+        try {
+          const { extras, total } = validateExtras(item.size.label, item.extras);
+          item.extras = extras;
+          realPrice = parseFloat((realPrice + total).toFixed(2));
+        } catch (e) {
+          return res.status(400).json({ success: false, message: 'Ungültige Extras für: ' + item.name });
+        }
       } else {
         realPrice = parseFloat(product.price);
+        delete item.extras;
       }
       const qty = Math.max(1, Math.min(20, parseInt(item.qty) || 1));
       item.price = realPrice;

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { TOPPINGS, FISH_TOPPINGS, EXTRA_PRICES, KAESERAND } = require('../extras');
+const pizzaExtras = { toppings: TOPPINGS, fish: FISH_TOPPINGS, prices: EXTRA_PRICES, kaeserand: KAESERAND };
 
 router.get('/', async (req, res) => {
   const categories = await db.all('SELECT * FROM categories WHERE active = 1 ORDER BY sort_order');
@@ -12,7 +14,8 @@ router.get('/', async (req, res) => {
     categories,
     products,
     settings,
-    activeCategory: null
+    activeCategory: null,
+    pizzaExtras
   });
 });
 
@@ -29,7 +32,8 @@ router.get('/kategorie/:slug', async (req, res) => {
     categories,
     products,
     activeCategory: category.slug,
-    settings
+    settings,
+    pizzaExtras
   });
 });
 
@@ -45,7 +49,9 @@ router.get('/produkt/:slug', async (req, res) => {
     product,
     related,
     settings,
-    activeMenu: 'speisekarte'
+    activeMenu: 'speisekarte',
+    pizzaExtras,
+    isPizza: !!product.sizes
   });
 });
 

@@ -47,6 +47,7 @@
                   </label>
                   <% }); %>
                 </div>
+                <% if (isPizza) { %><%- include('partials/pizza-extras', { productId: product.id }) %><% } %>
                 <p class="mad-text-color-2 content-element">Anzahl:</p>
                 <div class="btn-set big-btns">
                   <div class="quantity size-2">
@@ -126,6 +127,26 @@
 </div>
 
 <script>
+window.PIZZA_EXTRA_PRICES = <%- JSON.stringify(pizzaExtras.prices) %>;
+(function() {
+  function updateDetailPrice() {
+    var priceEl = document.getElementById('detailPrice');
+    if (!priceEl) return;
+    var radio = document.querySelector('input[name="detailSize"]:checked');
+    var total = radio ? parseFloat(radio.value) || 0 : 0;
+    document.querySelectorAll('[data-extras-for] input[type="checkbox"]:checked').forEach(function(cb) {
+      total += parseFloat(cb.getAttribute('data-extra-price')) || 0;
+    });
+    priceEl.textContent = total.toFixed(2) + ' €';
+  }
+  document.addEventListener('change', function(e) {
+    if (e.target && e.target.matches && e.target.matches('[data-extras-for] input[type="checkbox"], input[name="detailSize"]')) {
+      updateDetailPrice();
+    }
+  });
+  updateDetailPrice();
+  window.updateDetailPrice = updateDetailPrice;
+})();
 (function() {
   var picker = document.querySelector('.size-picker-detail');
   if (!picker) return;

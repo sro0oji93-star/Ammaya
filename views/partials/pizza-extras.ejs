@@ -1,0 +1,20 @@
+<% /* Extras & Beläge für Pizza – Locals: productId. pizzaExtras muss im Scope sein. */ %>
+<div class="pizza-extras" data-extras-for="<%= productId %>" style="margin-top:10px;border:1px dashed #e5c8ce;border-radius:10px;padding:10px 12px;background:#fffdf7">
+  <details>
+    <summary style="cursor:pointer;font-weight:700;font-size:13px;color:#232223">Extras &amp; Beläge <span style="font-weight:400;color:#7a7879;font-size:12px">– optional, Preis je nach Größe</span></summary>
+    <div style="margin-top:8px;display:flex;flex-direction:column;gap:2px;max-height:220px;overflow-y:auto;padding-right:4px">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:4px 6px;border-radius:8px">
+        <input type="checkbox" data-extra-name="<%= pizzaExtras.kaeserand %>" data-extra-type="kaeserand" style="width:16px;height:16px;accent-color:#eb0029">
+        <span style="flex:1;font-weight:600"><%= pizzaExtras.kaeserand %></span>
+        <span class="extra-price" style="color:#eb0029;font-weight:700;white-space:nowrap"></span>
+      </label>
+      <% pizzaExtras.toppings.forEach(function(t) { %>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:4px 6px;border-radius:8px">
+        <input type="checkbox" data-extra-name="<%= t %>" data-extra-type="<%= pizzaExtras.fish.indexOf(t) !== -1 ? 'fisch' : 'belag' %>" style="width:16px;height:16px;accent-color:#eb0029">
+        <span style="flex:1"><%= t %></span>
+        <span class="extra-price" style="color:#eb0029;font-weight:700;white-space:nowrap"></span>
+      </label>
+      <% }); %>
+    </div>
+  </details>
+</div>
