@@ -171,7 +171,7 @@ async function initialize() {
   const catCount = (await get('SELECT COUNT(*) as count FROM categories')).count;
   if (catCount === 0) {
     const categories = [
-      ['Pizza', 'pizza', 'Italienische Steinofenpizza, knusprig und frisch belegt', 1],
+      ['Pizza', 'pizza', 'Steinofenpizza in 4 Größen: 26 cm, 30 cm, Familien Pizza und Party. Alle Pizzen in 26 cm und 30 cm auch als Calzone erhältlich.', 1],
       ['Burger', 'burger', 'Smash Burger frisch für dich gesmasht. Für nur 5,00 € Aufpreis als Menü: 4 Zwiebelringe oder Pommes und ein 0,33 l Softdrink nach Wahl.', 2],
       ['Croque', 'croque', 'Frisch überbackene Croques. Inklusive 1 Sauce nach Wahl.', 3],
       ['Salat', 'salat', 'Frische Salatkreationen mit hausgemachten Dressings', 4],
@@ -193,9 +193,36 @@ async function initialize() {
   const prodCount = (await get('SELECT COUNT(*) as count FROM products')).count;
   if (prodCount === 0) {
     const products = [
-      [1, 'Margherita', 'margherita', 'Tomatensauce, Mozzarella, frischer Basilikum', 9.90, null, 'Tomatensauce, Mozzarella, Basilikum', 1, 1],
-      [1, 'Salami', 'salami', 'Tomatensauce, Mozzarella, pikante Salami', 11.90, null, 'Tomatensauce, Mozzarella, Salami', 1, 2],
-      [1, 'Prosciutto', 'prosciutto', 'Tomatensauce, Mozzarella, luftgetrockneter Schinken, Rucola', 13.90, null, 'Tomatensauce, Mozzarella, Schinken, Rucola', 0, 3],
+      [1, 'Margherita', 'margherita', 'Tomatensauce, Oregano', 8.90, null, 'Tomatensauce, Oregano', 1, 1, '[{"label":"26 cm","price":8.9},{"label":"30 cm","price":11.5},{"label":"Familien Pizza","price":19.9},{"label":"Party 60x40","price":27.1}]'],
+      [1, 'Mozzarella', 'mozzarella', 'Tomatensauce, Mozzarella, frische Tomaten, Basilikum, Oregano', 10.90, null, 'Tomatensauce, Mozzarella, frische Tomaten, Basilikum, Oregano', 0, 2, '[{"label":"26 cm","price":10.9},{"label":"30 cm","price":13.5},{"label":"Familien Pizza","price":22.9},{"label":"Party 60x40","price":31.9}]'],
+      [1, 'Cheese', 'cheese', 'Tomatensauce, verschiedene Käsesorten, Oregano', 10.90, null, 'Tomatensauce, verschiedene Käsesorten, Oregano', 0, 3, '[{"label":"26 cm","price":10.9},{"label":"30 cm","price":13.5},{"label":"Familien Pizza","price":22.9},{"label":"Party 60x40","price":31.9}]'],
+      [1, 'Salami', 'salami', 'Tomatensauce, Salami, Oregano', 10.20, null, 'Tomatensauce, Salami, Oregano', 1, 4, '[{"label":"26 cm","price":10.2},{"label":"30 cm","price":12.5},{"label":"Familien Pizza","price":21.5},{"label":"Party 60x40","price":30.5}]'],
+      [1, 'Prosciutto', 'prosciutto', 'Tomatensauce, Schinken, Oregano', 10.20, null, 'Tomatensauce, Schinken, Oregano', 0, 5, '[{"label":"26 cm","price":10.2},{"label":"30 cm","price":12.5},{"label":"Familien Pizza","price":21.5},{"label":"Party 60x40","price":30.5}]'],
+      [1, 'Funghi', 'funghi', 'Tomatensauce, Champignons, Oregano', 10.20, null, 'Tomatensauce, Champignons, Oregano', 0, 6, '[{"label":"26 cm","price":10.2},{"label":"30 cm","price":12.5},{"label":"Familien Pizza","price":21.5},{"label":"Party 60x40","price":30.5}]'],
+      [1, 'Dreiklang', 'dreiklang', 'Tomatensauce, Salami, Schinken, Champignons, Oregano', 12.40, null, 'Tomatensauce, Salami, Schinken, Champignons, Oregano', 1, 7, '[{"label":"26 cm","price":12.4},{"label":"30 cm","price":14.9},{"label":"Familien Pizza","price":23.9},{"label":"Party 60x40","price":33.5}]'],
+      [1, 'Hawaii', 'hawaii', 'Tomatensauce, Schinken, Ananas, Oregano', 12.20, null, 'Tomatensauce, Schinken, Ananas, Oregano', 0, 8, '[{"label":"26 cm","price":12.2},{"label":"30 cm","price":14.5},{"label":"Familien Pizza","price":23.5},{"label":"Party 60x40","price":33}]'],
+      [1, 'Vegetarisch', 'vegetarisch', 'Tomatensauce, verschiedene Gemüsesorten, Oregano', 12.20, null, 'Tomatensauce, verschiedene Gemüsesorten, Oregano', 0, 9, '[{"label":"26 cm","price":12.2},{"label":"30 cm","price":14.5},{"label":"Familien Pizza","price":23.5},{"label":"Party 60x40","price":33}]'],
+      [1, 'Tonno', 'tonno', 'Tomatensauce, Thunfisch, rote Zwiebeln, Oregano', 12.60, null, 'Tomatensauce, Thunfisch, rote Zwiebeln, Oregano', 0, 10, '[{"label":"26 cm","price":12.6},{"label":"30 cm","price":14.9},{"label":"Familien Pizza","price":24},{"label":"Party 60x40","price":33.5}]'],
+      [1, 'Scampi', 'scampi', 'Tomatensauce, Scampi, Oregano', 14.20, null, 'Tomatensauce, Scampi, Oregano', 0, 11, '[{"label":"26 cm","price":14.2},{"label":"30 cm","price":16.5},{"label":"Familien Pizza","price":25.5},{"label":"Party 60x40","price":35.9}]'],
+      [1, 'Frutti di Mare', 'frutti-di-mare', 'Tomatensauce, Frutti di Mare, Oregano', 14.20, null, 'Tomatensauce, Frutti di Mare, Oregano', 0, 12, '[{"label":"26 cm","price":14.2},{"label":"30 cm","price":16.5},{"label":"Familien Pizza","price":25.5},{"label":"Party 60x40","price":35.9}]'],
+      [1, 'Spezial Chicken', 'spezial-chicken', 'Tomatensauce, Hähnchen, Paprika, rote Zwiebeln, Champignons, Oregano', 13.40, null, 'Tomatensauce, Hähnchen, Paprika, rote Zwiebeln, Champignons, Oregano', 1, 13, '[{"label":"26 cm","price":13.4},{"label":"30 cm","price":15.9},{"label":"Familien Pizza","price":24.9},{"label":"Party 60x40","price":34.9}]'],
+      [1, 'Chicken Hollandaise', 'chicken-hollandaise', 'Tomatensauce, Hähnchen, Brokkoli, Sauce Hollandaise, Oregano', 13.40, null, 'Tomatensauce, Hähnchen, Brokkoli, Sauce Hollandaise, Oregano', 0, 14, '[{"label":"26 cm","price":13.4},{"label":"30 cm","price":15.9},{"label":"Familien Pizza","price":24.9},{"label":"Party 60x40","price":34.9}]'],
+      [1, 'Chicken Curry', 'chicken-curry', 'Tomatensauce, Hähnchen, Ananas, Curry, Oregano', 13.20, null, 'Tomatensauce, Hähnchen, Ananas, Curry, Oregano', 0, 15, '[{"label":"26 cm","price":13.2},{"label":"30 cm","price":15.5},{"label":"Familien Pizza","price":24.5},{"label":"Party 60x40","price":34.5}]'],
+      [1, 'Chicken Beef', 'chicken-beef', 'Tomatensauce, Hähnchen, Hackfleisch, Hirtenkäse, Oregano', 14.20, null, 'Tomatensauce, Hähnchen, Hackfleisch, Hirtenkäse, Oregano', 0, 16, '[{"label":"26 cm","price":14.2},{"label":"30 cm","price":16.5},{"label":"Familien Pizza","price":25.5},{"label":"Party 60x40","price":35.9}]'],
+      [1, 'BBQ', 'bbq', 'Tomatensauce, Salami, Hackfleisch, BBQ-Sauce, Röstzwiebeln, Oregano', 13.90, null, 'Tomatensauce, Salami, Hackfleisch, BBQ-Sauce, Röstzwiebeln, Oregano', 1, 17, '[{"label":"26 cm","price":13.9},{"label":"30 cm","price":16.2},{"label":"Familien Pizza","price":25.2},{"label":"Party 60x40","price":35.5}]'],
+      [1, 'Hot Beef', 'hot-beef', 'Tomatensauce, Hackfleisch, Paprika, Jalapeños, Oregano', 13.60, null, 'Tomatensauce, Hackfleisch, Paprika, Jalapeños, Oregano', 0, 18, '[{"label":"26 cm","price":13.6},{"label":"30 cm","price":15.9},{"label":"Familien Pizza","price":24.9},{"label":"Party 60x40","price":34.9}]'],
+      [1, 'Sucuk', 'sucuk', 'Tomatensauce, Sucuk, Peperoni, Ei, Oregano', 13.60, null, 'Tomatensauce, Sucuk, Peperoni, Ei, Oregano', 0, 19, '[{"label":"26 cm","price":13.6},{"label":"30 cm","price":15.9},{"label":"Familien Pizza","price":24.9},{"label":"Party 60x40","price":34.9}]'],
+      [1, 'Bacon', 'bacon', 'Tomatensauce, Rinderhackfleisch, BBQ-Sauce, Mozzarella, Bacon, Oregano', 14.20, null, 'Tomatensauce, Rinderhackfleisch, BBQ-Sauce, Mozzarella, Bacon, Oregano', 0, 20, '[{"label":"26 cm","price":14.2},{"label":"30 cm","price":16.5},{"label":"Familien Pizza","price":25.5},{"label":"Party 60x40","price":35.9}]'],
+      [1, 'Sucuk Jalapeños', 'sucuk-jalapenos', 'Tomatensauce, Sucuk, Jalapeños, Ei, Oregano', 13.60, null, 'Tomatensauce, Sucuk, Jalapeños, Ei, Oregano', 0, 21, '[{"label":"26 cm","price":13.6},{"label":"30 cm","price":15.9},{"label":"Familien Pizza","price":24.9},{"label":"Party 60x40","price":34.9}]'],
+      [1, 'Meat Lovers', 'meat-lovers', 'Tomatensauce, Salami, Schinken, Sucuk, Rinderhackfleisch, Oregano', 14.90, null, 'Tomatensauce, Salami, Schinken, Sucuk, Rinderhackfleisch, Oregano', 1, 22, '[{"label":"26 cm","price":14.9},{"label":"30 cm","price":17.2},{"label":"Familien Pizza","price":26.2},{"label":"Party 60x40","price":36.9}]'],
+      [1, 'Hot Dog', 'hot-dog', 'Tomatensauce, Würstchen, Gewürzgurken, Röstzwiebeln, Oregano', 13.20, null, 'Tomatensauce, Würstchen, Gewürzgurken, Röstzwiebeln, Oregano', 0, 23, '[{"label":"26 cm","price":13.2},{"label":"30 cm","price":15.5},{"label":"Familien Pizza","price":24.5},{"label":"Party 60x40","price":34.5}]'],
+      [1, 'UFO', 'ufo', 'Tomatensauce, von allem etwas, doppelter Teig, Oregano', 15.20, null, 'Tomatensauce, von allem etwas, doppelter Teig, Oregano', 0, 24, '[{"label":"26 cm","price":15.2},{"label":"30 cm","price":17.5},{"label":"Familien Pizza","price":26.9},{"label":"Party 60x40","price":37.9}]'],
+      [1, 'NEXO Wunsch', 'nexo-wunsch', 'Tomatensauce, drei Zutaten nach Wahl, Oregano', 13.60, null, 'Tomatensauce, drei Zutaten nach Wahl, Oregano', 0, 25, '[{"label":"26 cm","price":13.6},{"label":"30 cm","price":15.9},{"label":"Familien Pizza","price":24.9},{"label":"Party 60x40","price":34.9}]'],
+      [1, 'NEXO X', 'nexo-x', 'Hollandaise, Krispy Chicken, Mais, Paprika, Knoblauchsauce', 14.20, null, 'Hollandaise, Krispy Chicken, Mais, Paprika, Knoblauchsauce', 0, 26, '[{"label":"26 cm","price":14.2},{"label":"30 cm","price":16.5},{"label":"Familien Pizza","price":25.5},{"label":"Party 60x40","price":35.9}]'],
+      [1, 'NEXO Boom', 'nexo-boom', 'Tomatensauce, Salami, Hackfleisch, Paprika, Mais, Hirtenkäse, Oregano', 14.50, null, 'Tomatensauce, Salami, Hackfleisch, Paprika, Mais, Hirtenkäse, Oregano', 1, 27, '[{"label":"26 cm","price":14.5},{"label":"30 cm","price":16.9},{"label":"Familien Pizza","price":25.9},{"label":"Party 60x40","price":36.5}]'],
+      [1, 'NEXO Deluxe', 'nexo-deluxe', 'Crème fraîche, Lachs, Paprika, Rucola', 15.20, null, 'Crème fraîche, Lachs, Paprika, Rucola', 0, 28, '[{"label":"26 cm","price":15.2},{"label":"30 cm","price":17.5},{"label":"Familien Pizza","price":26.9},{"label":"Party 60x40","price":37.9}]'],
+      [1, 'NEXO Feuer Royale', 'nexo-feuer-royale', 'Tomatensauce, Hackfleisch, Jalapeños, Sauce Hollandaise, Feta, Oregano', 14.50, null, 'Tomatensauce, Hackfleisch, Jalapeños, Sauce Hollandaise, Feta, Oregano', 0, 29, '[{"label":"26 cm","price":14.5},{"label":"30 cm","price":16.9},{"label":"Familien Pizza","price":25.9},{"label":"Party 60x40","price":36.5}]'],
+      [1, 'NEXO Goldkrone', 'nexo-goldkrone', 'Tomatensauce, Pute, Brokkoli, Champignons, Sauce Hollandaise, Oregano', 14.20, null, 'Tomatensauce, Pute, Brokkoli, Champignons, Sauce Hollandaise, Oregano', 0, 30, '[{"label":"26 cm","price":14.2},{"label":"30 cm","price":16.5},{"label":"Familien Pizza","price":25.5},{"label":"Party 60x40","price":35.9}]'],
       [2, 'Hamburger Smash', 'hamburger-smash', '110 g Smash Beef, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 8.90, null, '110 g Smash Beef, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 0, 4],
       [2, 'Cheeseburger Smash', 'cheeseburger-smash', '110 g Smash Beef, Cheddar, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 9.90, null, '110 g Smash Beef, Cheddar, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 1, 5],
       [2, 'Chickenburger', 'chickenburger', 'Crispy Chicken, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Chicken Sauce', 9.90, null, 'Crispy Chicken, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Chicken Sauce', 0, 6],
@@ -244,9 +271,9 @@ async function initialize() {
     ];
     for (const p of products) {
       await query(
-        `INSERT INTO products (category_id, name, slug, description, price, old_price, ingredients, is_featured, sort_order)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (slug) DO NOTHING`,
-        p
+        `INSERT INTO products (category_id, name, slug, description, price, old_price, ingredients, is_featured, sort_order, sizes)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (slug) DO NOTHING`,
+        [p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9] || null]
       );
     }
   }
@@ -332,6 +359,59 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Croque Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Pizza 2026-09-04: 30 NEXO-Pizzen mit je 4 Größen (26cm/30cm/Familie/Party) per Upsert (idempotent)
+  try {
+    const pizzaCat = await get("SELECT * FROM categories WHERE slug = 'pizza'");
+    if (pizzaCat) {
+      await query('UPDATE categories SET description = $1 WHERE id = $2',
+        ['Steinofenpizza in 4 Größen: 26 cm, 30 cm, Familien Pizza und Party. Alle Pizzen in 26 cm und 30 cm auch als Calzone erhältlich.', pizzaCat.id]);
+      await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('prosciutto')", [pizzaCat.id]);
+      const SZ = (a, b, c, d) => JSON.stringify([{ label: '26 cm', price: a }, { label: '30 cm', price: b }, { label: 'Familien Pizza', price: c }, { label: 'Party 60x40', price: d }]);
+      const nexoPizzen = [
+        ['Margherita', 'margherita', 'Tomatensauce, Oregano', 8.90, 'Tomatensauce, Oregano', 1, 1, '/images/products/img1.jpg', SZ(8.90, 11.50, 19.90, 27.10)],
+        ['Mozzarella', 'mozzarella', 'Tomatensauce, Mozzarella, frische Tomaten, Basilikum, Oregano', 10.90, 'Tomatensauce, Mozzarella, frische Tomaten, Basilikum, Oregano', 0, 2, '/images/products/img1.jpg', SZ(10.90, 13.50, 22.90, 31.90)],
+        ['Cheese', 'cheese', 'Tomatensauce, verschiedene Käsesorten, Oregano', 10.90, 'Tomatensauce, verschiedene Käsesorten, Oregano', 0, 3, '/images/products/img2.jpg', SZ(10.90, 13.50, 22.90, 31.90)],
+        ['Salami', 'salami', 'Tomatensauce, Salami, Oregano', 10.20, 'Tomatensauce, Salami, Oregano', 1, 4, '/images/products/img2.jpg', SZ(10.20, 12.50, 21.50, 30.50)],
+        ['Prosciutto', 'prosciutto', 'Tomatensauce, Schinken, Oregano', 10.20, 'Tomatensauce, Schinken, Oregano', 0, 5, '/images/products/img3.jpg', SZ(10.20, 12.50, 21.50, 30.50)],
+        ['Funghi', 'funghi', 'Tomatensauce, Champignons, Oregano', 10.20, 'Tomatensauce, Champignons, Oregano', 0, 6, '/images/products/img1.jpg', SZ(10.20, 12.50, 21.50, 30.50)],
+        ['Dreiklang', 'dreiklang', 'Tomatensauce, Salami, Schinken, Champignons, Oregano', 12.40, 'Tomatensauce, Salami, Schinken, Champignons, Oregano', 1, 7, '/images/products/img2.jpg', SZ(12.40, 14.90, 23.90, 33.50)],
+        ['Hawaii', 'hawaii', 'Tomatensauce, Schinken, Ananas, Oregano', 12.20, 'Tomatensauce, Schinken, Ananas, Oregano', 0, 8, '/images/products/img3.jpg', SZ(12.20, 14.50, 23.50, 33.00)],
+        ['Vegetarisch', 'vegetarisch', 'Tomatensauce, verschiedene Gemüsesorten, Oregano', 12.20, 'Tomatensauce, verschiedene Gemüsesorten, Oregano', 0, 9, '/images/products/img1.jpg', SZ(12.20, 14.50, 23.50, 33.00)],
+        ['Tonno', 'tonno', 'Tomatensauce, Thunfisch, rote Zwiebeln, Oregano', 12.60, 'Tomatensauce, Thunfisch, rote Zwiebeln, Oregano', 0, 10, '/images/products/img2.jpg', SZ(12.60, 14.90, 24.00, 33.50)],
+        ['Scampi', 'scampi', 'Tomatensauce, Scampi, Oregano', 14.20, 'Tomatensauce, Scampi, Oregano', 0, 11, '/images/products/img3.jpg', SZ(14.20, 16.50, 25.50, 35.90)],
+        ['Frutti di Mare', 'frutti-di-mare', 'Tomatensauce, Frutti di Mare, Oregano', 14.20, 'Tomatensauce, Frutti di Mare, Oregano', 0, 12, '/images/products/img1.jpg', SZ(14.20, 16.50, 25.50, 35.90)],
+        ['Spezial Chicken', 'spezial-chicken', 'Tomatensauce, Hähnchen, Paprika, rote Zwiebeln, Champignons, Oregano', 13.40, 'Tomatensauce, Hähnchen, Paprika, rote Zwiebeln, Champignons, Oregano', 1, 13, '/images/products/img2.jpg', SZ(13.40, 15.90, 24.90, 34.90)],
+        ['Chicken Hollandaise', 'chicken-hollandaise', 'Tomatensauce, Hähnchen, Brokkoli, Sauce Hollandaise, Oregano', 13.40, 'Tomatensauce, Hähnchen, Brokkoli, Sauce Hollandaise, Oregano', 0, 14, '/images/products/img3.jpg', SZ(13.40, 15.90, 24.90, 34.90)],
+        ['Chicken Curry', 'chicken-curry', 'Tomatensauce, Hähnchen, Ananas, Curry, Oregano', 13.20, 'Tomatensauce, Hähnchen, Ananas, Curry, Oregano', 0, 15, '/images/products/img1.jpg', SZ(13.20, 15.50, 24.50, 34.50)],
+        ['Chicken Beef', 'chicken-beef', 'Tomatensauce, Hähnchen, Hackfleisch, Hirtenkäse, Oregano', 14.20, 'Tomatensauce, Hähnchen, Hackfleisch, Hirtenkäse, Oregano', 0, 16, '/images/products/img2.jpg', SZ(14.20, 16.50, 25.50, 35.90)],
+        ['BBQ', 'bbq', 'Tomatensauce, Salami, Hackfleisch, BBQ-Sauce, Röstzwiebeln, Oregano', 13.90, 'Tomatensauce, Salami, Hackfleisch, BBQ-Sauce, Röstzwiebeln, Oregano', 1, 17, '/images/products/img3.jpg', SZ(13.90, 16.20, 25.20, 35.50)],
+        ['Hot Beef', 'hot-beef', 'Tomatensauce, Hackfleisch, Paprika, Jalapeños, Oregano', 13.60, 'Tomatensauce, Hackfleisch, Paprika, Jalapeños, Oregano', 0, 18, '/images/products/img1.jpg', SZ(13.60, 15.90, 24.90, 34.90)],
+        ['Sucuk', 'sucuk', 'Tomatensauce, Sucuk, Peperoni, Ei, Oregano', 13.60, 'Tomatensauce, Sucuk, Peperoni, Ei, Oregano', 0, 19, '/images/products/img2.jpg', SZ(13.60, 15.90, 24.90, 34.90)],
+        ['Bacon', 'bacon', 'Tomatensauce, Rinderhackfleisch, BBQ-Sauce, Mozzarella, Bacon, Oregano', 14.20, 'Tomatensauce, Rinderhackfleisch, BBQ-Sauce, Mozzarella, Bacon, Oregano', 0, 20, '/images/products/img3.jpg', SZ(14.20, 16.50, 25.50, 35.90)],
+        ['Sucuk Jalapeños', 'sucuk-jalapenos', 'Tomatensauce, Sucuk, Jalapeños, Ei, Oregano', 13.60, 'Tomatensauce, Sucuk, Jalapeños, Ei, Oregano', 0, 21, '/images/products/img1.jpg', SZ(13.60, 15.90, 24.90, 34.90)],
+        ['Meat Lovers', 'meat-lovers', 'Tomatensauce, Salami, Schinken, Sucuk, Rinderhackfleisch, Oregano', 14.90, 'Tomatensauce, Salami, Schinken, Sucuk, Rinderhackfleisch, Oregano', 1, 22, '/images/products/img2.jpg', SZ(14.90, 17.20, 26.20, 36.90)],
+        ['Hot Dog', 'hot-dog', 'Tomatensauce, Würstchen, Gewürzgurken, Röstzwiebeln, Oregano', 13.20, 'Tomatensauce, Würstchen, Gewürzgurken, Röstzwiebeln, Oregano', 0, 23, '/images/products/img3.jpg', SZ(13.20, 15.50, 24.50, 34.50)],
+        ['UFO', 'ufo', 'Tomatensauce, von allem etwas, doppelter Teig, Oregano', 15.20, 'Tomatensauce, von allem etwas, doppelter Teig, Oregano', 0, 24, '/images/products/img1.jpg', SZ(15.20, 17.50, 26.90, 37.90)],
+        ['NEXO Wunsch', 'nexo-wunsch', 'Tomatensauce, drei Zutaten nach Wahl, Oregano', 13.60, 'Tomatensauce, drei Zutaten nach Wahl, Oregano', 0, 25, '/images/products/img2.jpg', SZ(13.60, 15.90, 24.90, 34.90)],
+        ['NEXO X', 'nexo-x', 'Hollandaise, Krispy Chicken, Mais, Paprika, Knoblauchsauce', 14.20, 'Hollandaise, Krispy Chicken, Mais, Paprika, Knoblauchsauce', 0, 26, '/images/products/img3.jpg', SZ(14.20, 16.50, 25.50, 35.90)],
+        ['NEXO Boom', 'nexo-boom', 'Tomatensauce, Salami, Hackfleisch, Paprika, Mais, Hirtenkäse, Oregano', 14.50, 'Tomatensauce, Salami, Hackfleisch, Paprika, Mais, Hirtenkäse, Oregano', 1, 27, '/images/products/img1.jpg', SZ(14.50, 16.90, 25.90, 36.50)],
+        ['NEXO Deluxe', 'nexo-deluxe', 'Crème fraîche, Lachs, Paprika, Rucola', 15.20, 'Crème fraîche, Lachs, Paprika, Rucola', 0, 28, '/images/products/img2.jpg', SZ(15.20, 17.50, 26.90, 37.90)],
+        ['NEXO Feuer Royale', 'nexo-feuer-royale', 'Tomatensauce, Hackfleisch, Jalapeños, Sauce Hollandaise, Feta, Oregano', 14.50, 'Tomatensauce, Hackfleisch, Jalapeños, Sauce Hollandaise, Feta, Oregano', 0, 29, '/images/products/img3.jpg', SZ(14.50, 16.90, 25.90, 36.50)],
+        ['NEXO Goldkrone', 'nexo-goldkrone', 'Tomatensauce, Pute, Brokkoli, Champignons, Sauce Hollandaise, Oregano', 14.20, 'Tomatensauce, Pute, Brokkoli, Champignons, Sauce Hollandaise, Oregano', 0, 30, '/images/products/img1.jpg', SZ(14.20, 16.50, 25.50, 35.90)],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of nexoPizzen) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+          [pizzaCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Pizza Auto-Migration übersprungen:', e.message);
   }
 
   const defaultSettings = [
