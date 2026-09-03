@@ -421,6 +421,13 @@ async function initialize() {
     console.error('Phone-Migration übersprungen:', e.message);
   }
 
+  // Logo aktivieren (nur wenn noch keins gesetzt ist)
+  try {
+    await query("UPDATE settings SET value = '/images/nexo-logo.png' WHERE key = 'logo_url' AND (value = '' OR value IS NULL)");
+  } catch (e) {
+    console.error('Logo-Migration übersprungen:', e.message);
+  }
+
   const defaultSettings = [
     ['site_name', 'Ammaya'],
     ['site_description', 'Ihr Restaurant für Pizza, Burger und mehr'],
@@ -441,7 +448,7 @@ async function initialize() {
     ['about_text', 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschließlich frische Zutaten und legen größten Wert auf Qualität.'],
     ['primary_color', '#eb0029'],
     ['secondary_color', '#ff4d4d'],
-    ['logo_url', ''],
+    ['logo_url', '/images/nexo-logo.png'],
     ['font_family', 'Inter'],
   ];
   for (const [key, value] of defaultSettings) {
