@@ -173,7 +173,7 @@ async function initialize() {
     const categories = [
       ['Pizza', 'pizza', 'Italienische Steinofenpizza, knusprig und frisch belegt', 1],
       ['Burger', 'burger', 'Smash Burger frisch für dich gesmasht. Für nur 5,00 € Aufpreis als Menü: 4 Zwiebelringe oder Pommes und ein 0,33 l Softdrink nach Wahl.', 2],
-      ['Croque', 'croque', 'Französisch inspirierte Croques, goldbraun überbacken', 3],
+      ['Croque', 'croque', 'Frisch überbackene Croques. Inklusive 1 Sauce nach Wahl.', 3],
       ['Salat', 'salat', 'Frische Salatkreationen mit hausgemachten Dressings', 4],
       ['Pasta', 'pasta', 'Italienische Pastagerichte, traditionell und kreativ', 5],
       ['Schnitzel', 'schnitzel', 'Knusprige Schnitzelvariationen', 6],
@@ -209,9 +209,19 @@ async function initialize() {
       [2, 'BoomBurger', 'boomburger', '3x 110 g Smash Beef, 3x Cheddar, Spiegelei, Champignons, Boom Sauce', 17.90, null, '3x 110 g Smash Beef, 3x Cheddar, Spiegelei, Champignons, Boom Sauce', 1, 14],
       [2, 'Beef & Chicken Smash', 'beef-chicken-smash', '110 g Smash Beef, 110 g Smash Chicken, Cheddar, Zwiebeln, Gewürzgurken, NEXO Sauce', 13.90, null, '110 g Smash Beef, 110 g Smash Chicken, Cheddar, Zwiebeln, Gewürzgurken, NEXO Sauce', 0, 15],
       // Hinweis: Produktbilder für neue Burger-Slugs stehen in views/menu.ejs (productImgMap), damit kein Pizza-Fallback angezeigt wird
-      [3, 'Croque Monsieur', 'croque-monsieur', 'Toast mit Schinken und Käse überbacken mit Béchamelsauce', 8.90, null, 'Toast, Schinken, Käse, Béchamelsauce', 1, 7],
-      [3, 'Croque Madame', 'croque-madame', 'Croque Monsieur mit Spiegelei und Trüffelmayo', 10.90, null, 'Toast, Schinken, Käse, Béchamelsauce, Ei, Trüffelmayo', 0, 8],
-      [3, 'Croque Hawaii', 'croque-hawaii', 'Toast mit Schinken, Ananas und Käse überbacken', 9.90, null, 'Toast, Schinken, Ananas, Käse', 0, 9],
+      [3, 'NEXO Madame', 'nexo-madame', 'Tomate, Käse', 7.90, null, 'Tomate, Käse', 0, 16],
+      [3, 'NEXO Mozzarella', 'nexo-mozzarella', 'Mozzarella, Tomate, Käse', 8.50, null, 'Mozzarella, Tomate, Käse', 1, 17],
+      [3, 'NEXO Salami', 'nexo-salami', 'Salami, Käse', 8.90, null, 'Salami, Käse', 0, 18],
+      [3, 'NEXO Schinken', 'nexo-schinken', 'Schinken, Käse', 8.90, null, 'Schinken, Käse', 0, 19],
+      [3, 'NEXO Chicken', 'nexo-chicken', 'Hähnchen, Käse', 9.50, null, 'Hähnchen, Käse', 0, 20],
+      [3, 'NEXO Pute', 'nexo-pute', 'Putenbrust, Käse', 9.50, null, 'Putenbrust, Käse', 0, 21],
+      [3, 'NEXO Sucuk', 'nexo-sucuk', 'Sucuk, gekochtes Ei, Käse', 9.50, null, 'Sucuk, gekochtes Ei, Käse', 1, 22],
+      [3, 'NEXO Camembert', 'nexo-camembert', 'Camembert, Käse, Preiselbeeren', 9.90, null, 'Camembert, Käse, Preiselbeeren', 0, 23],
+      [3, 'NEXO Hawaii', 'nexo-hawaii', 'Schinken, Ananas, Käse', 9.50, null, 'Schinken, Ananas, Käse', 0, 24],
+      [3, 'NEXO Crispy', 'nexo-crispy', 'Crispy Chicken, Käse', 10.50, null, 'Crispy Chicken, Käse', 1, 25],
+      [3, 'NEXO Tuna', 'nexo-tuna', 'Thunfisch, Zwiebeln, Käse', 9.90, null, 'Thunfisch, Zwiebeln, Käse', 0, 26],
+      [3, 'NEXO Beef BBQ', 'nexo-beef-bbq', 'Rindfleisch, Käse, BBQ-Sauce', 10.90, null, 'Rindfleisch, Käse, BBQ-Sauce', 1, 27],
+      [3, 'NEXO Formaggi', 'nexo-formaggi', '4 Käsesorten', 10.50, null, '4 Käsesorten', 0, 28],
       [4, 'Griechischer Salat', 'griechischer-salat', 'Frischer Salat mit Feta, Oliven, Gurken, Tomaten und Oregano-Dressing', 11.90, null, 'Feta, Oliven, Gurke, Tomate, Oregano', 1, 10],
       [4, 'Caesar Salat', 'caesar-salat', 'Römersalat mit Hähnchen, Croutons, Parmesan und Caesar-Dressing', 12.90, null, 'Römersalat, Hähnchen, Croutons, Parmesan', 0, 11],
       [5, 'Spaghetti Bolognese', 'spaghetti-bolognese', 'Spaghetti mit hausgemachter Fleischsoße und Parmesan', 12.90, null, 'Spaghetti, Rinderhack, Tomaten, Parmesan', 1, 12],
@@ -287,6 +297,41 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Burger Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Croque 2026-09-04: 3 alte Croques löschen, 13 NEXO-Croques per Upsert sicherstellen (idempotent)
+  try {
+    const croqueCat = await get("SELECT * FROM categories WHERE slug = 'croque'");
+    if (croqueCat) {
+      await query('UPDATE categories SET description = $1 WHERE id = $2',
+        ['Frisch überbackene Croques. Inklusive 1 Sauce nach Wahl.', croqueCat.id]);
+      await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('croque-monsieur','croque-madame','croque-hawaii')", [croqueCat.id]);
+      const nexoCroques = [
+        ['NEXO Madame', 'nexo-madame', 'Tomate, Käse', 7.90, 'Tomate, Käse', 0, 16, '/images/products/img7.jpg'],
+        ['NEXO Mozzarella', 'nexo-mozzarella', 'Mozzarella, Tomate, Käse', 8.50, 'Mozzarella, Tomate, Käse', 1, 17, '/images/products/img8.jpg'],
+        ['NEXO Salami', 'nexo-salami', 'Salami, Käse', 8.90, 'Salami, Käse', 0, 18, '/images/products/img9.jpg'],
+        ['NEXO Schinken', 'nexo-schinken', 'Schinken, Käse', 8.90, 'Schinken, Käse', 0, 19, '/images/products/img7.jpg'],
+        ['NEXO Chicken', 'nexo-chicken', 'Hähnchen, Käse', 9.50, 'Hähnchen, Käse', 0, 20, '/images/products/img8.jpg'],
+        ['NEXO Pute', 'nexo-pute', 'Putenbrust, Käse', 9.50, 'Putenbrust, Käse', 0, 21, '/images/products/img9.jpg'],
+        ['NEXO Sucuk', 'nexo-sucuk', 'Sucuk, gekochtes Ei, Käse', 9.50, 'Sucuk, gekochtes Ei, Käse', 1, 22, '/images/products/img7.jpg'],
+        ['NEXO Camembert', 'nexo-camembert', 'Camembert, Käse, Preiselbeeren', 9.90, 'Camembert, Käse, Preiselbeeren', 0, 23, '/images/products/img8.jpg'],
+        ['NEXO Hawaii', 'nexo-hawaii', 'Schinken, Ananas, Käse', 9.50, 'Schinken, Ananas, Käse', 0, 24, '/images/products/img9.jpg'],
+        ['NEXO Crispy', 'nexo-crispy', 'Crispy Chicken, Käse', 10.50, 'Crispy Chicken, Käse', 1, 25, '/images/products/img7.jpg'],
+        ['NEXO Tuna', 'nexo-tuna', 'Thunfisch, Zwiebeln, Käse', 9.90, 'Thunfisch, Zwiebeln, Käse', 0, 26, '/images/products/img8.jpg'],
+        ['NEXO Beef BBQ', 'nexo-beef-bbq', 'Rindfleisch, Käse, BBQ-Sauce', 10.90, 'Rindfleisch, Käse, BBQ-Sauce', 1, 27, '/images/products/img9.jpg'],
+        ['NEXO Formaggi', 'nexo-formaggi', '4 Käsesorten', 10.50, '4 Käsesorten', 0, 28, '/images/products/img7.jpg'],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image] of nexoCroques) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, image=COALESCE(products.image, EXCLUDED.image)`,
+          [croqueCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Croque Auto-Migration übersprungen:', e.message);
   }
 
   const defaultSettings = [
