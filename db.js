@@ -225,6 +225,7 @@ async function initialize() {
       ['Wraps', 'wraps', 'Frisch gerollte Wraps mit knackigem Salat.', 18],
       ['Bowls', 'bowls', 'Beilage nach Wahl: Reis oder Pommes. 1 Sauce inklusive, jede weitere +0,80 €.', 19],
       ['Pizza Brötchen', 'pizza-broetchen', '6 oder 12 Stück. Inklusive 1 Sauce nach Wahl.', 20],
+      ['NEXO Deals', 'nexo-deals', 'Tageszeit-Angebote: Mittag Deal 12–15 Uhr · Night Deal ab 21:00 Uhr (nur Abholer).', 21],
     ];
     for (const c of categories) {
       await query(
@@ -1099,6 +1100,36 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Pizza-Brötchen Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration NEXO Deals 2026-09-05: Mittag Deal (12-15 Uhr) + Night Deal (ab 21 Uhr, Abholer) per Upsert (idempotent)
+  try {
+    let dealsCat = await get("SELECT * FROM categories WHERE slug = 'nexo-deals'");
+    if (!dealsCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['NEXO Deals', 'nexo-deals', 'Tageszeit-Angebote: Mittag Deal 12–15 Uhr · Night Deal ab 21:00 Uhr (nur Abholer).', 21]
+      );
+      dealsCat = await get("SELECT * FROM categories WHERE slug = 'nexo-deals'");
+    }
+    if (dealsCat) {
+      await query('UPDATE categories SET name = $1, description = $2, sort_order = 21, active = 1 WHERE id = $3',
+        ['NEXO Deals', 'Tageszeit-Angebote: Mittag Deal 12–15 Uhr · Night Deal ab 21:00 Uhr (nur Abholer).', dealsCat.id]);
+      const nexoDeals = [
+        ['Mittag Deal · Wunsch-Menü', 'nexo-mittag-deal', 'Pizza Ø 26 cm oder Baguette nach Wunsch, bis zu 3 Beläge nach Wahl (Fisch ausgeschlossen) + 1 Getränk 0,33 l nach Wahl. Nur zur Mittagszeit 12–15 Uhr.', 10.99, 'Pizza oder Baguette, 3 Beläge nach Wahl, Getränk 0,33 l', 1, 1, '/images/products/img2.jpg', null],
+        ['Night Deal · Wunsch-Pizza', 'nexo-night-deal', 'Pizza Ø 26 cm nach Wunsch, bis zu 3 Beläge + 1 Sauce nach Wahl (Fisch & Käserand ausgeschlossen). Nur für Abholer, ab 21:00 Uhr.', 6.00, 'Pizza 26 cm, 3 Beläge, 1 Sauce nach Wahl', 1, 2, '/images/products/img3.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of nexoDeals) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [dealsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('NEXO-Deals Auto-Migration übersprungen:', e.message);
   }
 
   // Hero-Preise als Single Source (nur Anzeigen): Deal-Produkte von den Slide-Preisen ableiten
