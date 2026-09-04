@@ -180,7 +180,7 @@ async function initialize() {
       ['Snacks', 'snacks', 'Menü-Aufpreis +4,00 €: mit Pommes und 0,33 l Softdrink nach Wahl.', 7],
       ['Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8],
       ['Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9],
-      ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
+      ['Saucen & Dips', 'saucen-dips', 'Alle Saucen je 2,00 €.', 10],
       ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11],
       ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12],
       ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13],
@@ -294,10 +294,13 @@ async function initialize() {
       [8, 'Wasser', 'wasser', 'Natürliches Mineralwasser mit Kohlensäure 0,75l', 3.00, null, null, 0, 22],
       [9, 'Frühlingsrolle', 'fruehlingsrolle', 'Knusprige Frühlingsrollen mit süß-saurer Dippsauce', 6.90, null, 'Teig, Gemüse, Glasnudeln', 0, 23],
       [9, 'Falafel Wrap', 'falafel-wrap', 'Vegetarischer Wrap mit Falafel, Hummus und frischem Gemüse', 8.90, null, 'Falafel, Hummus, Gemüse, Fladenbrot', 0, 24],
-      [10, 'Ketchup', 'ketchup', 'Hausgemachter Ketchup 50ml', 1.50, null, null, 0, 25],
-      [10, 'Mayonnaise', 'mayonnaise', 'Hausgemachte Mayonnaise 50ml', 1.50, null, null, 0, 26],
-      [10, 'Knoblauchsauce', 'knoblauchsauce', 'Cremige Knoblauchsauce 50ml', 1.50, null, null, 0, 27],
-      [10, 'Chillisauce', 'chillisauce', 'Scharfe Chillisauce 50ml', 1.50, null, null, 0, 28],
+      [10, 'Knoblauch', 'knoblauch', '', 2.00, null, '', 0, 1, null],
+      [10, 'American', 'american', '', 2.00, null, '', 0, 2, null],
+      [10, 'Remoulade', 'remoulade', '', 2.00, null, '', 0, 3, null],
+      [10, 'NEXO Haus', 'nexo-haus', 'Unsere Haussauce', 2.00, null, 'Unsere Haussauce', 1, 4, null],
+      [10, 'Chili', 'chili', '', 2.00, null, '', 0, 5, null],
+      [10, 'BBQ', 'bbq-sauce', '', 2.00, null, '', 0, 6, null],
+      [10, 'Curry', 'curry', '', 2.00, null, '', 0, 7, null],
       [11, 'Spaghetti Eis', 'spaghetti-eis', '', 5.50, null, '', 1, 1, null],
       [11, 'Tiramisu', 'tiramisu', '', 5.50, null, '', 0, 2, null],
       [11, 'Cheesecake', 'cheesecake', '', 5.50, null, '', 0, 3, null],
@@ -664,6 +667,35 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Schnitzel Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Saucen 2026-09-04: 4 alte Saucen löschen, 7 neue je 2,00 € per Upsert (idempotent)
+  try {
+    const saucenCat = await get("SELECT * FROM categories WHERE slug = 'saucen-dips'");
+    if (saucenCat) {
+      await query('UPDATE categories SET description = $1 WHERE id = $2',
+        ['Alle Saucen je 2,00 €.', saucenCat.id]);
+      await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('ketchup','mayonnaise','knoblauchsauce','chillisauce')", [saucenCat.id]);
+      const saucen = [
+        ['Knoblauch', 'knoblauch', '', 2.00, '', 0, 1, '/images/products/img9.jpg', null],
+        ['American', 'american', '', 2.00, '', 0, 2, '/images/products/img12.jpg', null],
+        ['Remoulade', 'remoulade', '', 2.00, '', 0, 3, '/images/products/img9.jpg', null],
+        ['NEXO Haus', 'nexo-haus', 'Unsere Haussauce', 2.00, 'Unsere Haussauce', 1, 4, '/images/products/img12.jpg', null],
+        ['Chili', 'chili', '', 2.00, '', 0, 5, '/images/products/img9.jpg', null],
+        ['BBQ', 'bbq-sauce', '', 2.00, '', 0, 6, '/images/products/img12.jpg', null],
+        ['Curry', 'curry', '', 2.00, '', 0, 7, '/images/products/img9.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of saucen) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [saucenCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Saucen Auto-Migration übersprungen:', e.message);
   }
 
   // Auto-Migration Salat 2026-09-04: 2 alte Salate löschen, 6 neue per Upsert (idempotent)
