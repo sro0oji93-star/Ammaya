@@ -35,7 +35,7 @@ var Cart = (function() {
       if (n) setItemNote(n.getAttribute('data-key'), n.value);
     });
     if (document.getElementById('cartList')) renderCartPage();
-    if (document.getElementById('checkoutItems')) renderCheckoutSummary();
+    if (document.getElementById('checkoutItems')) { bindOrderType(); applyPickupRules(); renderCheckoutSummary(); }
   }
 
   function load() {
@@ -106,7 +106,7 @@ var Cart = (function() {
       item.qty = Math.max(1, Math.min(20, qty));
       save();
     if (document.getElementById('cartList')) renderCartPage();
-    if (document.getElementById('checkoutItems')) { bindOrderType(); applyPickupRules(); renderCheckoutSummary(); }
+    if (document.getElementById('checkoutItems')) renderCheckoutSummary();
   }
   }
 
