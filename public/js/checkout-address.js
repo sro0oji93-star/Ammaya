@@ -34,6 +34,13 @@
   function fmtKm(km) { return km.toFixed(1).replace('.', ',') + ' km'; }
   function fmtEur(v) { return v.toFixed(2).replace('.', ',') + ' €'; }
 
+  // Bestellübersicht neu berechnen, damit der Zonenzuschlag sofort sichtbar wird
+  function refreshSummary() {
+    try {
+      if (window.Cart && typeof window.Cart.renderCheckoutSummary === 'function') window.Cart.renderCheckoutSummary();
+    } catch (e) { /* ignore */ }
+  }
+
   function showOk(km) {
     if (!noteOk) return;
     var z = findZone(km);
@@ -42,15 +49,6 @@
     noteOk.style.border = '1px solid #22c55e';
     noteOk.style.color = '#15803d';
     noteOk.textContent = 'Entfernung: ' + fmtKm(km) + ' Fahrstrecke – Lieferzuschlag ' + fmtEur(z.fee) + ', Mindestbestellwert ' + fmtEur(z.min) + '.';
-  }
-
-  function showOk(km) {
-    if (!noteOk) return;
-    noteOk.style.display = 'block';
-    noteOk.style.background = '#f0fdf4';
-    noteOk.style.border = '1px solid #22c55e';
-    noteOk.style.color = '#15803d';
-    noteOk.textContent = 'Entfernung: ' + fmtKm(km) + ' Fahrstrecke – Lieferung möglich.';
   }
 
   function showBlocked(km) {
@@ -85,6 +83,7 @@
     if (lonField) lonField.value = '';
     if (noteOk) noteOk.style.display = 'none';
     if (noteBlocked) noteBlocked.style.display = 'none';
+    refreshSummary();
   }
 
   function checkDistance(lat, lon) {
@@ -104,8 +103,10 @@
         window.DeliveryCheck.min = zone.min;
         window.DeliveryCheck.blocked = false;
         showOk(km);
+        refreshSummary();
       } else {
         showBlocked(km);
+        refreshSummary();
       }
     }).catch(function () { /* still -> Server entscheidet */ });
   }
