@@ -33,6 +33,10 @@ router.post('/', async (req, res) => {
   try {
     const { name, email, phone, address, city, zip, notes, payment, items, discount_code, orderType } = req.body;
 
+    if (!phone || !String(phone).trim()) {
+      return res.status(400).json({ success: false, message: 'Bitte geben Sie Ihre Telefonnummer an.' });
+    }
+
     const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
     const type = orderType === 'abholung' ? 'abholung' : 'lieferung';
 
