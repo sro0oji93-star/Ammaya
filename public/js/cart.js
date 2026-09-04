@@ -23,6 +23,7 @@ var Cart = (function() {
     load();
     renderCartBadge();
     bindAddToCart();
+    applyDealWindows();
     // Kasse: Extra entfernen + Notiz pro Position (delegiert, einmalig)
     document.addEventListener('click', function(e) {
       var x = e.target && e.target.closest ? e.target.closest('.co-extra-x') : null;
@@ -151,6 +152,30 @@ var Cart = (function() {
       toastMsg.textContent = msg;
       toast.classList.add('show');
       setTimeout(function() { toast.classList.remove('show'); }, 2500);
+    }
+  }
+
+  // Tageszeit-Angebote: Button außerhalb des Bestellfensters deaktivieren + Hinweis zeigen
+  // (Serverseitig wird beim Checkout erneut streng geprüft)
+  function applyDealWindows() {
+    var now = new Date();
+    var mins = now.getHours() * 60 + now.getMinutes();
+    var btns = document.querySelectorAll('.add-to-cart[data-deal-from]');
+    for (var bi = 0; bi < btns.length; bi++) {
+      (function(btn) {
+        var from = parseInt(btn.getAttribute('data-deal-from'), 10);
+        var to = parseInt(btn.getAttribute('data-deal-to'), 10);
+        if (mins >= from && mins < to) return;
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'not-allowed';
+        if (!btn.parentElement || btn.parentElement.querySelector('.deal-hint')) return;
+        var hint = document.createElement('div');
+        hint.className = 'deal-hint';
+        hint.style.cssText = 'margin-top:6px;font-size:12px;color:#eb0029;font-weight:700';
+        hint.textContent = btn.getAttribute('data-deal-hint') || 'Aktuell nicht verfügbar';
+        btn.insertAdjacentElement('afterend', hint);
+      })(btns[bi]);
     }
   }
 

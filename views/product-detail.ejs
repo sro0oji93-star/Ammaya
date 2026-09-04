@@ -71,7 +71,8 @@
                     <button type="button" class="qty-plus"><i class="material-icons">add</i></button>
                     <button type="button" class="qty-minus"><i class="material-icons">remove</i></button>
                   </div>
-                  <button class="btn btn-big btn-style-3 add-to-cart" data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>">
+                  <% var detailDeal = null; if (product.slug === 'nexo-mittag-deal') { detailDeal = { from: 720, to: 900, hint: 'Nur 12:00–15:00 Uhr bestellbar' }; } else if (product.slug === 'nexo-night-deal') { detailDeal = { from: 1260, to: 1440, hint: 'Ab 21:00 Uhr bestellbar · nur Abholer' }; } %>
+                  <button class="btn btn-big btn-style-3 add-to-cart" data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>"<%= detailDeal ? ' data-deal-from="' + detailDeal.from + '" data-deal-to="' + detailDeal.to + '" data-deal-hint="' + detailDeal.hint + '"' : '' %>>
                     <i class="material-icons-outlined">shopping_cart</i><span>In den Warenkorb</span>
                   </button>
                 </div>

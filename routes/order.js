@@ -3,6 +3,23 @@ const router = express.Router();
 const db = require('../db');
 const { validateExtras } = require('../extras');
 
+// Tageszeit-Angebote: Bestellfenster in Europe/Berlin (Server auf Render läuft in UTC!)
+function berlinMinutes() {
+  try {
+    const s = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date());
+    const parts = s.split(':');
+    return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+  } catch (e) {
+    const d = new Date();
+    return d.getHours() * 60 + d.getMinutes();
+  }
+}
+
+const TIME_DEALS = {
+  'nexo-mittag-deal': { from: 12 * 60, to: 15 * 60, message: 'Der Mittag Deal ist nur von 12:00 bis 15:00 Uhr bestellbar.' },
+  'nexo-night-deal': { from: 21 * 60, to: 24 * 60, message: 'Der Night Deal ist erst ab 21:00 Uhr bestellbar (nur Abholer).' }
+};
+
 router.get('/', async (req, res) => {
   const settings = res.locals.settings;
   
@@ -19,10 +36,16 @@ router.post('/', async (req, res) => {
     const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
     
     let calculatedSubtotal = 0;
+    const nowBerlinMin = berlinMinutes();
     for (const item of parsedItems) {
-      const product = await db.get('SELECT price, sizes FROM products WHERE id = $1', [item.id]);
+      const product = await db.get('SELECT id, slug, price, sizes FROM products WHERE id = $1', [item.id]);
       if (!product) {
         return res.status(400).json({ success: false, message: 'Produkt nicht gefunden: ' + item.name });
+      }
+      // Tageszeit-Angebote serverseitig prüfen (Client-Zeit kann manipuliert sein)
+      const rule = TIME_DEALS[product.slug];
+      if (rule && (nowBerlinMin < rule.from || nowBerlinMin >= rule.to)) {
+        return res.status(400).json({ success: false, message: rule.message });
       }
       let realPrice;
       if (item.size && product.sizes) {

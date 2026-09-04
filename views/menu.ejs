@@ -86,6 +86,10 @@
     'vanille':'/images/products/img22.jpg','schokolade':'/images/products/img22.jpg','banane':'/images/products/img22.jpg',
     'erdbeere':'/images/products/img22.jpg','mix-milkshake':'/images/products/img22.jpg'
   }; %>
+  <% var dealWindows = {
+    'nexo-mittag-deal': { from: 720, to: 900, hint: 'Nur 12:00–15:00 Uhr bestellbar' },
+    'nexo-night-deal': { from: 1260, to: 1440, hint: 'Ab 21:00 Uhr bestellbar · nur Abholer' }
+  }; %>
   <script>window.PIZZA_EXTRA_PRICES = <%- JSON.stringify(pizzaExtras.prices) %>;</script>
   <% categories.forEach(function(cat, ci) { %>
   <% if (activeCategory && activeCategory !== cat.slug) return; %>
@@ -134,7 +138,7 @@
                 <% if (cat.slug === 'pizza') { %><%- include('partials/pizza-extras', { productId: p.id }) %><% } %>
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1" style="margin-top:10px">In den Warenkorb</button>
                 <% } else { %>
-                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" style="margin-top:8px">In den Warenkorb</button>
+                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%= dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %> style="margin-top:8px">In den Warenkorb</button>
                 <% } %>
               </div>
             </div>
@@ -172,7 +176,7 @@
                 <% if (cat.slug === 'pizza') { %><%- include('partials/pizza-extras', { productId: p.id }) %><% } %>
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1" style="margin-top:8px">In den Warenkorb</button>
                 <% } else { %>
-                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" style="margin-top:8px">In den Warenkorb</button>
+                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%= dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %> style="margin-top:8px">In den Warenkorb</button>
                 <% } %>
               </div>
             </div>
