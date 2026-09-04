@@ -31,17 +31,20 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, email, phone, address, city, zip, notes, payment, items, discount_code } = req.body;
-    
+    const { name, email, phone, address, city, zip, notes, payment, items, discount_code, orderType } = req.body;
+
     const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
-    
+    const type = orderType === 'abholung' ? 'abholung' : 'lieferung';
+
     let calculatedSubtotal = 0;
     const nowBerlinMin = berlinMinutes();
+    let hasPickupOnlyDeal = false;
     for (const item of parsedItems) {
       const product = await db.get('SELECT id, slug, price, sizes FROM products WHERE id = $1', [item.id]);
       if (!product) {
         return res.status(400).json({ success: false, message: 'Produkt nicht gefunden: ' + item.name });
       }
+      if (product.slug === 'nexo-night-deal') hasPickupOnlyDeal = true;
       // Tageszeit-Angebote serverseitig prüfen (Client-Zeit kann manipuliert sein)
       const rule = TIME_DEALS[product.slug];
       if (rule && (nowBerlinMin < rule.from || nowBerlinMin >= rule.to)) {
@@ -80,9 +83,13 @@ router.post('/', async (req, res) => {
     }
     
     const settings = res.locals.settings;
-    const deliveryFee = parseFloat(settings.delivery_fee) || 4.50;
+    // Night Deal: Abholung erzwingen (Client-Angabe nicht vertrauen)
+    if (hasPickupOnlyDeal && type !== 'abholung') {
+      return res.status(400).json({ success: false, message: 'Der Night Deal ist nur für Abholer – bitte Abholung wählen.' });
+    }
+    const deliveryFee = type === 'abholung' ? 0 : (parseFloat(settings.delivery_fee) || 4.50);
     const freeFrom = parseFloat(settings.free_delivery_from) || 0;
-    const calculatedDelivery = calculatedSubtotal >= freeFrom ? 0 : deliveryFee;
+    const calculatedDelivery = (type === 'abholung' || calculatedSubtotal >= freeFrom) ? 0 : deliveryFee;
     
     let calculatedDiscount = 0;
     let validCode = null;
@@ -101,11 +108,11 @@ router.post('/', async (req, res) => {
     
     const orderNumber = 'FEIN-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
     
-    await db.run(`INSERT INTO orders (order_number, customer_name, customer_email, customer_phone, delivery_address, delivery_city, delivery_zip, notes, items, subtotal, delivery_fee, discount, discount_code, total, payment_method, payment_status, order_status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+    await db.run(`INSERT INTO orders (order_number, customer_name, customer_email, customer_phone, delivery_address, delivery_city, delivery_zip, notes, items, subtotal, delivery_fee, discount, discount_code, total, payment_method, payment_status, order_status, order_type)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
       [orderNumber, name, email, phone, address, city, zip, notes,
       JSON.stringify(parsedItems), calculatedSubtotal, calculatedDelivery, calculatedDiscount, validCode, calculatedTotal,
-      payment, payment === 'online' ? 'ausstehend' : 'bar', 'neu']
+      payment, payment === 'online' ? 'ausstehend' : 'bar', 'neu', type]
     );
     
     if (validCode) {

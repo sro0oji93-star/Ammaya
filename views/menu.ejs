@@ -138,7 +138,7 @@
                 <% if (cat.slug === 'pizza') { %><%- include('partials/pizza-extras', { productId: p.id }) %><% } %>
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1" style="margin-top:10px">In den Warenkorb</button>
                 <% } else { %>
-                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%= dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %> style="margin-top:8px">In den Warenkorb</button>
+                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%- dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %><%- p.slug === 'nexo-night-deal' ? ' data-pickup-only="1"' : '' %> style="margin-top:8px">In den Warenkorb</button>
                 <% } %>
               </div>
             </div>
@@ -176,7 +176,7 @@
                 <% if (cat.slug === 'pizza') { %><%- include('partials/pizza-extras', { productId: p.id }) %><% } %>
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1" style="margin-top:8px">In den Warenkorb</button>
                 <% } else { %>
-                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%= dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %> style="margin-top:8px">In den Warenkorb</button>
+                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%- dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %><%- p.slug === 'nexo-night-deal' ? ' data-pickup-only="1"' : '' %> style="margin-top:8px">In den Warenkorb</button>
                 <% } %>
               </div>
             </div>

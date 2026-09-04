@@ -2,6 +2,7 @@
 var Cart = (function() {
   var items = [];
   var discount = { code: null, value: 0 };
+  var orderType = 'lieferung';
   var settings = window.restaurantSettings || { delivery_fee: 4.50, free_delivery_from: 40.00 };
 
   function makeKey(id, size, extras) {
@@ -43,27 +44,46 @@ var Cart = (function() {
       if (data) items = JSON.parse(data);
       items.forEach(function(i) {
         if (!i.extras) i.extras = [];
+        if (typeof i.pickupOnly === 'undefined') i.pickupOnly = false;
         i._key = makeKey(i.id, i.size, i.extras);
       });
       var disc = localStorage.getItem('feinDiscount');
       if (disc) discount = JSON.parse(disc);
+      var ot = localStorage.getItem('feinOrderType');
+      if (ot === 'abholung' || ot === 'lieferung') orderType = ot;
     } catch(e) { items = []; }
   }
 
   function save() {
     localStorage.setItem('feinCart', JSON.stringify(items));
     localStorage.setItem('feinDiscount', JSON.stringify(discount));
+    localStorage.setItem('feinOrderType', orderType);
   }
 
-  function addItem(id, name, price, qty, size, extras) {
+  function getOrderType() { return orderType; }
+
+  function setOrderType(t) {
+    if (t !== 'abholung' && t !== 'lieferung') return;
+    orderType = t;
+    save();
+    if (document.getElementById('cartList')) renderCartPage();
+    if (document.getElementById('checkoutItems')) renderCheckoutSummary();
+  }
+
+  function needsPickupOnly() {
+    return items.some(function(i) { return !!i.pickupOnly; });
+  }
+
+  function addItem(id, name, price, qty, size, extras, pickupOnly) {
     qty = qty || 1;
     extras = extras || [];
     var key = makeKey(id, size, extras);
     var existing = items.find(function(i) { return i._key === key; });
     if (existing) {
       existing.qty += qty;
+      if (pickupOnly) existing.pickupOnly = true;
     } else {
-      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras });
+      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras, pickupOnly: !!pickupOnly });
     }
     save();
     renderCartBadge();
@@ -85,9 +105,9 @@ var Cart = (function() {
     if (item) {
       item.qty = Math.max(1, Math.min(20, qty));
       save();
-      if (document.getElementById('cartList')) renderCartPage();
-      if (document.getElementById('checkoutItems')) renderCheckoutSummary();
-    }
+    if (document.getElementById('cartList')) renderCartPage();
+    if (document.getElementById('checkoutItems')) { bindOrderType(); applyPickupRules(); renderCheckoutSummary(); }
+  }
   }
 
   function getSubtotal() {
@@ -95,6 +115,7 @@ var Cart = (function() {
   }
 
   function getDeliveryFee(subtotal) {
+    if (orderType === 'abholung') return 0;
     var fee = parseFloat(settings.delivery_fee) || 4.50;
     var freeFrom = parseFloat(settings.free_delivery_from) || 40.00;
     return subtotal >= freeFrom ? 0 : fee;
@@ -163,9 +184,9 @@ var Cart = (function() {
     var btns = document.querySelectorAll('.add-to-cart[data-deal-from]');
     for (var bi = 0; bi < btns.length; bi++) {
       (function(btn) {
-        var from = parseInt(btn.getAttribute('data-deal-from'), 10);
-        var to = parseInt(btn.getAttribute('data-deal-to'), 10);
-        if (mins >= from && mins < to) return;
+        var from = parseInt(String(btn.getAttribute('data-deal-from')).replace(/[^\d]/g, ''), 10);
+        var to = parseInt(String(btn.getAttribute('data-deal-to')).replace(/[^\d]/g, ''), 10);
+        if (isFinite(from) && isFinite(to) && mins >= from && mins < to) return;
         btn.disabled = true;
         btn.style.opacity = '0.5';
         btn.style.cursor = 'not-allowed';
@@ -179,6 +200,53 @@ var Cart = (function() {
     }
   }
 
+  // Bestellart-Umschalter an der Kasse (Abholung blendet Lieferadresse aus)
+  function bindOrderType() {
+    var radios = document.querySelectorAll('input[name="orderType"]');
+    if (!radios.length) return;
+    radios.forEach(function(r) {
+      if (r.value === orderType) r.checked = true;
+      r.addEventListener('change', function() {
+        if (needsPickupOnly() && this.value === 'lieferung') {
+          applyPickupRules();
+          return;
+        }
+        setOrderType(this.value);
+        toggleAddress(this.value);
+      });
+    });
+    toggleAddress(orderType);
+  }
+
+  function toggleAddress(t) {
+    var card = document.getElementById('addressCard');
+    var addr = document.getElementById('address');
+    var city = document.getElementById('city');
+    var zip = document.getElementById('zip');
+    if (card) card.style.display = t === 'abholung' ? 'none' : '';
+    [addr, city, zip].forEach(function(f) { if (f) f.required = (t !== 'abholung'); });
+  }
+
+  // Night Deal o.ä.: Bestellart auf Abholung zwingen
+  function applyPickupRules() {
+    var note = document.getElementById('pickupOnlyNote');
+    var lieferRadio = document.querySelector('input[name="orderType"][value="lieferung"]');
+    var abholRadio = document.querySelector('input[name="orderType"][value="abholung"]');
+    if (needsPickupOnly()) {
+      orderType = 'abholung';
+      save();
+      if (lieferRadio) lieferRadio.disabled = true;
+      if (abholRadio) abholRadio.checked = true;
+      if (note) note.style.display = 'block';
+      toggleAddress('abholung');
+    } else {
+      if (lieferRadio) lieferRadio.disabled = false;
+      if (note) note.style.display = 'none';
+      var checked = document.querySelector('input[name="orderType"]:checked');
+      toggleAddress(checked ? checked.value : orderType);
+    }
+  }
+
   function bindAddToCart() {
     document.addEventListener('click', function(e) {
       var btn = e.target.closest('.add-to-cart');
@@ -186,6 +254,7 @@ var Cart = (function() {
       var id = btn.getAttribute('data-id');
       var name = btn.getAttribute('data-name');
       var hasSizes = btn.getAttribute('data-has-sizes');
+      var pickupOnly = btn.getAttribute('data-pickup-only') === '1';
       var qtyInput = document.getElementById('qtyInput');
       var qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
 
@@ -209,10 +278,10 @@ var Cart = (function() {
         var unit = size.price;
         extras.forEach(function(e) { unit += e.price; });
         unit = parseFloat(unit.toFixed(2));
-        addItem(id, name, unit, qty, size, extras);
+        addItem(id, name, unit, qty, size, extras, pickupOnly);
       } else {
         var price = btn.getAttribute('data-price');
-        addItem(id, name, price, qty);
+        addItem(id, name, price, qty, null, [], pickupOnly);
       }
 
       if (qtyInput) qtyInput.value = 1;
@@ -281,7 +350,11 @@ var Cart = (function() {
     empty.style.display = 'none';
     summary.style.display = 'block';
 
-    list.innerHTML = items.map(function(item) {
+    var pickupBanner = needsPickupOnly()
+      ? '<div style="margin-bottom:12px;padding:10px 14px;background:#fff5f5;border:1px solid #eb0029;border-radius:10px;font-size:13px;color:#b8001f;font-weight:600">Hinweis: Der Night Deal ist nur für Abholer – an der Kasse ist nur Abholung möglich (ohne Liefergebühr).</div>'
+      : '';
+
+    list.innerHTML = pickupBanner + items.map(function(item) {
       var nameHtml = item.size ? escapeHtml(item.name) + ' <small>(' + escapeHtml(item.size.label) + ')</small>' : escapeHtml(item.name);
       var extrasHtml = '';
       if (item.extras && item.extras.length) {
@@ -330,6 +403,7 @@ var Cart = (function() {
     var container = document.getElementById('checkoutItems');
     if (!container) return;
 
+    applyPickupRules();
     if (items.length === 0) {
       container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px">Warenkorb ist leer</p>';
       return;
@@ -380,6 +454,10 @@ var Cart = (function() {
     getDeliveryFee: getDeliveryFee,
     getTotal: getTotal,
     getItems: function() { return items; },
+    getOrderType: getOrderType,
+    setOrderType: setOrderType,
+    needsPickupOnly: needsPickupOnly,
+    applyPickupRules: applyPickupRules,
     getDiscount: function() { return discount; },
     applyDiscount: applyDiscount,
     clearDiscount: clearDiscount,
@@ -427,6 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
         zip: formData.get('zip'),
         notes: formData.get('notes'),
         payment: formData.get('payment'),
+        orderType: Cart.getOrderType(),
         items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }), note: i.note || '' }; }),
         subtotal: Cart.getSubtotal(),
         delivery_fee: Cart.getDeliveryFee(Cart.getSubtotal()),

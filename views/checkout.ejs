@@ -30,6 +30,33 @@
           </div>
 
           <div class="checkout-card">
+            <h3><i class="fas fa-shopping-bag"></i> Bestellart</h3>
+            <div class="payment-options">
+              <label class="payment-option">
+                <input type="radio" name="orderType" value="lieferung" checked>
+                <div class="payment-option-content">
+                  <i class="fas fa-truck"></i>
+                  <div>
+                    <strong>Lieferung</strong>
+                    <span>Bequem nach Hause liefern lassen</span>
+                  </div>
+                </div>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="orderType" value="abholung">
+                <div class="payment-option-content">
+                  <i class="fas fa-store"></i>
+                  <div>
+                    <strong>Abholung</strong>
+                    <span>Selbst abholen – ohne Liefergebühr</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+            <p id="pickupOnlyNote" style="display:none;margin-top:10px;padding:10px 14px;background:#fff5f5;border:1px solid #eb0029;border-radius:10px;font-size:13px;color:#b8001f;font-weight:600">Hinweis: Der Night Deal ist nur für Abholer – Ihre Bestellung wird als Abholung aufgegeben.</p>
+          </div>
+
+          <div class="checkout-card" id="addressCard">
             <h3><i class="fas fa-map-marker-alt"></i> Lieferadresse</h3>
             <div class="form-grid">
               <div class="form-group">

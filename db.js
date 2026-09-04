@@ -194,6 +194,7 @@ async function initialize() {
     );
 
     ALTER TABLE products ADD COLUMN IF NOT EXISTS sizes TEXT;
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS order_type TEXT DEFAULT 'lieferung';
   `);
 
   const hash = bcrypt.hashSync('admin123', 10);

@@ -31,6 +31,10 @@
           <strong><%= parseFloat(order.total).toFixed(2) %> €</strong>
         </div>
         <div class="confirmation-row">
+          <span>Bestellart</span>
+          <strong><%= order.order_type === 'abholung' ? 'Abholung' : 'Lieferung' %></strong>
+        </div>
+        <div class="confirmation-row">
           <span>Zahlungsmethode</span>
           <strong><%= order.payment_method === 'bar' ? 'Barzahlung' : (order.payment_method === 'karte' ? 'Kartenzahlung' : 'Online-Zahlung') %></strong>
         </div>
