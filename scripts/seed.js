@@ -18,7 +18,8 @@ async function seed() {
     ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12],
     ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13],
     ['NEXO Box', 'nexo-box', 'Gemeinsam genießen & sparen.', 14],
-    ['Kids Menü', 'kids-menue', 'Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', 15]
+    ['Kids Menü', 'kids-menue', 'Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', 15],
+    ['Milkshake', 'milkshake', 'Frisch gemixte Milkshakes.', 16]
   ];
 
   const products = [
@@ -152,7 +153,12 @@ async function seed() {
     [14, 'BOX 3', 'box-3', 'Pizza Wunsch Ø 30 cm, 1 Cheeseburger oder 1 Chickenburger, Pasta Wunsch, Pommes, 2 Saucen', 38.90, null, '/images/products/img18.jpg', 'Pizza Wunsch, Cheeseburger oder Chickenburger, Pasta Wunsch, Pommes, Saucen', 0, 3, null],
     [15, 'Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm, Margherita oder Salami', 7.90, null, '/images/products/img1.jpg', 'Pizza, Margherita oder Salami', 1, 1, null],
     [15, 'Kids Nuggets', 'kids-nuggets', '5 Chicken Nuggets, Pommes', 7.50, null, '/images/products/img8.jpg', 'Chicken Nuggets, Pommes', 0, 2, null],
-    [15, 'Happy Fish', 'happy-fish', '4 Happy Fish, Pommes', 7.90, null, '/images/products/img9.jpg', 'Fisch, Pommes', 0, 3, null]
+    [15, 'Happy Fish', 'happy-fish', '4 Happy Fish, Pommes', 7.90, null, '/images/products/img9.jpg', 'Fisch, Pommes', 0, 3, null],
+    [16, 'Vanille', 'vanille', '', 5.99, null, '/images/products/img22.jpg', '', 0, 1, null],
+    [16, 'Schokolade', 'schokolade', '', 5.99, null, '/images/products/img22.jpg', '', 0, 2, null],
+    [16, 'Banane', 'banane', '', 5.99, null, '/images/products/img22.jpg', '', 0, 3, null],
+    [16, 'Erdbeere', 'erdbeere', '', 5.99, null, '/images/products/img22.jpg', '', 0, 4, null],
+    [16, 'Mix Milkshake', 'mix-milkshake', '2 Sorten nach Wahl gemischt', 6.49, null, '/images/products/img22.jpg', '2 Sorten nach Wahl gemischt', 1, 5, null]
   ];
 
   try {

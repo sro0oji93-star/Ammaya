@@ -186,6 +186,7 @@ async function initialize() {
       ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13],
       ['NEXO Box', 'nexo-box', 'Gemeinsam genießen & sparen.', 14],
       ['Kids Menü', 'kids-menue', 'Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', 15],
+      ['Milkshake', 'milkshake', 'Frisch gemixte Milkshakes.', 16],
     ];
     for (const c of categories) {
       await query(
@@ -330,6 +331,11 @@ async function initialize() {
       [15, 'Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm, Margherita oder Salami', 7.90, null, 'Pizza, Margherita oder Salami', 1, 1, null],
       [15, 'Kids Nuggets', 'kids-nuggets', '5 Chicken Nuggets, Pommes', 7.50, null, 'Chicken Nuggets, Pommes', 0, 2, null],
       [15, 'Happy Fish', 'happy-fish', '4 Happy Fish, Pommes', 7.90, null, 'Fisch, Pommes', 0, 3, null],
+      [16, 'Vanille', 'vanille', '', 5.99, null, '', 0, 1, null],
+      [16, 'Schokolade', 'schokolade', '', 5.99, null, '', 0, 2, null],
+      [16, 'Banane', 'banane', '', 5.99, null, '', 0, 3, null],
+      [16, 'Erdbeere', 'erdbeere', '', 5.99, null, '', 0, 4, null],
+      [16, 'Mix Milkshake', 'mix-milkshake', '2 Sorten nach Wahl gemischt', 6.49, null, '2 Sorten nach Wahl gemischt', 1, 5, null],
     ];
     for (const p of products) {
       await query(
@@ -642,6 +648,39 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Kids Menü Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Milkshake 2026-09-04: Kategorie anlegen (falls fehlend) + 5 Shakes per Upsert (idempotent)
+  try {
+    let shakeCat = await get("SELECT * FROM categories WHERE slug = 'milkshake'");
+    if (!shakeCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Milkshake', 'milkshake', 'Frisch gemixte Milkshakes.', 16]
+      );
+      shakeCat = await get("SELECT * FROM categories WHERE slug = 'milkshake'");
+    }
+    if (shakeCat) {
+      await query('UPDATE categories SET description = $1, sort_order = 16 WHERE id = $2',
+        ['Frisch gemixte Milkshakes.', shakeCat.id]);
+      const shakes = [
+        ['Vanille', 'vanille', '', 5.99, '', 0, 1, '/images/products/img22.jpg', null],
+        ['Schokolade', 'schokolade', '', 5.99, '', 0, 2, '/images/products/img22.jpg', null],
+        ['Banane', 'banane', '', 5.99, '', 0, 3, '/images/products/img22.jpg', null],
+        ['Erdbeere', 'erdbeere', '', 5.99, '', 0, 4, '/images/products/img22.jpg', null],
+        ['Mix Milkshake', 'mix-milkshake', '2 Sorten nach Wahl gemischt', 6.49, '2 Sorten nach Wahl gemischt', 1, 5, '/images/products/img22.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of shakes) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [shakeCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Milkshake Auto-Migration übersprungen:', e.message);
   }
 
   // Auto-Migration Pasta 2026-09-04: 2 alte Pasta löschen, 14 NEXO-Pasta per Upsert (idempotent)
