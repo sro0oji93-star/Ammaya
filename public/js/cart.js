@@ -219,12 +219,15 @@ var Cart = (function() {
   }
 
   function toggleAddress(t) {
+    var isPickup = (t === 'abholung');
     var card = document.getElementById('addressCard');
+    var payCard = document.getElementById('paymentCard');
     var addr = document.getElementById('address');
     var city = document.getElementById('city');
     var zip = document.getElementById('zip');
-    if (card) card.style.display = t === 'abholung' ? 'none' : '';
-    [addr, city, zip].forEach(function(f) { if (f) f.required = (t !== 'abholung'); });
+    if (card) card.style.display = isPickup ? 'none' : '';
+    if (payCard) payCard.style.display = isPickup ? 'none' : '';
+    [addr, city, zip].forEach(function(f) { if (f) f.required = !isPickup; });
   }
 
   // Night Deal o.ä.: Bestellart auf Abholung zwingen
@@ -386,6 +389,8 @@ var Cart = (function() {
     var total = getTotal();
 
     document.getElementById('cartSubtotal').textContent = formatEUR(sub);
+    var feeRow = document.getElementById('cartDeliveryRow');
+    if (feeRow) feeRow.style.display = orderType === 'abholung' ? 'none' : '';
     document.getElementById('cartDelivery').textContent = fee === 0 ? 'Kostenfrei' : formatEUR(fee);
     document.getElementById('cartTotal').textContent = formatEUR(total);
 
@@ -429,6 +434,8 @@ var Cart = (function() {
     var total = getTotal();
 
     document.getElementById('checkoutSubtotal').textContent = formatEUR(sub);
+    var coFeeRow = document.getElementById('checkoutDeliveryRow');
+    if (coFeeRow) coFeeRow.style.display = orderType === 'abholung' ? 'none' : '';
     document.getElementById('checkoutDelivery').textContent = fee === 0 ? 'Kostenfrei' : formatEUR(fee);
     document.getElementById('checkoutTotal').textContent = formatEUR(total);
 
