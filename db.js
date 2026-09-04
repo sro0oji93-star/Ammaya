@@ -177,7 +177,7 @@ async function initialize() {
       ['Salat', 'salat', 'Frische Salate mit Dressing nach Wahl: Knoblauch, Hausdressing, Yoghurt, American, Kräuter.', 4],
       ['Pasta', 'pasta', 'Italienische Pastagerichte, traditionell und kreativ', 5],
       ['Schnitzel', 'schnitzel', 'Knusprige Schnitzelvariationen', 6],
-      ['Snacks', 'snacks', 'Kleine Köstlichkeiten für den Hunger zwischendurch', 7],
+      ['Snacks', 'snacks', 'Menü-Aufpreis +4,00 €: mit Pommes und 0,33 l Softdrink nach Wahl.', 7],
       ['Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8],
       ['Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9],
       ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
@@ -262,9 +262,18 @@ async function initialize() {
       [6, 'Wiener Schnitzel', 'wiener-schnitzel', 'Kalbfleisch paniert und goldbraun gebraten, mit Preiselbeeren und Zitrone', 16.90, null, 'Kalbfleisch, Panade, Preiselbeeren, Zitrone', 1, 14],
       [6, 'Jägerschnitzel', 'jaegerschnitzel', 'Schweineschnitzel mit cremiger Pilzsoße und Pommes', 15.90, null, 'Schweinefleisch, Pilze, Sahne, Pommes', 0, 15],
       [6, 'Zigeunerschnitzel', 'zigeunerschnitzel', 'Schnitzel mit bunter Paprika-Zwiebel-Soße und Reis', 15.90, null, 'Schweinefleisch, Paprika, Zwiebeln, Reis', 0, 16],
-      [7, 'Pommes Frites', 'pommes-frites', 'Knusprige Pommes mit hausgemachter Mayo oder Ketchup', 5.90, null, 'Kartoffeln, Pflanzenöl', 0, 17],
-      [7, 'Chicken Nuggets', 'chicken-nuggets', 'Knusprige Hähnchen-Nuggets mit Dipsauce', 8.90, null, 'Hähnchen, Panade, Dip', 0, 18],
-      [7, 'Nachos', 'nachos', 'Knusprige Nachos mit Käsesauce, Jalapeños und Sour Cream', 9.90, null, 'Nachos, Käse, Jalapeños, Sour Cream', 0, 19],
+      [7, 'Currywurst mit Pommes', 'currywurst-pommes', 'Mit Pommes', 8.90, null, 'Wurst, Curry, Pommes', 1, 1, null],
+      [7, 'Chicken Nuggets', 'chicken-nuggets', '6 oder 12 Stück', 6.90, null, 'Hähnchen, Panade', 1, 2, '[{"label":"6 Stk.","price":6.9},{"label":"12 Stk.","price":10.9}]'],
+      [7, 'Chicken Wings', 'chicken-wings', '6 oder 12 Stück', 7.90, null, 'Hähnchen', 0, 3, '[{"label":"6 Stk.","price":7.9},{"label":"12 Stk.","price":12.9}]'],
+      [7, 'Chili Cheese Nuggets', 'chili-cheese-nuggets', '6 oder 12 Stück', 6.90, null, 'Hähnchen, Chili, Käse', 0, 4, '[{"label":"6 Stk.","price":6.9},{"label":"12 Stk.","price":10.9}]'],
+      [7, 'Baked Feta', 'baked-feta', '6 oder 12 Stück', 7.90, null, 'Feta', 0, 5, '[{"label":"6 Stk.","price":7.9},{"label":"12 Stk.","price":11.9}]'],
+      [7, 'Chicken Strips', 'chicken-strips', '6 oder 12 Stück', 8.50, null, 'Hähnchen', 0, 6, '[{"label":"6 Stk.","price":8.5},{"label":"12 Stk.","price":13.9}]'],
+      [7, 'Frühlingsrollen', 'fruehlingsrollen', '6 oder 12 Stück', 5.90, null, 'Teig, Gemüse', 0, 7, '[{"label":"6 Stk.","price":5.9},{"label":"12 Stk.","price":9.9}]'],
+      [7, 'Mozzarella Sticks', 'mozzarella-sticks', '6 oder 12 Stück', 6.90, null, 'Mozzarella, Panade', 0, 8, '[{"label":"6 Stk.","price":6.9},{"label":"12 Stk.","price":11.9}]'],
+      [7, 'Zwiebelringe', 'zwiebelringe', '6 oder 12 Stück', 5.50, null, 'Zwiebeln, Panade', 0, 9, '[{"label":"6 Stk.","price":5.5},{"label":"12 Stk.","price":9.5}]'],
+      [7, 'Shrimps', 'shrimps', '6 oder 12 Stück', 8.50, null, 'Shrimps, Panade', 0, 10, '[{"label":"6 Stk.","price":8.5},{"label":"12 Stk.","price":13.9}]'],
+      [7, 'Muslitos', 'muslitos', '6 oder 12 Stück', 8.50, null, 'Muslitos, Panade', 0, 11, '[{"label":"6 Stk.","price":8.5},{"label":"12 Stk.","price":13.9}]'],
+      [7, 'Corn Dog', 'corn-dog', 'Klein oder Groß', 2.99, null, 'Würstchen, Maisteig', 0, 12, '[{"label":"Klein","price":2.99},{"label":"Groß","price":5.9}]'],
       [8, 'Coca Cola', 'coca-cola', 'Eisgekühlte Coca Cola 0,33l', 3.50, null, null, 0, 20],
       [8, 'Fanta', 'fanta', 'Eisgekühlte Fanta 0,33l', 3.50, null, null, 0, 21],
       [8, 'Wasser', 'wasser', 'Natürliches Mineralwasser mit Kohlensäure 0,75l', 3.00, null, null, 0, 22],
@@ -536,6 +545,41 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Salat Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Snacks 2026-09-04: alte Snacks löschen, 12 neue per Upsert (idempotent)
+  try {
+    const snacksCat = await get("SELECT * FROM categories WHERE slug = 'snacks'");
+    if (snacksCat) {
+      await query('UPDATE categories SET description = $1 WHERE id = $2',
+        ['Menü-Aufpreis +4,00 €: mit Pommes und 0,33 l Softdrink nach Wahl.', snacksCat.id]);
+      await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('pommes-frites','nachos')", [snacksCat.id]);
+      const S6 = (a, b) => JSON.stringify([{ label: '6 Stk.', price: a }, { label: '12 Stk.', price: b }]);
+      const snacks = [
+        ['Currywurst mit Pommes', 'currywurst-pommes', 'Mit Pommes', 8.90, 'Wurst, Curry, Pommes', 1, 1, '/images/products/img7.jpg', null],
+        ['Chicken Nuggets', 'chicken-nuggets', '6 oder 12 Stück', 6.90, 'Hähnchen, Panade', 1, 2, '/images/products/img8.jpg', S6(6.90, 10.90)],
+        ['Chicken Wings', 'chicken-wings', '6 oder 12 Stück', 7.90, 'Hähnchen', 0, 3, '/images/products/img9.jpg', S6(7.90, 12.90)],
+        ['Chili Cheese Nuggets', 'chili-cheese-nuggets', '6 oder 12 Stück', 6.90, 'Hähnchen, Chili, Käse', 0, 4, '/images/products/img7.jpg', S6(6.90, 10.90)],
+        ['Baked Feta', 'baked-feta', '6 oder 12 Stück', 7.90, 'Feta', 0, 5, '/images/products/img8.jpg', S6(7.90, 11.90)],
+        ['Chicken Strips', 'chicken-strips', '6 oder 12 Stück', 8.50, 'Hähnchen', 0, 6, '/images/products/img9.jpg', S6(8.50, 13.90)],
+        ['Frühlingsrollen', 'fruehlingsrollen', '6 oder 12 Stück', 5.90, 'Teig, Gemüse', 0, 7, '/images/products/img7.jpg', S6(5.90, 9.90)],
+        ['Mozzarella Sticks', 'mozzarella-sticks', '6 oder 12 Stück', 6.90, 'Mozzarella, Panade', 0, 8, '/images/products/img8.jpg', S6(6.90, 11.90)],
+        ['Zwiebelringe', 'zwiebelringe', '6 oder 12 Stück', 5.50, 'Zwiebeln, Panade', 0, 9, '/images/products/img9.jpg', S6(5.50, 9.50)],
+        ['Shrimps', 'shrimps', '6 oder 12 Stück', 8.50, 'Shrimps, Panade', 0, 10, '/images/products/img7.jpg', S6(8.50, 13.90)],
+        ['Muslitos', 'muslitos', '6 oder 12 Stück', 8.50, 'Muslitos, Panade', 0, 11, '/images/products/img8.jpg', S6(8.50, 13.90)],
+        ['Corn Dog', 'corn-dog', 'Klein oder Groß', 2.99, 'Würstchen, Maisteig', 0, 12, '/images/products/img9.jpg', JSON.stringify([{ label: 'Klein', price: 2.99 }, { label: 'Groß', price: 5.90 }])],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of snacks) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+          [snacksCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Snacks Auto-Migration übersprungen:', e.message);
   }
 
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)
