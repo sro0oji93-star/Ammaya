@@ -7,7 +7,7 @@ const pizzaExtras = { toppings: TOPPINGS, fish: FISH_TOPPINGS, prices: EXTRA_PRI
 router.get('/', async (req, res) => {
   const categories = await db.all('SELECT * FROM categories WHERE active = 1 ORDER BY sort_order');
   // Hero-Deals (nur über Hero-Button bestellbar) nicht in der Speisekarte zeigen
-  const products = await db.all("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id IN (SELECT MIN(id) FROM products WHERE is_available = 1 GROUP BY name) AND p.slug NOT IN ('deal-grosse-pizza-getraenke','deal-mix-match','deal-grosse-hamburger-getraenk') ORDER BY c.sort_order, p.sort_order");
+  const products = await db.all("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id IN (SELECT MIN(id) FROM products WHERE is_available = 1 GROUP BY name) AND p.slug NOT IN ('deal-grosse-pizza-getraenke','deal-mix-match','deal-grosse-hamburger-getraenk','deal-night-abholung') ORDER BY c.sort_order, p.sort_order");
   const settings = res.locals.settings;
   
   res.render('menu', {
@@ -24,7 +24,7 @@ router.get('/kategorie/:slug', async (req, res) => {
   const category = await db.get('SELECT * FROM categories WHERE slug = $1 AND active = 1', [req.params.slug]);
   if (!category) return res.status(404).render('404', { title: 'Kategorie nicht gefunden' });
   
-  const products = await db.all("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id IN (SELECT MIN(id) FROM products WHERE category_id = $1 AND is_available = 1 GROUP BY name) AND p.slug NOT IN ('deal-grosse-pizza-getraenke','deal-mix-match','deal-grosse-hamburger-getraenk') ORDER BY p.sort_order", [category.id]);
+  const products = await db.all("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id IN (SELECT MIN(id) FROM products WHERE category_id = $1 AND is_available = 1 GROUP BY name) AND p.slug NOT IN ('deal-grosse-pizza-getraenke','deal-mix-match','deal-grosse-hamburger-getraenk','deal-night-abholung') ORDER BY p.sort_order", [category.id]);
   const categories = await db.all('SELECT * FROM categories WHERE active = 1 ORDER BY sort_order');
   const settings = res.locals.settings;
   

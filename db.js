@@ -961,11 +961,29 @@ async function initialize() {
       );
     }
     // Burger-Anzeige (auch mit Tippfehler "Hambuger") -> Hamburger-Deal; Pizza-Anzeige -> Pizza-Deal; Combo -> Mix-Deal
-    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-grosse-hamburger-getraenk' WHERE (button_link = '/warenkorb' OR button_link LIKE '/warenkorb?add=%') AND (line2 ILIKE '%ambuger%' OR line2 ILIKE '%burger%')");
-    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-grosse-pizza-getraenke' WHERE (button_link = '/warenkorb' OR button_link LIKE '/warenkorb?add=%') AND line2 ILIKE '%pizza%'");
+    // (Night-Anzeigen ausgenommen: sie bekommen unten ihren eigenen Deal)
+    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-grosse-hamburger-getraenk' WHERE (button_link = '/warenkorb' OR button_link LIKE '/warenkorb?add=%') AND (line2 ILIKE '%ambuger%' OR line2 ILIKE '%burger%') AND line1 NOT ILIKE '%night%' AND line2 NOT ILIKE '%night%'");
+    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-grosse-pizza-getraenke' WHERE (button_link = '/warenkorb' OR button_link LIKE '/warenkorb?add=%') AND line2 ILIKE '%pizza%' AND line1 NOT ILIKE '%night%' AND line2 NOT ILIKE '%night%'");
     await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-mix-match' WHERE button_link = '/warenkorb' AND line2 ILIKE '%combo%'");
   } catch (e) {
     console.error('Hamburger-Deal Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Night Hero-Deal: eigene Anzeige (Night Deal 5,99 €, nur Abholung) bekommt eigenes Produkt
+  // Jede Night-Anzeige zeigt damit ihre eigenen Preise statt der alten Pizza-Preise
+  try {
+    const boxCat3 = await get("SELECT * FROM categories WHERE slug = 'nexo-box'");
+    if (boxCat3) {
+      await query(
+        `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+         VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+        [boxCat3.id, 'Night Deal · Pizza Ø 26', 'deal-night-abholung', 'Pizza Ø 26 cm nach Wunsch, bis zu 3 Beläge + 1 Sauce nach Wahl (Fisch & Käserand ausgeschlossen). Nur für Abholer, ab 21:00 Uhr.', 5.99, '/images/products/img3.jpg', 'Pizza 26 cm, 3 Beläge, 1 Sauce nach Wahl', 0, 13, JSON.stringify([{ label: 'Abholung', price: 5.99 }])]
+      );
+    }
+    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-night-abholung' WHERE (button_link = '/warenkorb' OR button_link LIKE '/warenkorb?add=%') AND (line1 ILIKE '%night%' OR line2 ILIKE '%night%' OR line3 ILIKE '%night%')");
+  } catch (e) {
+    console.error('Night Hero-Deal Auto-Migration übersprungen:', e.message);
   }
 
   // Auto-Migration Getränke 2026-09-05: alte Getränke durch Softgetränke-Preisliste ersetzen (idempotent)

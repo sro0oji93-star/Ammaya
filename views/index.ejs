@@ -36,9 +36,9 @@
             </label>
             <% }); %>
           </div>
-          <button type="button" class="btn btn-big btn-style-3 hero-add-to-cart" data-id="<%= heroDeal.id %>" data-name="<%= heroDeal.name %>" data-slide="<%= idx %>" style="margin-top:12px;display:inline-block;cursor:pointer"><%= slide.button_text || 'JETZT BESTELLEN' %></button>
+          <button type="button" class="btn btn-big btn-style-3 hero-add-to-cart" data-id="<%= heroDeal.id %>" data-name="<%= heroDeal.name %>" data-slide="<%= idx %>"<%- heroDeal.slug === 'deal-night-abholung' ? ' data-pickup-only="1"' : '' %> style="margin-top:12px;display:inline-block;cursor:pointer"><%= slide.button_text || 'JETZT BESTELLEN' %></button>
           <% } else if (heroDeal) { %>
-          <button type="button" class="btn btn-big btn-style-3 hero-add-to-cart" data-id="<%= heroDeal.id %>" data-name="<%= heroDeal.name %>" data-price="<%= heroDeal.price %>" data-slide="<%= idx %>" style="margin-top:25px;display:inline-block;cursor:pointer"><%= slide.button_text || 'JETZT BESTELLEN' %></button>
+          <button type="button" class="btn btn-big btn-style-3 hero-add-to-cart" data-id="<%= heroDeal.id %>" data-name="<%= heroDeal.name %>" data-price="<%= heroDeal.price %>" data-slide="<%= idx %>"<%- heroDeal.slug === 'deal-night-abholung' ? ' data-pickup-only="1"' : '' %> style="margin-top:25px;display:inline-block;cursor:pointer"><%= slide.button_text || 'JETZT BESTELLEN' %></button>
           <% } else { %>
           <a href="<%= slide.button_link || '/speisekarte' %>" class="btn btn-big btn-style-3" style="margin-top:25px;display:inline-block"><%= slide.button_text || 'JETZT BESTELLEN' %></a>
           <% } %>
@@ -117,14 +117,15 @@
     e.preventDefault();
     var id = btn.getAttribute('data-id');
     var name = btn.getAttribute('data-name');
+    var pickupOnly = btn.getAttribute('data-pickup-only') === '1';
     var container = btn.closest('.mad-hero-text');
     var radio = container ? container.querySelector('.hero-deal-picker input[type="radio"]:checked') : null;
     if (window.Cart && window.Cart.addItem) {
       if (radio) {
         var size = { label: radio.getAttribute('data-label'), price: parseFloat(radio.value) };
-        window.Cart.addItem(id, name, size.price, 1, size, []);
+        window.Cart.addItem(id, name, size.price, 1, size, [], pickupOnly);
       } else {
-        window.Cart.addItem(id, name, parseFloat(btn.getAttribute('data-price')), 1);
+        window.Cart.addItem(id, name, parseFloat(btn.getAttribute('data-price')), 1, null, [], pickupOnly);
       }
       setTimeout(function() { window.location.href = '/warenkorb'; }, 400);
     } else {

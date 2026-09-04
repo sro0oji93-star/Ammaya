@@ -17,7 +17,8 @@ function berlinMinutes() {
 
 const TIME_DEALS = {
   'nexo-mittag-deal': { from: 12 * 60, to: 15 * 60, message: 'Der Mittag Deal ist nur von 12:00 bis 15:00 Uhr bestellbar.' },
-  'nexo-night-deal': { from: 21 * 60, to: 24 * 60, message: 'Der Night Deal ist erst ab 21:00 Uhr bestellbar (nur Abholer).' }
+  'nexo-night-deal': { from: 21 * 60, to: 24 * 60, message: 'Der Night Deal ist erst ab 21:00 Uhr bestellbar (nur Abholer).' },
+  'deal-night-abholung': { from: 21 * 60, to: 24 * 60, message: 'Der Night Deal ist erst ab 21:00 Uhr bestellbar (nur Abholer).' }
 };
 
 // Liefergebiet serverseitig prüfen (Nominatim-Geocoding + OSRM-Fahrstrecke).
@@ -124,7 +125,7 @@ router.post('/', async (req, res) => {
       if (!product) {
         return res.status(400).json({ success: false, message: 'Produkt nicht gefunden: ' + item.name });
       }
-      if (product.slug === 'nexo-night-deal') hasPickupOnlyDeal = true;
+      if (product.slug === 'nexo-night-deal' || product.slug === 'deal-night-abholung') hasPickupOnlyDeal = true;
       // Tageszeit-Angebote serverseitig prüfen (Client-Zeit kann manipuliert sein)
       const rule = TIME_DEALS[product.slug];
       if (rule && (nowBerlinMin < rule.from || nowBerlinMin >= rule.to)) {
