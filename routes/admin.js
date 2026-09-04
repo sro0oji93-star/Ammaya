@@ -312,6 +312,12 @@ router.post('/einstellungen/hero-slides', auth, hsUpload, async (req, res) => {
     imgVal(req.files, 'drink_tl_file', req.body.drink_tl),
     imgVal(req.files, 'drink_tr_file', req.body.drink_tr),
     imgVal(req.files, 'drink_br_file', req.body.drink_br)]);
+  // Anzeige-Preise sind Single Source: Deal-Produkt sofort von den Slide-Preisen ableiten
+  try {
+    await db.syncDealPricesFromSlide({ button_link: button_link || '/warenkorb', price1, price1_cents, price1_tag, price2, price2_cents, price2_tag });
+  } catch (e) {
+    console.error('Deal-Preis-Sync übersprungen:', e.message);
+  }
   req.flash = req.flash || {};
   req.flash.success = 'Slide wurde erstellt!';
   req.session.save(() => res.redirect('/admin/einstellungen'));
@@ -334,6 +340,12 @@ router.post('/einstellungen/hero-slides/bearbeiten/:id', auth, hsUpload, async (
     imgValEdit('drink_tr', 'drink_tr_file', slide.drink_tr),
     imgValEdit('drink_br', 'drink_br_file', slide.drink_br),
     active ? 1 : 0, line1 || '', req.params.id]);
+  // Anzeige-Preise sind Single Source: Deal-Produkt sofort von den Slide-Preisen ableiten
+  try {
+    await db.syncDealPricesFromSlide({ button_link: button_link || '/warenkorb', price1, price1_cents, price1_tag, price2, price2_cents, price2_tag });
+  } catch (e) {
+    console.error('Deal-Preis-Sync übersprungen:', e.message);
+  }
   req.flash = req.flash || {};
   req.flash.success = 'Slide wurde aktualisiert!';
   req.session.save(() => res.redirect('/admin/einstellungen'));

@@ -29,6 +29,40 @@ async function run(text, params) {
   return result;
 }
 
+// Hero als Single Source für Anzeige-Preise (nur deal-Produkte):
+// Übernimmt price1/price2 (+cents, +tag) eines Hero-Slides in sizes+price des verlinkten Deal-Produkts.
+// Wird beim Speichern im Admin sowie beim Serverstart aufgerufen. Ungültige Preise -> kein Update.
+function parseHeroPrice(intPart, centsPart) {
+  const raw = String(intPart || '') + String(centsPart || '');
+  if (!raw.trim()) return null;
+  let s = raw.replace(/[^\d,\.]/g, '');
+  if (!s) return null;
+  if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+  const v = parseFloat(s);
+  return (isFinite(v) && v > 0) ? Math.round(v * 100) / 100 : null;
+}
+
+function heroTagLabel(tag, fallback) {
+  const t = String(tag || '').trim();
+  if (!t) return fallback;
+  return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+}
+
+async function syncDealPricesFromSlide(slide) {
+  if (!slide || !slide.button_link) return false;
+  const m = String(slide.button_link).match(/\?add=([A-Za-z0-9_-]+)/);
+  if (!m || m[1].indexOf('deal-') !== 0) return false;
+  const sizes = [];
+  const p1 = parseHeroPrice(slide.price1, slide.price1_cents);
+  if (p1) sizes.push({ label: heroTagLabel(slide.price1_tag, 'Abholung'), price: p1 });
+  const p2 = parseHeroPrice(slide.price2, slide.price2_cents);
+  if (p2) sizes.push({ label: heroTagLabel(slide.price2_tag, 'Lieferung'), price: p2 });
+  if (sizes.length === 0) return false;
+  const min = Math.min.apply(null, sizes.map(function (s) { return s.price; }));
+  const r = await query('UPDATE products SET sizes = $1, price = $2 WHERE slug = $3', [JSON.stringify(sizes), min, m[1]]);
+  return r.rowCount > 0;
+}
+
 async function initialize() {
   await query(`
     CREATE TABLE IF NOT EXISTS categories (
@@ -929,6 +963,16 @@ async function initialize() {
     console.error('Hamburger-Deal Auto-Migration übersprungen:', e.message);
   }
 
+  // Hero-Preise als Single Source (nur Anzeigen): Deal-Produkte von den Slide-Preisen ableiten
+  try {
+    const slides = await query("SELECT * FROM hero_slides WHERE button_link LIKE '%?add=deal-%'");
+    for (const s of slides.rows) {
+      await syncDealPricesFromSlide(s);
+    }
+  } catch (e) {
+    console.error('Hero-Preis-Sync übersprungen:', e.message);
+  }
+
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)
   try {
     await query("UPDATE settings SET value = '04131 4006817' WHERE key = 'phone' AND value = '+49 30 123456789'");
@@ -1017,4 +1061,4 @@ async function initialize() {
   }
 }
 
-module.exports = { query, get, all, run, pool, initialize };
+module.exports = { query, get, all, run, pool, initialize, syncDealPricesFromSlide };
