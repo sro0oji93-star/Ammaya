@@ -877,6 +877,38 @@ async function initialize() {
     console.error('Rings Auto-Migration übersprungen:', e.message);
   }
 
+  // Auto-Migration Hero Deals 2026-09-05: 2 Angebots-Produkte (mit Abholung/Lieferung-Größen) per Upsert (idempotent)
+  // + Hero-Buttons auf Direkt-Add (/warenkorb?add=slug) umstellen, damit JETZT BESTELLEN den Deal in den Warenkorb legt
+  try {
+    let boxCat = await get("SELECT * FROM categories WHERE slug = 'nexo-box'");
+    if (!boxCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['NEXO Box', 'nexo-box', 'Gemeinsam genießen & sparen.', 14]
+      );
+      boxCat = await get("SELECT * FROM categories WHERE slug = 'nexo-box'");
+    }
+    if (boxCat) {
+      const deals = [
+        ['1 Grosse Pizza + 3 Getränke', 'deal-grosse-pizza-getraenke', '1 große Pizza (3 Beläge nach Wahl) + 3 Getränke (0,33 l) nach Wahl', 24.99, 'Pizza, 3 Beläge nach Wahl, 3 Getränke (0,33 l)', 1, 10, '/images/products/img2.jpg', JSON.stringify([{ label: 'Abholung', price: 24.99 }, { label: 'Lieferung', price: 26.99 }])],
+        ['Mix or Match Combo Deal', 'deal-mix-match', '1 Burger, 1 kleine Pommes, 1 Dip und 1 Getränk (0,33 l)', 9.99, 'Burger, Pommes, Dip, Getränk (0,33 l)', 0, 11, '/images/products/img14.jpg', JSON.stringify([{ label: 'Abholung', price: 9.99 }, { label: 'Lieferung', price: 11.99 }])],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of deals) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+          [boxCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+    // Nur plain /warenkorb-Links der beiden Standard-Slides auf Direkt-Add umstellen (Admin-Anpassungen bleiben erhalten)
+    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-grosse-pizza-getraenke' WHERE button_link = '/warenkorb' AND sort_order = 0 AND (line2 = 'PIZZA' OR line1 = '1 GROSSE')");
+    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-mix-match' WHERE button_link = '/warenkorb' AND sort_order = 1 AND line2 = 'COMBO DEAL'");
+  } catch (e) {
+    console.error('Hero-Deals Auto-Migration übersprungen:', e.message);
+  }
+
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)
   try {
     await query("UPDATE settings SET value = '04131 4006817' WHERE key = 'phone' AND value = '+49 30 123456789'");

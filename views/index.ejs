@@ -24,7 +24,23 @@
             <% } %>
           </div>
           <p style="margin-top:15px;font-size:16px;color:rgba(255,255,255,.85);max-width:80%"><%= slide.description || '' %></p>
+          <% var heroAddSlug = null; if (slide.button_link && slide.button_link.indexOf('?add=') !== -1) { heroAddSlug = slide.button_link.split('?add=')[1].split('&')[0]; } %>
+          <% var heroDeal = heroAddSlug ? products.find(function(x) { return x.slug === heroAddSlug; }) : null; %>
+          <% if (heroDeal && heroDeal.sizes) { var heroSizes = JSON.parse(heroDeal.sizes); %>
+          <div class="hero-deal-picker" data-deal-id="<%= heroDeal.id %>" style="margin-top:22px;display:flex;gap:8px;flex-wrap:wrap">
+            <% heroSizes.forEach(function(s, si) { %>
+            <label style="cursor:pointer;padding:8px 18px;border:2px solid <%= si === 0 ? '#ebe117' : 'rgba(255,255,255,.5)' %>;border-radius:12px;font-size:14px;background:<%= si === 0 ? 'rgba(235,225,23,.15)' : 'rgba(255,255,255,.08)' %>;color:#fff;font-weight:700">
+              <input type="radio" name="hero_size_<%= slide.id || idx %>" value="<%= s.price %>" data-label="<%= s.label %>" style="display:none" <%= si === 0 ? 'checked' : '' %>>
+              <%= s.label %> · <%= s.price.toFixed(2).replace('.', ',') %> €
+            </label>
+            <% }); %>
+          </div>
+          <button type="button" class="btn btn-big btn-style-3 hero-add-to-cart" data-id="<%= heroDeal.id %>" data-name="<%= heroDeal.name %>" data-slide="<%= idx %>" style="margin-top:12px;display:inline-block;cursor:pointer"><%= slide.button_text || 'JETZT BESTELLEN' %></button>
+          <% } else if (heroDeal) { %>
+          <button type="button" class="btn btn-big btn-style-3 hero-add-to-cart" data-id="<%= heroDeal.id %>" data-name="<%= heroDeal.name %>" data-price="<%= heroDeal.price %>" data-slide="<%= idx %>" style="margin-top:25px;display:inline-block;cursor:pointer"><%= slide.button_text || 'JETZT BESTELLEN' %></button>
+          <% } else { %>
           <a href="<%= slide.button_link || '/speisekarte' %>" class="btn btn-big btn-style-3" style="margin-top:25px;display:inline-block"><%= slide.button_text || 'JETZT BESTELLEN' %></a>
+          <% } %>
         </div>
         <div style="flex:1;min-width:350px;max-width:700px;position:relative;min-height:550px;display:flex;align-items:center;justify-content:center">
           <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center">
@@ -76,6 +92,44 @@
     current = i;
   }
   interval = setInterval(function() { showSlide((current + 1) % slides.length); }, 6000);
+})();
+</script>
+
+<script>
+/* Hero-Deal: Abholung/Lieferung-Pills + Direkt-Add in den Warenkorb */
+(function() {
+  document.querySelectorAll('.hero-deal-picker').forEach(function(picker) {
+    picker.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        picker.querySelectorAll('label').forEach(function(l) {
+          l.style.borderColor = 'rgba(255,255,255,.5)';
+          l.style.background = 'rgba(255,255,255,.08)';
+        });
+        var label = this.closest('label');
+        if (label) { label.style.borderColor = '#ebe117'; label.style.background = 'rgba(235,225,23,.15)'; }
+      });
+    });
+  });
+  document.addEventListener('click', function(e) {
+    var btn = e.target && e.target.closest ? e.target.closest('.hero-add-to-cart') : null;
+    if (!btn) return;
+    e.preventDefault();
+    var id = btn.getAttribute('data-id');
+    var name = btn.getAttribute('data-name');
+    var container = btn.closest('.mad-hero-text');
+    var radio = container ? container.querySelector('.hero-deal-picker input[type="radio"]:checked') : null;
+    if (window.Cart && window.Cart.addItem) {
+      if (radio) {
+        var size = { label: radio.getAttribute('data-label'), price: parseFloat(radio.value) };
+        window.Cart.addItem(id, name, size.price, 1, size, []);
+      } else {
+        window.Cart.addItem(id, name, parseFloat(btn.getAttribute('data-price')), 1);
+      }
+      setTimeout(function() { window.location.href = '/warenkorb'; }, 400);
+    } else {
+      window.location.href = '/warenkorb';
+    }
+  });
 })();
 </script>
 
