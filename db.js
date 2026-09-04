@@ -181,6 +181,7 @@ async function initialize() {
       ['Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8],
       ['Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9],
       ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
+      ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11],
     ];
     for (const c of categories) {
       await query(
@@ -268,6 +269,18 @@ async function initialize() {
       [10, 'Mayonnaise', 'mayonnaise', 'Hausgemachte Mayonnaise 50ml', 1.50, null, null, 0, 26],
       [10, 'Knoblauchsauce', 'knoblauchsauce', 'Cremige Knoblauchsauce 50ml', 1.50, null, null, 0, 27],
       [10, 'Chillisauce', 'chillisauce', 'Scharfe Chillisauce 50ml', 1.50, null, null, 0, 28],
+      [11, 'Spaghetti Eis', 'spaghetti-eis', '', 5.50, null, '', 1, 1, null],
+      [11, 'Tiramisu', 'tiramisu', '', 5.50, null, '', 0, 2, null],
+      [11, 'Cheesecake', 'cheesecake', '', 5.50, null, '', 0, 3, null],
+      [11, 'Oreo Choice', 'oreo-choice', 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 3.90, null, 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 0, 4, null],
+      [11, 'Nutella Pizza', 'nutella-pizza', 'Nutella, Weiße Schokolade', 8.90, null, 'Nutella, Weiße Schokolade', 1, 5, null],
+      [11, 'Crêpe Nutella', 'crepe-nutella', 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 7.90, null, 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 0, 6, null],
+      [11, 'Crêpe Frucht', 'crepe-frucht', 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 0, 7, null],
+      [11, 'Crêpe Lotus', 'crepe-lotus', 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 0, 8, null],
+      [11, 'Crêpe Oreo', 'crepe-oreo', 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 0, 9, null],
+      [11, 'Crêpe Bueno', 'crepe-bueno', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 9.50, null, 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 1, 10, null],
+      [11, 'Mini Pancakes', 'mini-pancakes', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '10 oder 20 Stück, 2 Toppings nach Wahl', 1, 11, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
+      [11, 'Mini Waffel', 'mini-waffel', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '10 oder 20 Stück, 2 Toppings nach Wahl', 0, 12, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
     ];
     for (const p of products) {
       await query(
@@ -412,6 +425,46 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Pizza Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Dessert 2026-09-04: Kategorie anlegen (falls fehlend) + 12 Produkte per Upsert (idempotent)
+  try {
+    let dessertCat = await get("SELECT * FROM categories WHERE slug = 'dessert'");
+    if (!dessertCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11]
+      );
+      dessertCat = await get("SELECT * FROM categories WHERE slug = 'dessert'");
+    }
+    if (dessertCat) {
+      await query('UPDATE categories SET description = $1, sort_order = 11 WHERE id = $2',
+        ['Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', dessertCat.id]);
+      const desserts = [
+        ['Spaghetti Eis', 'spaghetti-eis', '', 5.50, '', 1, 1, '/images/products/img20.jpg', null],
+        ['Tiramisu', 'tiramisu', '', 5.50, '', 0, 2, '/images/products/img19.jpg', null],
+        ['Cheesecake', 'cheesecake', '', 5.50, '', 0, 3, '/images/products/img22.jpg', null],
+        ['Oreo Choice', 'oreo-choice', 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 3.90, 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 0, 4, '/images/products/img21.jpg', null],
+        ['Nutella Pizza', 'nutella-pizza', 'Nutella, Weiße Schokolade', 8.90, 'Nutella, Weiße Schokolade', 1, 5, '/images/products/img19.jpg', null],
+        ['Crêpe Nutella', 'crepe-nutella', 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 7.90, 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 0, 6, '/images/products/img20.jpg', null],
+        ['Crêpe Frucht', 'crepe-frucht', 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 8.90, 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 0, 7, '/images/products/img21.jpg', null],
+        ['Crêpe Lotus', 'crepe-lotus', 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 8.90, 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 0, 8, '/images/products/img22.jpg', null],
+        ['Crêpe Oreo', 'crepe-oreo', 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 8.90, 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 0, 9, '/images/products/img19.jpg', null],
+        ['Crêpe Bueno', 'crepe-bueno', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 9.50, 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 1, 10, '/images/products/img20.jpg', null],
+        ['Mini Pancakes', 'mini-pancakes', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, '10 oder 20 Stück, 2 Toppings nach Wahl', 1, 11, '/images/products/img21.jpg', '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
+        ['Mini Waffel', 'mini-waffel', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, '10 oder 20 Stück, 2 Toppings nach Wahl', 0, 12, '/images/products/img22.jpg', '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of desserts) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [dessertCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Dessert Auto-Migration übersprungen:', e.message);
   }
 
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)

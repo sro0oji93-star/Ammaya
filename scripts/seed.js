@@ -13,7 +13,8 @@ async function seed() {
     ['Snacks', 'snacks', 'Kleine Köstlichkeiten für den Hunger zwischendurch', 7],
     ['Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8],
     ['Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9],
-    ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10]
+    ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
+    ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11]
   ];
 
   const products = [
@@ -90,7 +91,19 @@ async function seed() {
     [10, 'Ketchup', 'ketchup', 'Hausgemachter Ketchup 50ml', 1.50, null, '/images/products/img9.jpg', null, 0, 34],
     [10, 'Mayonnaise', 'mayonnaise', 'Hausgemachte Mayonnaise 50ml', 1.50, null, '/images/products/img12.jpg', null, 0, 35],
     [10, 'Knoblauchsauce', 'knoblauchsauce', 'Cremige Knoblauchsauce 50ml', 1.50, null, '/images/products/img3.jpg', null, 0, 36],
-    [10, 'Chillisauce', 'chillisauce', 'Scharfe Chillisauce 50ml', 1.50, null, '/images/products/img4.jpg', null, 0, 37]
+    [10, 'Chillisauce', 'chillisauce', 'Scharfe Chillisauce 50ml', 1.50, null, '/images/products/img4.jpg', null, 0, 37],
+    [11, 'Spaghetti Eis', 'spaghetti-eis', '', 5.50, null, '/images/products/img20.jpg', '', 1, 1, null],
+    [11, 'Tiramisu', 'tiramisu', '', 5.50, null, '/images/products/img19.jpg', '', 0, 2, null],
+    [11, 'Cheesecake', 'cheesecake', '', 5.50, null, '/images/products/img22.jpg', '', 0, 3, null],
+    [11, 'Oreo Choice', 'oreo-choice', 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 3.90, null, '/images/products/img21.jpg', 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 0, 4, null],
+    [11, 'Nutella Pizza', 'nutella-pizza', 'Nutella, Weiße Schokolade', 8.90, null, '/images/products/img19.jpg', 'Nutella, Weiße Schokolade', 1, 5, null],
+    [11, 'Crêpe Nutella', 'crepe-nutella', 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 7.90, null, '/images/products/img20.jpg', 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 0, 6, null],
+    [11, 'Crêpe Frucht', 'crepe-frucht', 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, '/images/products/img21.jpg', 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 0, 7, null],
+    [11, 'Crêpe Lotus', 'crepe-lotus', 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, '/images/products/img22.jpg', 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 0, 8, null],
+    [11, 'Crêpe Oreo', 'crepe-oreo', 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, '/images/products/img19.jpg', 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 0, 9, null],
+    [11, 'Crêpe Bueno', 'crepe-bueno', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 9.50, null, '/images/products/img20.jpg', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 1, 10, null],
+    [11, 'Mini Pancakes', 'mini-pancakes', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '/images/products/img21.jpg', '10 oder 20 Stück, 2 Toppings nach Wahl', 1, 11, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
+    [11, 'Mini Waffel', 'mini-waffel', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '/images/products/img22.jpg', '10 oder 20 Stück, 2 Toppings nach Wahl', 0, 12, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]']
   ];
 
   try {
