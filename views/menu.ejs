@@ -117,9 +117,9 @@
                   <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
                   <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
                   <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); %>
-                  <div class="mad-spec-price" style="padding:0 1.5rem;color:#eb0029;white-space:nowrap">ab <%= minP.toFixed(2) %> €</div>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap">ab <%= minP.toFixed(2) %> €</div>
                   <% } else { %>
-                  <div class="mad-spec-price" style="padding:0 1.5rem;color:#eb0029;white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
                   <% } %>
                 </div>
                 <div class="mad-spec-tags" style="font-size:1rem;line-height:1.5rem;color:#7a7879;margin-top:0.25rem">
@@ -131,7 +131,7 @@
                   <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:13px;transition:all .25s ease;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.04);text-align:center">
                     <input type="radio" name="size_<%= p.id %>" value="<%= s.price %>" data-label="<%= s.label %>" data-id="<%= p.id %>" data-name="<%= p.name %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:13px"><%= s.label %></span>
-                    <span style="display:block;color:#eb0029;font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
+                    <span style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
                   </label>
                   <% }); %>
                 </div>
@@ -155,9 +155,9 @@
                   <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
                   <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
                   <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); %>
-                  <div class="mad-spec-price" style="padding:0 1.5rem;color:#eb0029;white-space:nowrap">ab <%= minP.toFixed(2) %> €</div>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap">ab <%= minP.toFixed(2) %> €</div>
                   <% } else { %>
-                  <div class="mad-spec-price" style="padding:0 1.5rem;color:#eb0029;white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
                   <% } %>
                 </div>
                 <div class="mad-spec-tags" style="font-size:1rem;line-height:1.5rem;color:#7a7879;margin-top:0.25rem">
@@ -169,7 +169,7 @@
                   <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:13px;transition:all .25s ease;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.04);text-align:center">
                     <input type="radio" name="size_<%= p.id %>" value="<%= s.price %>" data-label="<%= s.label %>" data-id="<%= p.id %>" data-name="<%= p.name %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:13px"><%= s.label %></span>
-                    <span style="display:block;color:#eb0029;font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
+                    <span style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
                   </label>
                   <% }); %>
                 </div>
@@ -214,7 +214,7 @@ document.querySelectorAll('.size-picker').forEach(function(picker) {
   var first = picker.querySelector('input[type="radio"]');
   if (first) {
     var label = first.closest('.size-option');
-    if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
+    if (label) { label.style.borderColor = 'var(--primary)'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
   }
   picker.querySelectorAll('input[type="radio"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
@@ -224,7 +224,7 @@ document.querySelectorAll('.size-picker').forEach(function(picker) {
         l.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)';
       });
       var label = this.closest('.size-option');
-      if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
+      if (label) { label.style.borderColor = 'var(--primary)'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
     });
   });
   // Hover effect

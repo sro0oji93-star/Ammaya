@@ -43,7 +43,7 @@
                   <label class="size-option-detail" style="cursor:pointer;padding:12px 20px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px;transition:all .25s ease;text-align:center;min-width:100px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.04);position:relative;overflow:hidden">
                     <input type="radio" name="detailSize" value="<%= s.price %>" data-label="<%= s.label %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:16px;margin-bottom:4px"><%= s.label %></span>
-                    <span style="display:block;color:#eb0029;font-weight:700;font-size:15px"><%= s.price.toFixed(2) %> €</span>
+                    <span style="display:block;color:var(--primary);font-weight:700;font-size:15px"><%= s.price.toFixed(2) %> €</span>
                   </label>
                   <% }); %>
                 </div>
@@ -154,7 +154,7 @@ window.PIZZA_EXTRA_PRICES = <%- JSON.stringify(pizzaExtras.prices) %>;
   var first = picker.querySelector('input[type="radio"]');
   if (first) {
     var label = first.closest('.size-option-detail');
-    if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
+    if (label) { label.style.borderColor = 'var(--primary)'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
   }
   picker.querySelectorAll('input[type="radio"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
@@ -164,7 +164,7 @@ window.PIZZA_EXTRA_PRICES = <%- JSON.stringify(pizzaExtras.prices) %>;
         l.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
       });
       var label = this.closest('.size-option-detail');
-      if (label) { label.style.borderColor = '#eb0029'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
+      if (label) { label.style.borderColor = 'var(--primary)'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
       var priceEl = document.getElementById('detailPrice');
       if (priceEl) priceEl.textContent = parseFloat(this.value).toFixed(2) + ' €';
     });

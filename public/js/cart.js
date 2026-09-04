@@ -207,7 +207,7 @@ var Cart = (function() {
         if (!btn.parentElement || btn.parentElement.querySelector('.deal-hint')) return;
         var hint = document.createElement('div');
         hint.className = 'deal-hint';
-        hint.style.cssText = 'margin-top:6px;font-size:12px;color:#eb0029;font-weight:700';
+        hint.style.cssText = 'margin-top:6px;font-size:12px;color:var(--primary);font-weight:700';
         hint.textContent = btn.getAttribute('data-deal-hint') || 'Aktuell nicht verfügbar';
         btn.insertAdjacentElement('afterend', hint);
       })(btns[bi]);
@@ -390,7 +390,7 @@ var Cart = (function() {
     summary.style.display = 'block';
 
     var pickupBanner = needsPickupOnly()
-      ? '<div style="margin-bottom:12px;padding:10px 14px;background:#fff5f5;border:1px solid #eb0029;border-radius:10px;font-size:13px;color:#b8001f;font-weight:600">Hinweis: Der Night Deal ist nur für Abholer – an der Kasse ist nur Abholung möglich (ohne Liefergebühr).</div>'
+      ? '<div style="margin-bottom:12px;padding:10px 14px;background:#fff5f5;border:1px solid var(--primary);border-radius:10px;font-size:13px;color:#b8001f;font-weight:600">Hinweis: Der Night Deal ist nur für Abholer – an der Kasse ist nur Abholung möglich (ohne Liefergebühr).</div>'
       : '';
 
     list.innerHTML = pickupBanner + items.map(function(item) {
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!Cart.isValidPhone(formData.get('phone'))) {
         alert('Bitte geben Sie eine gültige Telefonnummer an (z. B. 0151 23456789).');
         var phoneInput = document.getElementById('phone');
-        if (phoneInput) { phoneInput.style.borderColor = '#eb0029'; phoneInput.focus(); }
+        if (phoneInput) { phoneInput.style.borderColor = 'var(--primary)'; phoneInput.focus(); }
         return;
       }
 
