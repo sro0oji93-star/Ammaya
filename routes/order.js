@@ -20,6 +20,17 @@ const TIME_DEALS = {
   'nexo-night-deal': { from: 21 * 60, to: 24 * 60, message: 'Der Night Deal ist erst ab 21:00 Uhr bestellbar (nur Abholer).' }
 };
 
+// Deutsche Rufnummer prüfen: nur erlaubte Zeichen, 7–15 Ziffern, 0… oder +49…
+function isValidPhone(p) {
+  if (p == null) return false;
+  const s = String(p).trim();
+  if (!/^[+\d\s(][\d\s\-/().]*$/.test(s)) return false;
+  let digits = s.replace(/\D/g, '');
+  if (digits.slice(0, 2) === '00') digits = digits.slice(2);
+  if (digits.length < 7 || digits.length > 15) return false;
+  return digits.charAt(0) === '0' || digits.slice(0, 2) === '49';
+}
+
 router.get('/', async (req, res) => {
   const settings = res.locals.settings;
   
@@ -33,8 +44,8 @@ router.post('/', async (req, res) => {
   try {
     const { name, email, phone, address, city, zip, notes, payment, items, discount_code, orderType } = req.body;
 
-    if (!phone || !String(phone).trim()) {
-      return res.status(400).json({ success: false, message: 'Bitte geben Sie Ihre Telefonnummer an.' });
+    if (!isValidPhone(phone)) {
+      return res.status(400).json({ success: false, message: 'Bitte geben Sie eine gültige Telefonnummer an (z. B. 0151 23456789).' });
     }
 
     const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;

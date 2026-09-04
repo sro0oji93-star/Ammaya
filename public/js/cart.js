@@ -299,6 +299,17 @@ var Cart = (function() {
     return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
+  // Deutsche Rufnummer prüfen: nur erlaubte Zeichen, 7–15 Ziffern, 0… oder +49…
+  function isValidPhone(p) {
+    if (p == null) return false;
+    var s = String(p).trim();
+    if (!/^[+\d\s(][\d\s\-/().]*$/.test(s)) return false;
+    var digits = s.replace(/\D/g, '');
+    if (digits.slice(0, 2) === '00') digits = digits.slice(2);
+    if (digits.length < 7 || digits.length > 15) return false;
+    return digits.charAt(0) === '0' || digits.slice(0, 2) === '49';
+  }
+
   // Extra aus einer Position in der Kasse entfernen (Preis wird neu berechnet)
   function removeExtra(key, extraName) {
     var item = items.find(function(i) { return i._key === key; });
@@ -465,6 +476,7 @@ var Cart = (function() {
     setOrderType: setOrderType,
     needsPickupOnly: needsPickupOnly,
     applyPickupRules: applyPickupRules,
+    isValidPhone: isValidPhone,
     getDiscount: function() { return discount; },
     applyDiscount: applyDiscount,
     clearDiscount: clearDiscount,
@@ -501,6 +513,13 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       var items = Cart.getItems();
       if (items.length === 0) { alert('Ihr Warenkorb ist leer.'); return; }
+
+      if (!Cart.isValidPhone(formData.get('phone'))) {
+        alert('Bitte geben Sie eine gültige Telefonnummer an (z. B. 0151 23456789).');
+        var phoneInput = document.getElementById('phone');
+        if (phoneInput) { phoneInput.style.borderColor = '#eb0029'; phoneInput.focus(); }
+        return;
+      }
 
       var formData = new FormData(checkoutForm);
       var data = {
