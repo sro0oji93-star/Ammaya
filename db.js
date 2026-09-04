@@ -224,6 +224,7 @@ async function initialize() {
       ['Rings', 'rings', 'Inklusive 1 Sauce nach Wahl.', 17],
       ['Wraps', 'wraps', 'Frisch gerollte Wraps mit knackigem Salat.', 18],
       ['Bowls', 'bowls', 'Beilage nach Wahl: Reis oder Pommes. 1 Sauce inklusive, jede weitere +0,80 €.', 19],
+      ['Pizza Brötchen', 'pizza-broetchen', '6 oder 12 Stück. Inklusive 1 Sauce nach Wahl.', 20],
     ];
     for (const c of categories) {
       await query(
@@ -1061,6 +1062,43 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Bowls Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Pizza Brötchen 2026-09-05: Kategorie anlegen (falls fehlend) + 7 Sorten per Upsert (idempotent)
+  // 6 oder 12 Stück, inklusive 1 Sauce nach Wahl
+  try {
+    let broetchenCat = await get("SELECT * FROM categories WHERE slug = 'pizza-broetchen'");
+    if (!broetchenCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Pizza Brötchen', 'pizza-broetchen', '6 oder 12 Stück. Inklusive 1 Sauce nach Wahl.', 20]
+      );
+      broetchenCat = await get("SELECT * FROM categories WHERE slug = 'pizza-broetchen'");
+    }
+    if (broetchenCat) {
+      await query('UPDATE categories SET name = $1, description = $2, sort_order = 20, active = 1 WHERE id = $3',
+        ['Pizza Brötchen', '6 oder 12 Stück. Inklusive 1 Sauce nach Wahl.', broetchenCat.id]);
+      const S612 = (a, b) => JSON.stringify([{ label: '6 Stück', price: a }, { label: '12 Stück', price: b }]);
+      const broetchen = [
+        ['① Pizza Brötchen Käse', 'pizza-broetchen-kaese', 'Käse · Tomatensauce', 6.90, 'Käse · Tomatensauce', 1, 1, '/images/products/img7.jpg', S612(6.90, 11.90)],
+        ['② Pizza Brötchen Schinken', 'pizza-broetchen-schinken', 'Schinken · Käse', 7.90, 'Schinken · Käse', 0, 2, '/images/products/img8.jpg', S612(7.90, 13.90)],
+        ['③ Pizza Brötchen Pute', 'pizza-broetchen-pute', 'Putenbrust · Käse', 7.90, 'Putenbrust · Käse', 0, 3, '/images/products/img9.jpg', S612(7.90, 13.90)],
+        ['④ Pizza Brötchen Salami', 'pizza-broetchen-salami', 'Salami · Käse', 7.90, 'Salami · Käse', 0, 4, '/images/products/img7.jpg', S612(7.90, 13.90)],
+        ['⑤ Pizza Brötchen Sucuk', 'pizza-broetchen-sucuk', 'Sucuk · Käse · Zwiebeln', 8.50, 'Sucuk · Käse · Zwiebeln', 0, 5, '/images/products/img8.jpg', S612(8.50, 14.90)],
+        ['⑥ Pizza Brötchen Thunfisch', 'pizza-broetchen-thunfisch', 'Thunfisch · Käse · Zwiebeln', 8.50, 'Thunfisch · Käse · Zwiebeln', 0, 6, '/images/products/img9.jpg', S612(8.50, 14.90)],
+        ['⑦ Pizza Brötchen Hähnchen', 'pizza-broetchen-haehnchen', 'Hähnchen · Käse · Paprika', 8.90, 'Hähnchen · Käse · Paprika', 0, 7, '/images/products/img7.jpg', S612(8.90, 15.90)],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of broetchen) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+          [broetchenCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Pizza-Brötchen Auto-Migration übersprungen:', e.message);
   }
 
   // Hero-Preise als Single Source (nur Anzeigen): Deal-Produkte von den Slide-Preisen ableiten
