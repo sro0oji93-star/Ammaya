@@ -136,3 +136,56 @@
 }
 .footer h4,
 .footer-logo { color: var(--secondary, #f5d67b) !important; }
+
+/* ============================================================
+   Yummi base elements follow the admin colors (frontend only,
+   scoped to #mad-page-wrapper so the admin panel is untouched)
+   ============================================================ */
+/* all solid buttons: admin primary, dark text */
+#mad-page-wrapper .btn:not(.btn-outline):not(.btn-link) {
+  background: var(--primary, #d4af37) !important;
+  background: linear-gradient(135deg, var(--secondary, #f5d67b) 0%, var(--primary, #d4af37) 60%, var(--accent, #9c7c1a) 100%) !important;
+  color: #0a0a0a !important;
+  border: none !important;
+}
+#mad-page-wrapper .btn:not(.btn-outline):not(.btn-link):hover {
+  -webkit-box-shadow: 2px 6px 0px 0px rgba(212,175,55,.4), 0 8px 28px rgba(212,175,55,.45) !important;
+  box-shadow: 2px 6px 0px 0px color-mix(in srgb, var(--primary, #d4af37) 40%, transparent), 0 8px 28px color-mix(in srgb, var(--primary, #d4af37) 45%, transparent) !important;
+  color: #0a0a0a !important;
+  transform: translateY(-2px);
+}
+/* no dark-red hover on primary buttons (cart / checkout) */
+#mad-page-wrapper .btn-primary:hover {
+  background: var(--accent, #9c7c1a) !important;
+  background: linear-gradient(135deg, var(--primary, #d4af37), var(--accent, #9c7c1a)) !important;
+  color: #fff !important;
+}
+/* header cart circle: admin primary instead of red */
+#mad-page-wrapper .mad-actions .mad-item-link {
+  background: var(--primary, #d4af37) !important;
+  color: #0a0a0a !important;
+}
+#mad-page-wrapper .mad-actions .mad-item-link:hover {
+  background: var(--secondary, #f5d67b) !important;
+  color: #0a0a0a !important;
+}
+#mad-page-wrapper .mad-cart-count {
+  background: #0a0a0a !important;
+  color: var(--primary, #d4af37) !important;
+}
+/* category cards: gold hover instead of fixed yellow */
+#mad-page-wrapper .mad-menu-box .mad-menu-item:hover,
+#mad-page-wrapper .mad-tabs .mad-active .mad-menu-item {
+  background: var(--primary, #d4af37) !important;
+}
+/* kill leftover red SVG fills on hover/active */
+#mad-page-wrapper .mad-menu-box .mad-menu-item:hover .svg .cls-1,
+#mad-page-wrapper .mad-tabs .mad-active .mad-menu-icon .svg path {
+  fill: #0a0a0a !important;
+}
+#mad-page-wrapper .mad-menu-box .mad-menu-item:hover .svg .cls-2 {
+  stroke: #0a0a0a !important;
+}
+#mad-page-wrapper .shopping-cart {
+  background: var(--primary, #d4af37) !important;
+}
