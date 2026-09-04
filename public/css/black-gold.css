@@ -1,0 +1,440 @@
+/* ============================================================
+   Ammaya — Black & Gold Theme Override
+   Loaded AFTER yummi-full.css + style.css
+   Palette:
+     --gold: #d4af37 | --gold-light: #f5d67b | --gold-dark: #9c7c1a
+     --black: #0a0a0a | --black2: #111111 | --black3: #1a1a1a
+   ============================================================ */
+:root {
+  --primary: #d4af37 !important;
+  --secondary: #f5d67b !important;
+  --gold: #d4af37;
+  --gold-light: #f5d67b;
+  --gold-dark: #9c7c1a;
+  --black: #0a0a0a;
+  --black2: #111111;
+  --black3: #1a1a1a;
+  --border-dark: #2a2a2a;
+}
+
+/* ---------- Base ---------- */
+html { background: #0a0a0a; }
+body {
+  background: #0a0a0a !important;
+  color: #f5f1e6 !important;
+}
+a { color: var(--gold); }
+a:hover { color: var(--gold-light); }
+
+/* ---------- Headings / text (was #232223) ---------- */
+.section-title,
+.menu-category-title,
+.menu-card-title,
+.menu-spec-title,
+.tab-item-body h4,
+.news-card-body h5,
+.news-card-body h5 a,
+.how-step h5,
+.feature-item h6,
+.category-icon-card h6,
+.checkout-card h3,
+.cart-summary h3,
+.contact-card h3,
+.contact-social h3,
+.contact-form h2,
+.confirmation-header h2,
+.product-detail-info h2,
+.newsletter-section h4,
+.mad-logo-text,
+.footer-logo,
+.cart-empty h3,
+.cart-item-info h4,
+.testimonial-text,
+.testimonial-slide-text,
+.page-hero-title {
+  color: #f5f1e6 !important;
+}
+.page-hero-title { color: #f5f1e6 !important; }
+.section-desc,
+.menu-category-desc,
+.menu-card-desc,
+.menu-spec-desc,
+.tab-item-body p,
+.news-card-body p,
+.feature-item p,
+.how-step p,
+.app-section p,
+.newsletter-section p,
+.contact-card p,
+.confirmation-header p,
+.product-detail-desc,
+.cart-empty p,
+.summary-row,
+.form-group label,
+.checkout-note,
+.footer-desc {
+  color: #b9b3a4 !important;
+}
+
+/* ---------- Sections: light beige/white -> black ---------- */
+.about-section,
+.categories-section,
+.tabbed-menu-section,
+.how-it-works,
+.features-strip,
+.app-section,
+.news-section,
+.testimonials-section,
+.testimonials-carousel,
+.menu-section,
+.cart-section,
+.checkout-section,
+.contact-section,
+.confirmation-section,
+.product-detail-section,
+.related-section,
+.newsletter-section,
+.banner-section,
+.map-section {
+  background: #0a0a0a !important;
+}
+.menu-section,
+.cart-section,
+.checkout-section,
+.contact-section {
+  background: #0a0a0a !important;
+}
+
+/* page hero (menu/kontakt/...) */
+.page-hero {
+  background-color: #111111 !important;
+}
+.page-hero-subtitle { color: #b9b3a4 !important; }
+.page-hero-badge {
+  color: var(--gold-light) !important;
+  border-color: rgba(212,175,55,.5) !important;
+}
+.menu-breadcrumb a { color: var(--gold) !important; }
+
+/* ---------- Cards: white -> dark ---------- */
+.menu-card,
+.tab-item,
+.news-card,
+.testimonial-card,
+.testimonial-slide,
+.category-icon-card,
+.feature-item,
+.how-step,
+.contact-card,
+.contact-social,
+.contact-form-container,
+.checkout-card,
+.cart-summary,
+.cart-item,
+.confirmation-card,
+.banner-slide,
+.menu-empty,
+.about-stat,
+.product-detail-ingredients,
+.newsletter-section,
+.cart-toast {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+  color: #f5f1e6 !important;
+}
+.menu-card:hover,
+.tab-item:hover,
+.news-card:hover,
+.category-icon-card:hover {
+  border-color: var(--gold) !important;
+  box-shadow: 0 8px 40px rgba(212,175,55,.15) !important;
+}
+.tab-item-image,
+.news-card-image,
+.menu-card-image,
+.menu-spec-img,
+.product-detail-img,
+.cart-item-image {
+  background: #1a1a1a !important;
+}
+.about-image-content {
+  background: #111111 !important;
+}
+.about-image-content p { color: #f5f1e6 !important; }
+.about-image-frame { background: var(--gold) !important; }
+.about-image-deco { border-color: var(--gold) !important; }
+
+/* menu spec list */
+.menu-spec-item { border-bottom-color: #2a2a2a !important; }
+.menu-spec-line { border-bottom-color: #4a4128 !important; }
+.menu-spec-price,
+.tab-item-price,
+.price-current,
+.stat-number,
+.summary-total span:last-child,
+.cart-item-total {
+  color: var(--gold) !important;
+}
+.price-old { color: #8a8578 !important; }
+
+/* ---------- Filters / tabs ---------- */
+.filter-btn,
+.tab-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #b9b3a4 !important;
+}
+.filter-btn.active, .filter-btn:hover,
+.tab-btn.active, .tab-btn:hover {
+  background: var(--gold) !important;
+  border-color: var(--gold) !important;
+  color: #0a0a0a !important;
+}
+
+/* ---------- Buttons: yellow #ebe117 -> gold ---------- */
+.btn-yellow,
+.hero-actions .btn-yellow,
+.cta-section .btn-yellow,
+.btn-primary.btn-yellow {
+  background: var(--gold) !important;
+  color: #0a0a0a !important;
+  border-right-color: var(--gold-dark) !important;
+  border-bottom-color: var(--gold-dark) !important;
+}
+.btn-yellow:hover,
+.hero-actions .btn-yellow:hover,
+.cta-section .btn-yellow:hover {
+  background: var(--gold-light) !important;
+  color: #0a0a0a !important;
+}
+.btn-primary,
+.tab-item-btn,
+.newsletter-form button {
+  background: var(--gold) !important;
+  color: #0a0a0a !important;
+}
+.btn-primary:hover,
+.tab-item-btn:hover,
+.newsletter-form button:hover {
+  background: var(--gold-dark) !important;
+  color: #fff !important;
+}
+.btn-outline {
+  border-color: #f5f1e6 !important;
+  color: #f5f1e6 !important;
+}
+.btn-outline:hover {
+  background: var(--gold) !important;
+  border-color: var(--gold) !important;
+  color: #0a0a0a !important;
+}
+.hero-actions .btn-outline {
+  border-color: var(--gold) !important;
+  color: var(--gold-light) !important;
+}
+.hero-actions .btn-outline:hover {
+  background: var(--gold) !important;
+  color: #0a0a0a !important;
+}
+
+/* badges / prices that were #ebe117 */
+.menu-card-badge,
+.product-detail-badge,
+.hero-price,
+.mad-logo-text::first-letter {
+  color: var(--gold) !important;
+}
+.hero-price {
+  text-shadow: 3px 3px 0 rgba(0,0,0,.8), 5px 5px 0 rgba(156,124,26,.6) !important;
+}
+.footer-decoration span,
+.footer-contact i,
+.testimonial-stars i.active,
+.testimonial-slide-stars i {
+  color: var(--gold) !important;
+}
+.mad-logo-text::after {
+  background: linear-gradient(90deg, var(--gold) 30%, var(--gold-light) 70%) !important;
+}
+
+/* red #b8001f / rgba(235,0,41...) -> gold-dark */
+.menu-card-cart,
+.how-step-number,
+.testimonial-avatar,
+.testimonial-slide-avatar,
+.mad-cart-count,
+.header-avatar {
+  background: var(--gold) !important;
+  color: #0a0a0a !important;
+}
+.how-step-number::after { background: var(--gold-light) !important; }
+.category-icon-card .icon-wrap,
+.feature-item .icon-wrap,
+.contact-icon,
+.social-link-lg {
+  background: rgba(212,175,55,.12) !important;
+}
+.category-icon-card .icon-wrap i,
+.category-icon-card .icon-wrap span,
+.feature-item .icon-wrap i,
+.contact-icon i,
+.social-link-lg {
+  color: var(--gold) !important;
+}
+.category-icon-card:hover .icon-wrap { background: var(--gold) !important; }
+.category-icon-card:hover .icon-wrap i,
+.category-icon-card:hover .icon-wrap span { color: #0a0a0a !important; }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.coupon-input input:focus,
+.newsletter-form input:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px rgba(212,175,55,.15) !important;
+}
+.payment-option input:checked + .payment-option-content {
+  border-color: var(--gold) !important;
+  background: rgba(212,175,55,.08) !important;
+}
+.carousel-dot.active { background: var(--gold) !important; }
+.carousel-arrow:hover {
+  background: var(--gold) !important;
+  border-color: var(--gold) !important;
+  color: #0a0a0a !important;
+}
+.app-btn { background: #1a1a1a !important; border: 1px solid #2a2a2a; color: #f5f1e6 !important; }
+.app-btn:hover { background: var(--gold) !important; color: #0a0a0a !important; }
+
+/* ---------- Forms / inputs ---------- */
+.form-group input,
+.form-group select,
+.form-group textarea,
+.coupon-input input,
+.newsletter-form input,
+.quantity-selector {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #f5f1e6 !important;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.newsletter-form input::placeholder { color: #8a8578 !important; }
+.payment-option-content {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+}
+.payment-option-content strong { color: #f5f1e6 !important; }
+.payment-option-content span { color: #b9b3a4 !important; }
+.summary-row span:last-child { color: #f5f1e6 !important; }
+.summary-divider,
+.confirmation-details,
+#checkoutItems .checkout-item,
+.admin-table td,
+.admin-table th { border-color: #2a2a2a !important; }
+#checkoutItems .checkout-item-name { color: #f5f1e6 !important; }
+.alert-error {
+  background: rgba(212,175,55,.08) !important;
+  border-color: rgba(212,175,55,.25) !important;
+  color: var(--gold-light) !important;
+}
+
+/* ---------- Header (yummi) ---------- */
+.mad-pre-header {
+  background: #0a0a0a !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  color: #b9b3a4 !important;
+}
+.mad-pre-header a { color: #b9b3a4 !important; }
+.mad-pre-header a:hover { color: var(--gold) !important; }
+#mad-header,
+.mad-header-section--sticky-xl {
+  background: rgba(10,10,10,.96) !important;
+  border-bottom: 1px solid rgba(212,175,55,.2) !important;
+}
+.mad-navigation a,
+.mad-navigation .menu-item a { color: #f5f1e6 !important; }
+.mad-navigation .current-menu-item a,
+.mad-navigation a:hover { color: var(--gold) !important; }
+.mad-info-title,
+.mad-logo-text { color: #f5f1e6 !important; }
+.mad-info,
+.mad-info-content span { color: #b9b3a4 !important; }
+.mad-mobile-nav-btn { filter: invert(85%); }
+
+/* mobile nav */
+.nav-menu { background: #111111 !important; }
+.nav-link { color: #f5f1e6 !important; }
+.nav-link:hover { color: var(--gold) !important; }
+@media (max-width: 768px) {
+  .nav-menu { background: #111111 !important; box-shadow: -10px 0 40px rgba(0,0,0,.6) !important; }
+  .homepage .nav-menu { background: #111111 !important; }
+  .homepage .nav-link { color: #f5f1e6 !important; }
+}
+
+/* ---------- Hero / CTA ---------- */
+.hero-overlay { background: linear-gradient(135deg, rgba(0,0,0,.85), rgba(0,0,0,.45)) !important; }
+.cta-section { background: linear-gradient(135deg, #0a0a0a, #1a1a1a) !important; border-top: 1px solid rgba(212,175,55,.25); border-bottom: 1px solid rgba(212,175,55,.25); }
+.create-section { background-color: #0a0a0a !important; }
+
+/* ---------- Footer ---------- */
+.footer {
+  background: #060606 !important;
+  border-top: 2px solid rgba(212,175,55,.35) !important;
+}
+.footer h4,
+.footer-logo { color: var(--gold-light) !important; }
+.footer-links a:hover,
+.footer-contact a:hover { color: var(--gold) !important; }
+.social-link { background: rgba(212,175,55,.1) !important; color: var(--gold) !important; }
+.social-link:hover { background: var(--gold) !important; color: #0a0a0a !important; }
+.footer-bottom { border-top-color: rgba(212,175,55,.15) !important; }
+.footer-heart { color: var(--gold) !important; }
+
+/* ---------- Yummi overrides (yummi-full.css was light) ---------- */
+.mad-section,
+.mad-section--stretched,
+.mad-product,
+.mad-menu-box,
+.mad-testimonial,
+.mad-news {
+  background-color: #0a0a0a !important;
+  color: #f5f1e6 !important;
+}
+
+/* ---------- Admin: Black & Gold ---------- */
+.admin-container { background: #0a0a0a; }
+body:has(.admin-container) { background: #0a0a0a !important; color: #f5f1e6 !important; }
+.admin-sidebar {
+  background: #111111 !important;
+  border-right: 1px solid rgba(212,175,55,.2) !important;
+}
+.sidebar-header { border-bottom-color: #2a2a2a !important; }
+.sidebar-header h2 { color: var(--gold-light) !important; }
+.sidebar-badge {
+  background: rgba(212,175,55,.12) !important;
+  color: var(--gold) !important;
+}
+.sidebar-logo { color: var(--gold) !important; }
+.nav-item { color: #b9b3a4 !important; }
+.nav-item:hover, .nav-item.active {
+  background: rgba(212,175,55,.1) !important;
+  color: var(--gold) !important;
+}
+.admin-header {
+  background: #111111 !important;
+  border-bottom: 1px solid #2a2a2a !important;
+}
+.admin-header h1 { color: #f5f1e6 !important; }
+.admin-content { background: #0a0a0a !important; }
+.stat-card,
+.table-container,
+.admin-card {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+.stat-card:hover { border-color: var(--gold) !important; }
+.stat-value { color: #f5f1e6 !important; }
+.stat-label { color: #b9b3a4 !important; }
+.admin-table th { background: #1a1a1a !important; color: #b9b3a4 !important; }
+.admin-table td { color: #f5f1e6 !important; }
+.admin-table tr:hover td { background: rgba(212,175,55,.05) !important; }

@@ -17,10 +17,10 @@
           </div>
           <div style="margin-top:20px;display:flex;gap:20px;flex-wrap:wrap">
             <% if (slide.price1) { %>
-            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 var(--primary),4px 4px 0 var(--primary);line-height:1"><%= slide.price1 %><% if (slide.price1_cents) { %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price1_cents %></span><% } %> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 var(--primary),3px 3px 0 var(--primary)"><%= slide.price1_tag || 'ABHOLUNG' %></span></span>
+            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#d4af37;text-shadow:3px 3px 0 var(--primary),4px 4px 0 var(--primary);line-height:1"><%= slide.price1 %><% if (slide.price1_cents) { %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price1_cents %></span><% } %> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#d4af37;text-shadow:2px 2px 0 var(--primary),3px 3px 0 var(--primary)"><%= slide.price1_tag || 'ABHOLUNG' %></span></span>
             <% } %>
             <% if (slide.price2) { %>
-            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#ebe117;text-shadow:3px 3px 0 var(--primary),4px 4px 0 var(--primary);line-height:1"><%= slide.price2 %><% if (slide.price2_cents) { %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price2_cents %></span><% } %> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#ebe117;text-shadow:2px 2px 0 var(--primary),3px 3px 0 var(--primary)"><%= slide.price2_tag || 'LIEFERUNG' %></span></span>
+            <span style="font-family:'Josefin Sans',sans-serif;font-size:clamp(36px,5vw,85px);font-weight:700;font-style:italic;color:#d4af37;text-shadow:3px 3px 0 var(--primary),4px 4px 0 var(--primary);line-height:1"><%= slide.price2 %><% if (slide.price2_cents) { %><span style="font-size:clamp(20px,2.5vw,48px)"><%= slide.price2_cents %></span><% } %> <span style="display:block;font-size:clamp(10px,0.9vw,15px);font-weight:700;color:#d4af37;text-shadow:2px 2px 0 var(--primary),3px 3px 0 var(--primary)"><%= slide.price2_tag || 'LIEFERUNG' %></span></span>
             <% } %>
           </div>
           <p style="margin-top:15px;font-size:16px;color:rgba(255,255,255,.85);max-width:80%"><%= slide.description || '' %></p>
@@ -30,7 +30,7 @@
           <% if (heroDeal && heroDeal.sizes) { var heroSizes = JSON.parse(heroDeal.sizes); %>
           <div class="hero-deal-picker" data-deal-id="<%= heroDeal.id %>" style="margin-top:22px;display:flex;gap:8px;flex-wrap:wrap">
             <% heroSizes.forEach(function(s, si) { %>
-            <label style="cursor:pointer;padding:8px 18px;border:2px solid <%= si === 0 ? '#ebe117' : 'rgba(255,255,255,.5)' %>;border-radius:12px;font-size:14px;background:<%= si === 0 ? 'rgba(235,225,23,.15)' : 'rgba(255,255,255,.08)' %>;color:#fff;font-weight:700">
+            <label style="cursor:pointer;padding:8px 18px;border:2px solid <%= si === 0 ? '#d4af37' : 'rgba(255,255,255,.5)' %>;border-radius:12px;font-size:14px;background:<%= si === 0 ? 'rgba(212,175,55,.15)' : 'rgba(255,255,255,.08)' %>;color:#fff;font-weight:700">
               <input type="radio" name="hero_size_<%= slide.id || idx %>" value="<%= s.price %>" data-label="<%= s.label %>" style="display:none" <%= si === 0 ? 'checked' : '' %>>
               <%= s.label %> · <%= s.price.toFixed(2).replace('.', ',') %> €
             </label>
@@ -107,7 +107,7 @@
           l.style.background = 'rgba(255,255,255,.08)';
         });
         var label = this.closest('label');
-        if (label) { label.style.borderColor = '#ebe117'; label.style.background = 'rgba(235,225,23,.15)'; }
+        if (label) { label.style.borderColor = '#d4af37'; label.style.background = 'rgba(212,175,55,.15)'; }
       });
     });
   });
