@@ -150,7 +150,7 @@ async function initialize() {
       price2_tag TEXT DEFAULT 'LIEFERUNG',
       description TEXT DEFAULT '',
       button_text TEXT DEFAULT 'JETZT BESTELLEN',
-      button_link TEXT DEFAULT '/speisekarte',
+      button_link TEXT DEFAULT '/warenkorb',
       bg_image TEXT DEFAULT '/images/revolution/6cbea-bg1.jpg',
       main_image TEXT DEFAULT '/images/revolution/75ec1-big1.png',
       drink_tl TEXT DEFAULT '/images/revolution/f13af-big3.png',
@@ -650,6 +650,13 @@ async function initialize() {
     console.error('Kids Menü Auto-Migration übersprungen:', e.message);
   }
 
+  // Hero-Buttons (JETZT BESTELLEN) führen in den Warenkorb (nur Standard-Links anfassen)
+  try {
+    await query("UPDATE hero_slides SET button_link = '/warenkorb' WHERE button_link = '/speisekarte'");
+  } catch (e) {
+    console.error('Hero-Button-Migration übersprungen:', e.message);
+  }
+
   // Auto-Migration Milkshake 2026-09-04: Kategorie anlegen (falls fehlend) + 5 Shakes per Upsert (idempotent)
   try {
     let shakeCat = await get("SELECT * FROM categories WHERE slug = 'milkshake'");
@@ -905,7 +912,7 @@ async function initialize() {
       price2_tag TEXT DEFAULT '',
       description TEXT DEFAULT '',
       button_text TEXT DEFAULT 'JETZT BESTELLEN',
-      button_link TEXT DEFAULT '/speisekarte',
+      button_link TEXT DEFAULT '/warenkorb',
       bg_image TEXT DEFAULT '',
       main_image TEXT DEFAULT '',
       drink_tl TEXT DEFAULT '',
@@ -918,8 +925,8 @@ async function initialize() {
   // Seed default hero slides
   const existingSlides = await query('SELECT COUNT(*) as cnt FROM hero_slides');
   if (existingSlides.rows[0].cnt === 0) {
-    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (0, '1 GROSSE', 'PIZZA', '+ 4 GETRÄNKE', '19', ',99€', 'ABHOLUNG', '21', ',99€', 'LIEFERUNG', 'Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!', 'JETZT BESTELLEN', '/speisekarte', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/75ec1-big1.png', '/images/revolution/f13af-big3.png', '/images/revolution/d70da-big4.png', '/images/revolution/96fdd-big6.png')`);
-    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (1, 'MIX OR MATCH', 'COMBO DEAL', 'SPECIAL', '9', ',99€', 'ABHOLUNG', '11', ',99€', 'LIEFERUNG', 'Includes 1 burger, 1 small fries, 1 dip and 1 drink (330ml)', 'JETZT BESTELLEN', '/speisekarte', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/5b6b6-burger.png', '/images/revolution/5fb1e-glass.png', '/images/revolution/6e11b-donut3.png', '/images/revolution/f1de6-donut2.png')`);
+    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (0, '1 GROSSE', 'PIZZA', '+ 4 GETRÄNKE', '19', ',99€', 'ABHOLUNG', '21', ',99€', 'LIEFERUNG', 'Bestellen Sie eine große 3-Belag-Pizza und erhalten Sie 4 Getränke (330ml) gratis!', 'JETZT BESTELLEN', '/warenkorb', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/75ec1-big1.png', '/images/revolution/f13af-big3.png', '/images/revolution/d70da-big4.png', '/images/revolution/96fdd-big6.png')`);
+    await query(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES (1, 'MIX OR MATCH', 'COMBO DEAL', 'SPECIAL', '9', ',99€', 'ABHOLUNG', '11', ',99€', 'LIEFERUNG', 'Includes 1 burger, 1 small fries, 1 dip and 1 drink (330ml)', 'JETZT BESTELLEN', '/warenkorb', '/images/revolution/6cbea-bg1.jpg', '/images/revolution/5b6b6-burger.png', '/images/revolution/5fb1e-glass.png', '/images/revolution/6e11b-donut3.png', '/images/revolution/f1de6-donut2.png')`);
   }
 }
 
