@@ -174,7 +174,7 @@ async function initialize() {
       ['Pizza', 'pizza', 'Steinofenpizza in 4 Größen: 26 cm, 30 cm, Familien Pizza und Party. Alle Pizzen in 26 cm und 30 cm auch als Calzone erhältlich.', 1],
       ['Burger', 'burger', 'Smash Burger frisch für dich gesmasht. Für nur 5,00 € Aufpreis als Menü: 4 Zwiebelringe oder Pommes und ein 0,33 l Softdrink nach Wahl.', 2],
       ['Croque', 'croque', 'Frisch überbackene Croques. Inklusive 1 Sauce nach Wahl.', 3],
-      ['Salat', 'salat', 'Frische Salatkreationen mit hausgemachten Dressings', 4],
+      ['Salat', 'salat', 'Frische Salate mit Dressing nach Wahl: Knoblauch, Hausdressing, Yoghurt, American, Kräuter.', 4],
       ['Pasta', 'pasta', 'Italienische Pastagerichte, traditionell und kreativ', 5],
       ['Schnitzel', 'schnitzel', 'Knusprige Schnitzelvariationen', 6],
       ['Snacks', 'snacks', 'Kleine Köstlichkeiten für den Hunger zwischendurch', 7],
@@ -251,8 +251,12 @@ async function initialize() {
       [3, 'NEXO Tuna', 'nexo-tuna', 'Thunfisch, Zwiebeln, Käse', 9.90, null, 'Thunfisch, Zwiebeln, Käse', 0, 26],
       [3, 'NEXO Beef BBQ', 'nexo-beef-bbq', 'Rindfleisch, Käse, BBQ-Sauce', 10.90, null, 'Rindfleisch, Käse, BBQ-Sauce', 1, 27],
       [3, 'NEXO Formaggi', 'nexo-formaggi', '4 Käsesorten', 10.50, null, '4 Käsesorten', 0, 28],
-      [4, 'Griechischer Salat', 'griechischer-salat', 'Frischer Salat mit Feta, Oliven, Gurken, Tomaten und Oregano-Dressing', 11.90, null, 'Feta, Oliven, Gurke, Tomate, Oregano', 1, 10],
-      [4, 'Caesar Salat', 'caesar-salat', 'Römersalat mit Hähnchen, Croutons, Parmesan und Caesar-Dressing', 12.90, null, 'Römersalat, Hähnchen, Croutons, Parmesan', 0, 11],
+      [4, 'Gemischter Salat', 'gemischter-salat', 'Eisbergsalat, Tomaten, Gurken, Mais. Dressing nach Wahl.', 7.90, null, 'Eisbergsalat, Tomaten, Gurken, Mais', 0, 1, null],
+      [4, 'Chicken Salat', 'chicken-salat', 'Gemischter Salat, gegrillte Hähnchenbrust. Dressing nach Wahl.', 10.90, null, 'Gemischter Salat, gegrillte Hähnchenbrust', 1, 2, null],
+      [4, 'Chef Salat', 'chef-salat', 'Gemischter Salat, Schinken, Thunfisch, gekochtes Ei. Dressing nach Wahl.', 11.90, null, 'Gemischter Salat, Schinken, Thunfisch, gekochtes Ei', 1, 3, null],
+      [4, 'Cheese Salat', 'cheese-salat', 'Gemischter Salat, 3 verschiedene Käsesorten. Dressing nach Wahl.', 10.90, null, 'Gemischter Salat, 3 verschiedene Käsesorten', 0, 4, null],
+      [4, 'Tuna Salat', 'tuna-salat', 'Gemischter Salat, Thunfisch, Zwiebeln, Oliven. Dressing nach Wahl.', 10.50, null, 'Gemischter Salat, Thunfisch, Zwiebeln, Oliven', 0, 5, null],
+      [4, 'Wunsch Salat', 'wunsch-salat', 'Gemischter Salat, 3 Zutaten nach Wahl. Dressing nach Wahl.', 11.90, null, 'Gemischter Salat, 3 Zutaten nach Wahl', 0, 6, null],
       [5, 'Spaghetti Bolognese', 'spaghetti-bolognese', 'Spaghetti mit hausgemachter Fleischsoße und Parmesan', 12.90, null, 'Spaghetti, Rinderhack, Tomaten, Parmesan', 1, 12],
       [5, 'Penne Arrabiata', 'penne-arrabiata', 'Penne in scharfer Tomatensoße mit Knoblauch und Chili', 10.90, null, 'Penne, Tomaten, Knoblauch, Chili', 0, 13],
       [6, 'Wiener Schnitzel', 'wiener-schnitzel', 'Kalbfleisch paniert und goldbraun gebraten, mit Preiselbeeren und Zitrone', 16.90, null, 'Kalbfleisch, Panade, Preiselbeeren, Zitrone', 1, 14],
@@ -504,6 +508,34 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Beilagen Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Salat 2026-09-04: 2 alte Salate löschen, 6 neue per Upsert (idempotent)
+  try {
+    const salatCat = await get("SELECT * FROM categories WHERE slug = 'salat'");
+    if (salatCat) {
+      await query('UPDATE categories SET description = $1 WHERE id = $2',
+        ['Frische Salate mit Dressing nach Wahl: Knoblauch, Hausdressing, Yoghurt, American, Kräuter.', salatCat.id]);
+      await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('griechischer-salat','caesar-salat')", [salatCat.id]);
+      const salate = [
+        ['Gemischter Salat', 'gemischter-salat', 'Eisbergsalat, Tomaten, Gurken, Mais. Dressing nach Wahl.', 7.90, 'Eisbergsalat, Tomaten, Gurken, Mais', 0, 1, '/images/products/img4.jpg', null],
+        ['Chicken Salat', 'chicken-salat', 'Gemischter Salat, gegrillte Hähnchenbrust. Dressing nach Wahl.', 10.90, 'Gemischter Salat, gegrillte Hähnchenbrust', 1, 2, '/images/products/img5.jpg', null],
+        ['Chef Salat', 'chef-salat', 'Gemischter Salat, Schinken, Thunfisch, gekochtes Ei. Dressing nach Wahl.', 11.90, 'Gemischter Salat, Schinken, Thunfisch, gekochtes Ei', 1, 3, '/images/products/img4.jpg', null],
+        ['Cheese Salat', 'cheese-salat', 'Gemischter Salat, 3 verschiedene Käsesorten. Dressing nach Wahl.', 10.90, 'Gemischter Salat, 3 verschiedene Käsesorten', 0, 4, '/images/products/img5.jpg', null],
+        ['Tuna Salat', 'tuna-salat', 'Gemischter Salat, Thunfisch, Zwiebeln, Oliven. Dressing nach Wahl.', 10.50, 'Gemischter Salat, Thunfisch, Zwiebeln, Oliven', 0, 5, '/images/products/img4.jpg', null],
+        ['Wunsch Salat', 'wunsch-salat', 'Gemischter Salat, 3 Zutaten nach Wahl. Dressing nach Wahl.', 11.90, 'Gemischter Salat, 3 Zutaten nach Wahl', 0, 6, '/images/products/img5.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of salate) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [salatCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Salat Auto-Migration übersprungen:', e.message);
   }
 
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)
