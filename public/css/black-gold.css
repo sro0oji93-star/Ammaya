@@ -438,3 +438,52 @@ body:has(.admin-container) { background: #0a0a0a !important; color: #f5f1e6 !imp
 .admin-table th { background: #1a1a1a !important; color: #b9b3a4 !important; }
 .admin-table td { color: #f5f1e6 !important; }
 .admin-table tr:hover td { background: rgba(212,175,55,.05) !important; }
+
+/* ---------- Hero / Ads slider: kill the red banner, pure Black & Gold ---------- */
+.mad-hero-animated,
+.hero.mad-hero-animated {
+  background: #0a0a0a !important;
+}
+.hero-slide-items {
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%, rgba(212,175,55,.16), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 20% 80%, rgba(212,175,55,.08), transparent 70%),
+    linear-gradient(135deg, #0a0a0a 0%, #141414 50%, #0a0a0a 100%) !important;
+}
+.hero-slide-items .hero-overlay {
+  background: linear-gradient(135deg, rgba(0,0,0,.55), rgba(0,0,0,.15)) !important;
+}
+.mad-hero-title {
+  text-shadow: 3px 3px 0 rgba(0,0,0,.9), 5px 5px 0 rgba(156,124,26,.55) !important;
+}
+.mad-hero-title span { color: #fff !important; }
+.hero-deal-price,
+[class*="hero"] [style*="ebe117"],
+.hero-slide-items [style*="color:#ebe117"] {
+  color: var(--gold) !important;
+}
+/* gold button, no red glow */
+[class*="btn"].btn-style-3 {
+  background: var(--gold) !important;
+  color: #0a0a0a !important;
+}
+[class*="btn"].btn-style-3:hover {
+  -webkit-box-shadow: 2px 6px 0px 0px rgba(212,175,55,.35) !important;
+  -moz-box-shadow: 2px 6px 0px 0px rgba(212,175,55,.35) !important;
+  box-shadow: 2px 6px 0px 0px rgba(212,175,55,.35) !important;
+}
+[class*="btn"].btn-style-4 {
+  background: var(--gold-dark) !important;
+  color: #fff !important;
+}
+/* hero deal pills: gold when selected */
+.hero-deal-picker label {
+  border-color: rgba(255,255,255,.5) !important;
+  background: rgba(255,255,255,.08) !important;
+  color: #fff !important;
+}
+.hero-deal-picker input:checked + span,
+.hero-deal-picker label:has(input:checked) {
+  border-color: var(--gold) !important;
+  background: rgba(212,175,55,.15) !important;
+}
