@@ -390,7 +390,7 @@ var Cart = (function() {
     summary.style.display = 'block';
 
     var pickupBanner = needsPickupOnly()
-      ? '<div style="margin-bottom:12px;padding:10px 14px;background:#fff5f5;border:1px solid var(--primary);border-radius:10px;font-size:13px;color:#b8001f;font-weight:600">Hinweis: Der Night Deal ist nur für Abholer – an der Kasse ist nur Abholung möglich (ohne Liefergebühr).</div>'
+      ? '<div style="margin-bottom:12px;padding:10px 14px;background:#241f0e;border:1px solid var(--primary);border-radius:10px;font-size:13px;color:var(--primary);font-weight:600">Hinweis: Der Night Deal ist nur für Abholer – an der Kasse ist nur Abholung möglich (ohne Liefergebühr).</div>'
       : '';
 
     list.innerHTML = pickupBanner + items.map(function(item) {
@@ -402,7 +402,7 @@ var Cart = (function() {
         }).join('') + '</div>';
       }
       var noteVal = item.note ? escapeHtml(item.note) : '';
-      var noteHtml = '<input type="text" class="co-note" data-key="' + escapeHtml(item._key) + '" value="' + noteVal + '" maxlength="200" placeholder="Anmerkung zu diesem Artikel…" style="margin-top:6px;width:100%;max-width:280px;padding:6px 10px;border:1px solid #e0e0e0;border-radius:8px;font-size:12px;background:#fffdf7">';
+      var noteHtml = '<input type="text" class="co-note" data-key="' + escapeHtml(item._key) + '" value="' + noteVal + '" maxlength="200" placeholder="Anmerkung zu diesem Artikel…" style="margin-top:6px;width:100%;max-width:280px;padding:6px 10px;border:1px solid #3a3a41;border-radius:8px;font-size:12px;color:#f0ead8;background:#1d1d21">';
       return '<div class="cart-item">' +
         '<div class="cart-item-image"><i class="fas fa-utensils"></i></div>' +
         '<div class="cart-item-info"><h4>' + nameHtml + '</h4>' + extrasHtml + noteHtml + '</div>' +

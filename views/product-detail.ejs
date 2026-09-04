@@ -40,7 +40,7 @@
                 <p class="mad-text-color-2 content-element">Größe wählen:</p>
                 <div class="size-picker-detail" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">
                   <% sizeData.forEach(function(s) { %>
-                  <label class="size-option-detail" style="cursor:pointer;padding:12px 20px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px;transition:all .25s ease;text-align:center;min-width:100px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.04);position:relative;overflow:hidden">
+                  <label class="size-option-detail" style="cursor:pointer;padding:12px 20px;border:2px solid #3a3a41;border-radius:12px;font-size:15px;transition:all .25s ease;text-align:center;min-width:100px;background:#1d1d21;color:#f0ead8;box-shadow:0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:hidden">
                     <input type="radio" name="detailSize" value="<%= s.price %>" data-label="<%= s.label %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:16px;margin-bottom:4px"><%= s.label %></span>
                     <span style="display:block;color:var(--primary);font-weight:700;font-size:15px"><%= s.price.toFixed(2) %> €</span>
@@ -151,30 +151,38 @@ window.PIZZA_EXTRA_PRICES = <%- JSON.stringify(pizzaExtras.prices) %>;
 (function() {
   var picker = document.querySelector('.size-picker-detail');
   if (!picker) return;
+  function paintSelected(label) {
+    label.style.borderColor = 'var(--primary)';
+    label.style.background = '#2a230f';
+    label.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.25)';
+    label.dataset.selected = '1';
+  }
+  function paintPlain(l) {
+    l.style.borderColor = '#3a3a41';
+    l.style.background = '#1d1d21';
+    l.style.boxShadow = '0 2px 8px rgba(0,0,0,0.4)';
+    delete l.dataset.selected;
+  }
   var first = picker.querySelector('input[type="radio"]');
   if (first) {
     var label = first.closest('.size-option-detail');
-    if (label) { label.style.borderColor = 'var(--primary)'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
+    if (label) paintSelected(label);
   }
   picker.querySelectorAll('input[type="radio"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
-      picker.querySelectorAll('.size-option-detail').forEach(function(l) {
-        l.style.borderColor = '#e0e0e0';
-        l.style.background = '#fff';
-        l.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
-      });
+      picker.querySelectorAll('.size-option-detail').forEach(function(l) { paintPlain(l); });
       var label = this.closest('.size-option-detail');
-      if (label) { label.style.borderColor = 'var(--primary)'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
+      if (label) paintSelected(label);
       var priceEl = document.getElementById('detailPrice');
       if (priceEl) priceEl.textContent = parseFloat(this.value).toFixed(2) + ' €';
     });
   });
   picker.querySelectorAll('.size-option-detail').forEach(function(l) {
     l.addEventListener('mouseenter', function() {
-      if (this.style.borderColor !== 'rgb(235, 0, 41)') { this.style.borderColor = '#ccc'; }
+      if (!this.dataset.selected) { this.style.borderColor = '#6b6455'; }
     });
     l.addEventListener('mouseleave', function() {
-      if (this.style.borderColor !== 'rgb(235, 0, 41)') { this.style.borderColor = '#e0e0e0'; }
+      if (!this.dataset.selected) { this.style.borderColor = '#3a3a41'; }
     });
   });
 })();

@@ -128,7 +128,7 @@
                 <% if (p.sizes) { var sizeData = JSON.parse(p.sizes); %>
                 <div class="size-picker" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
                   <% sizeData.forEach(function(s) { %>
-                  <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:13px;transition:all .25s ease;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.04);text-align:center">
+                  <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #3a3a41;border-radius:10px;font-size:13px;transition:all .25s ease;background:#1d1d21;color:#f0ead8;box-shadow:0 1px 4px rgba(0,0,0,0.4);text-align:center">
                     <input type="radio" name="size_<%= p.id %>" value="<%= s.price %>" data-label="<%= s.label %>" data-id="<%= p.id %>" data-name="<%= p.name %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:13px"><%= s.label %></span>
                     <span style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
@@ -166,7 +166,7 @@
                 <% if (p.sizes) { var sizeData = JSON.parse(p.sizes); %>
                 <div class="size-picker" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
                   <% sizeData.forEach(function(s) { %>
-                  <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:13px;transition:all .25s ease;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.04);text-align:center">
+                  <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #3a3a41;border-radius:10px;font-size:13px;transition:all .25s ease;background:#1d1d21;color:#f0ead8;box-shadow:0 1px 4px rgba(0,0,0,0.4);text-align:center">
                     <input type="radio" name="size_<%= p.id %>" value="<%= s.price %>" data-label="<%= s.label %>" data-id="<%= p.id %>" data-name="<%= p.name %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:13px"><%= s.label %></span>
                     <span style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
@@ -211,29 +211,37 @@ window.addEventListener('load', function(){
 </script>
 <script>
 document.querySelectorAll('.size-picker').forEach(function(picker) {
+  function paintSelected(label) {
+    label.style.borderColor = 'var(--primary)';
+    label.style.background = '#2a230f';
+    label.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.25)';
+    label.dataset.selected = '1';
+  }
+  function paintPlain(l) {
+    l.style.borderColor = '#3a3a41';
+    l.style.background = '#1d1d21';
+    l.style.boxShadow = '0 1px 4px rgba(0,0,0,0.4)';
+    delete l.dataset.selected;
+  }
   var first = picker.querySelector('input[type="radio"]');
   if (first) {
     var label = first.closest('.size-option');
-    if (label) { label.style.borderColor = 'var(--primary)'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
+    if (label) paintSelected(label);
   }
   picker.querySelectorAll('input[type="radio"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
-      picker.querySelectorAll('.size-option').forEach(function(l) {
-        l.style.borderColor = '#e0e0e0';
-        l.style.background = '#fff';
-        l.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)';
-      });
+      picker.querySelectorAll('.size-option').forEach(function(l) { paintPlain(l); });
       var label = this.closest('.size-option');
-      if (label) { label.style.borderColor = 'var(--primary)'; label.style.background = '#fff5f5'; label.style.boxShadow = '0 0 0 3px rgba(235,0,41,0.15)'; }
+      if (label) paintSelected(label);
     });
   });
   // Hover effect
   picker.querySelectorAll('.size-option').forEach(function(l) {
     l.addEventListener('mouseenter', function() {
-      if (this.style.borderColor !== 'rgb(235, 0, 41)') { this.style.borderColor = '#ccc'; }
+      if (!this.dataset.selected) { this.style.borderColor = '#6b6455'; }
     });
     l.addEventListener('mouseleave', function() {
-      if (this.style.borderColor !== 'rgb(235, 0, 41)') { this.style.borderColor = '#e0e0e0'; }
+      if (!this.dataset.selected) { this.style.borderColor = '#3a3a41'; }
     });
   });
 });

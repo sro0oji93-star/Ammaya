@@ -1185,6 +1185,14 @@ async function initialize() {
     console.error('Phone-Migration übersprungen:', e.message);
   }
 
+  // Black & Gold Theme: Standard-Rot durch Gold ersetzen (nur wenn noch unberührt)
+  try {
+    await query("UPDATE settings SET value = '#d4af37' WHERE key = 'primary_color' AND value = '#eb0029'");
+    await query("UPDATE settings SET value = '#f5d67b' WHERE key = 'secondary_color' AND value = '#ff4d4d'");
+  } catch (e) {
+    console.error('Gold-Theme-Migration übersprungen:', e.message);
+  }
+
   // Logo aktivieren (nur wenn noch keins gesetzt ist)
   try {
     await query("UPDATE settings SET value = '/images/nexo-logo.png' WHERE key = 'logo_url' AND (value = '' OR value IS NULL)");
@@ -1213,8 +1221,8 @@ async function initialize() {
 
     ['about_title', 'Unsere Philosophie'],
     ['about_text', 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschließlich frische Zutaten und legen größten Wert auf Qualität.'],
-    ['primary_color', '#eb0029'],
-    ['secondary_color', '#ff4d4d'],
+    ['primary_color', '#d4af37'],
+    ['secondary_color', '#f5d67b'],
     ['logo_url', '/images/nexo-logo.png'],
     ['font_family', 'Inter'],
   ];
