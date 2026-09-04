@@ -185,6 +185,7 @@ async function initialize() {
       ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12],
       ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13],
       ['NEXO Box', 'nexo-box', 'Gemeinsam genießen & sparen.', 14],
+      ['Kids Menü', 'kids-menue', 'Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', 15],
     ];
     for (const c of categories) {
       await query(
@@ -326,6 +327,9 @@ async function initialize() {
       [14, 'BOX 1', 'box-1', '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 38.90, null, '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 1, 1, null],
       [14, 'BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snack Rolls nach Wahl, Pommes, 3 Saucen', 49.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snack Rolls, Pommes, Saucen', 0, 2, null],
       [14, 'BOX 3', 'box-3', 'Pizza Wunsch Ø 30 cm, 1 Cheeseburger oder 1 Chickenburger, Pasta Wunsch, Pommes, 2 Saucen', 38.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Pasta Wunsch, Pommes, Saucen', 0, 3, null],
+      [15, 'Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm, Margherita oder Salami', 7.90, null, 'Pizza, Margherita oder Salami', 1, 1, null],
+      [15, 'Kids Nuggets', 'kids-nuggets', '5 Chicken Nuggets, Pommes', 7.50, null, 'Chicken Nuggets, Pommes', 0, 2, null],
+      [15, 'Happy Fish', 'happy-fish', '4 Happy Fish, Pommes', 7.90, null, 'Fisch, Pommes', 0, 3, null],
     ];
     for (const p of products) {
       await query(
@@ -607,6 +611,37 @@ async function initialize() {
     }
   } catch (e) {
     console.error('NEXO Box Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Kids Menü 2026-09-04: Kategorie anlegen (falls fehlend) + 3 Menüs per Upsert (idempotent)
+  try {
+    let kidsCat = await get("SELECT * FROM categories WHERE slug = 'kids-menue'");
+    if (!kidsCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Kids Menü', 'kids-menue', 'Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', 15]
+      );
+      kidsCat = await get("SELECT * FROM categories WHERE slug = 'kids-menue'");
+    }
+    if (kidsCat) {
+      await query('UPDATE categories SET description = $1, sort_order = 15 WHERE id = $2',
+        ['Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', kidsCat.id]);
+      const kids = [
+        ['Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm, Margherita oder Salami', 7.90, 'Pizza, Margherita oder Salami', 1, 1, '/images/products/img1.jpg', null],
+        ['Kids Nuggets', 'kids-nuggets', '5 Chicken Nuggets, Pommes', 7.50, 'Chicken Nuggets, Pommes', 0, 2, '/images/products/img8.jpg', null],
+        ['Happy Fish', 'happy-fish', '4 Happy Fish, Pommes', 7.90, 'Fisch, Pommes', 0, 3, '/images/products/img9.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of kids) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [kidsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Kids Menü Auto-Migration übersprungen:', e.message);
   }
 
   // Auto-Migration Pasta 2026-09-04: 2 alte Pasta löschen, 14 NEXO-Pasta per Upsert (idempotent)
