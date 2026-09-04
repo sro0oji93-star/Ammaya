@@ -176,7 +176,7 @@ async function initialize() {
       ['Croque', 'croque', 'Frisch überbackene Croques. Inklusive 1 Sauce nach Wahl.', 3],
       ['Salat', 'salat', 'Frische Salate mit Dressing nach Wahl: Knoblauch, Hausdressing, Yoghurt, American, Kräuter.', 4],
       ['Pasta', 'pasta', 'Italienische Pastagerichte, traditionell und kreativ', 5],
-      ['Schnitzel', 'schnitzel', 'Knusprige Schnitzelvariationen', 6],
+      ['Schnitzel', 'schnitzel', 'Inklusive Pommes oder Kroketten.', 6],
       ['Snacks', 'snacks', 'Menü-Aufpreis +4,00 €: mit Pommes und 0,33 l Softdrink nach Wahl.', 7],
       ['Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8],
       ['Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9],
@@ -273,9 +273,10 @@ async function initialize() {
       [5, 'NEXO Hähnchen Genuss', 'nexo-haehnchen-genuss', 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 11.50, null, 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 0, 12, null],
       [5, 'NEXO Deluxe', 'nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, null, 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, null],
       [5, 'NEXO Signature', 'nexo-signature', 'Hähnchen, Mais, Brokkoli, Sahnesauce', 12.90, null, 'Hähnchen, Mais, Brokkoli, Sahnesauce', 0, 14, null],
-      [6, 'Wiener Schnitzel', 'wiener-schnitzel', 'Kalbfleisch paniert und goldbraun gebraten, mit Preiselbeeren und Zitrone', 16.90, null, 'Kalbfleisch, Panade, Preiselbeeren, Zitrone', 1, 14],
-      [6, 'Jägerschnitzel', 'jaegerschnitzel', 'Schweineschnitzel mit cremiger Pilzsoße und Pommes', 15.90, null, 'Schweinefleisch, Pilze, Sahne, Pommes', 0, 15],
-      [6, 'Zigeunerschnitzel', 'zigeunerschnitzel', 'Schnitzel mit bunter Paprika-Zwiebel-Soße und Reis', 15.90, null, 'Schweinefleisch, Paprika, Zwiebeln, Reis', 0, 16],
+      [6, 'Schnitzel Wiener Art', 'schnitzel-wiener-art', 'Schnitzel, Zitrone', 13.90, null, 'Schnitzel, Zitrone', 1, 1, null],
+      [6, 'Jägerschnitzel', 'jaegerschnitzel', 'Schnitzel, Champignons, Jägersauce', 15.90, null, 'Schnitzel, Champignons, Jägersauce', 0, 2, null],
+      [6, 'Zigeunerschnitzel', 'zigeunerschnitzel', 'Schnitzel, Paprika, Zwiebeln, Paprikasauce', 15.90, null, 'Schnitzel, Paprika, Zwiebeln, Paprikasauce', 0, 3, null],
+      [6, 'Schnitzel Hollandaise', 'schnitzel-hollandaise', 'Schnitzel, Brokkoli, Sauce Hollandaise', 16.90, null, 'Schnitzel, Brokkoli, Sauce Hollandaise', 1, 4, null],
       [7, 'Currywurst mit Pommes', 'currywurst-pommes', 'Mit Pommes', 8.90, null, 'Wurst, Curry, Pommes', 1, 1, null],
       [7, 'Chicken Nuggets', 'chicken-nuggets', '6 oder 12 Stück', 6.90, null, 'Hähnchen, Panade', 1, 2, '[{"label":"6 Stk.","price":6.9},{"label":"12 Stk.","price":10.9}]'],
       [7, 'Chicken Wings', 'chicken-wings', '6 oder 12 Stück', 7.90, null, 'Hähnchen', 0, 3, '[{"label":"6 Stk.","price":7.9},{"label":"12 Stk.","price":12.9}]'],
@@ -637,6 +638,32 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Pasta Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Schnitzel 2026-09-04: altes Wiener Schnitzel löschen, 4 neue per Upsert (idempotent)
+  try {
+    const schnitzelCat = await get("SELECT * FROM categories WHERE slug = 'schnitzel'");
+    if (schnitzelCat) {
+      await query('UPDATE categories SET description = $1 WHERE id = $2',
+        ['Inklusive Pommes oder Kroketten.', schnitzelCat.id]);
+      await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('wiener-schnitzel')", [schnitzelCat.id]);
+      const schnitzel = [
+        ['Schnitzel Wiener Art', 'schnitzel-wiener-art', 'Schnitzel, Zitrone', 13.90, 'Schnitzel, Zitrone', 1, 1, '/images/products/img16.jpg', null],
+        ['Jägerschnitzel', 'jaegerschnitzel', 'Schnitzel, Champignons, Jägersauce', 15.90, 'Schnitzel, Champignons, Jägersauce', 0, 2, '/images/products/img17.jpg', null],
+        ['Zigeunerschnitzel', 'zigeunerschnitzel', 'Schnitzel, Paprika, Zwiebeln, Paprikasauce', 15.90, 'Schnitzel, Paprika, Zwiebeln, Paprikasauce', 0, 3, '/images/products/img18.jpg', null],
+        ['Schnitzel Hollandaise', 'schnitzel-hollandaise', 'Schnitzel, Brokkoli, Sauce Hollandaise', 16.90, 'Schnitzel, Brokkoli, Sauce Hollandaise', 1, 4, '/images/products/img16.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of schnitzel) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [schnitzelCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Schnitzel Auto-Migration übersprungen:', e.message);
   }
 
   // Auto-Migration Salat 2026-09-04: 2 alte Salate löschen, 6 neue per Upsert (idempotent)
