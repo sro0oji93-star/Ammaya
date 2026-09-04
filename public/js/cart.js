@@ -514,6 +514,8 @@ document.addEventListener('DOMContentLoaded', function() {
       var items = Cart.getItems();
       if (items.length === 0) { alert('Ihr Warenkorb ist leer.'); return; }
 
+      var formData = new FormData(checkoutForm);
+
       if (!Cart.isValidPhone(formData.get('phone'))) {
         alert('Bitte geben Sie eine gültige Telefonnummer an (z. B. 0151 23456789).');
         var phoneInput = document.getElementById('phone');
@@ -521,7 +523,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      var formData = new FormData(checkoutForm);
       var data = {
         name: formData.get('name'),
         email: formData.get('email'),
