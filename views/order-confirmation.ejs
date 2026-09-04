@@ -39,6 +39,23 @@
           <strong><%= order.payment_method === 'bar' ? 'Barzahlung' : (order.payment_method === 'karte' ? 'Kartenzahlung' : 'Online-Zahlung') %></strong>
         </div>
       </div>
+      <% if (order.order_type === 'abholung') { %>
+      <div class="delivery-time-box">
+        <i class="fas fa-clock"></i>
+        <div>
+          <strong>Bereit in ca. 15–20 Minuten</strong>
+          <span>Ihre Bestellung wird frisch zubereitet und wartet dann auf Sie zur Abholung.</span>
+        </div>
+      </div>
+      <% } else { %>
+      <div class="delivery-time-box">
+        <i class="fas fa-motorcycle"></i>
+        <div>
+          <strong>Lieferung in ca. 45 Minuten bis 1 Stunde</strong>
+          <span>Ihre Bestellung wird frisch zubereitet und heiß zu Ihnen geliefert.</span>
+        </div>
+      </div>
+      <% } %>
       <div class="confirmation-actions">
         <a href="/" class="btn btn-primary">Zur Startseite</a>
         <a href="/speisekarte" class="btn btn-outline">Weiter bestellen</a>

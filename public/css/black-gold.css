@@ -130,6 +130,35 @@
 .mad-item-link { color: #f0ead8 !important; }
 .mad-item-link:hover { color: var(--primary, #d4af37) !important; }
 
+/* ---------- Order confirmation: preparation time box ---------- */
+.delivery-time-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 24px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--primary, #d4af37);
+  background: rgba(212,175,55,.08);
+  background: color-mix(in srgb, var(--primary, #d4af37) 8%, #fff);
+  text-align: left;
+}
+.delivery-time-box i {
+  font-size: 28px;
+  color: var(--primary, #d4af37);
+  flex-shrink: 0;
+}
+.delivery-time-box strong {
+  display: block;
+  font-size: 16px;
+  color: #232223;
+  margin-bottom: 2px;
+}
+.delivery-time-box span {
+  font-size: 13px;
+  color: #6b6b6b;
+}
+
 /* ---------- Footer: gold accents ---------- */
 .footer {
   border-top: 2px solid var(--primary, #d4af37) !important;
