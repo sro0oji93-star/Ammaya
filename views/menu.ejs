@@ -92,6 +92,9 @@
   <div class="mad-section">
     <div class="container">
       <h2 class="mad-page-title align-center"><%= cat.name %></h2>
+      <% if (cat.description) { %>
+      <p class="align-center" style="color:#7a7879;font-size:1.05rem;max-width:700px;margin:0 auto 10px auto"><%= cat.description %></p>
+      <% } %>
       <div class="content-element-7">
         <% if (catProducts.length === 0) { %>
         <p class="align-center" style="color:#7a7879;font-size:1.1rem;padding:20px 0">Bald verfügbar</p>
