@@ -963,6 +963,37 @@ async function initialize() {
     console.error('Hamburger-Deal Auto-Migration übersprungen:', e.message);
   }
 
+  // Auto-Migration Getränke 2026-09-05: alte Getränke durch Softgetränke-Preisliste ersetzen (idempotent)
+  // 0,33 l Dose / 1,0 l: Coca-Cola, Zero, Fanta, Sprite, Mezzo Mix (2,40 / 5,90 €) · 0,5 l Durstlöscher 2,00 € · Red Bull 3,50 €
+  try {
+    const getrCat = await get("SELECT * FROM categories WHERE slug = 'getraenke'");
+    if (getrCat) {
+      await query('UPDATE categories SET name = $1, description = $2 WHERE id = $3',
+        ['Getränke', 'Softgetränke: Coca-Cola, Fanta, Sprite, Mezzo Mix, Durstlöscher und Red Bull.', getrCat.id]);
+      await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('coca-cola','fanta','wasser')", [getrCat.id]);
+      const SD = (a, b) => JSON.stringify([{ label: '0,33 l Dose', price: a }, { label: '1,0 l', price: b }]);
+      const softgetraenke = [
+        ['Coca-Cola', 'coca-cola', '0,33 l Dose oder 1,0 l Flasche', 2.40, '0,33 l Dose oder 1,0 l Flasche', 1, 1, '/images/products/img22.jpg', SD(2.40, 5.90)],
+        ['Coca-Cola Zero', 'coca-cola-zero', '0,33 l Dose oder 1,0 l Flasche', 2.40, '0,33 l Dose oder 1,0 l Flasche', 0, 2, '/images/products/img22.jpg', SD(2.40, 5.90)],
+        ['Fanta', 'fanta', '0,33 l Dose oder 1,0 l Flasche', 2.40, '0,33 l Dose oder 1,0 l Flasche', 0, 3, '/images/products/img23.jpg', SD(2.40, 5.90)],
+        ['Sprite', 'sprite', '0,33 l Dose oder 1,0 l Flasche', 2.40, '0,33 l Dose oder 1,0 l Flasche', 0, 4, '/images/products/img23.jpg', SD(2.40, 5.90)],
+        ['Mezzo Mix', 'mezzo-mix', '0,33 l Dose oder 1,0 l Flasche', 2.40, '0,33 l Dose oder 1,0 l Flasche', 0, 5, '/images/products/img22.jpg', SD(2.40, 5.90)],
+        ['Durstlöscher', 'durstloescher', '0,5 l', 2.00, '0,5 l', 0, 6, '/images/products/img6.jpg', null],
+        ['Red Bull', 'red-bull', '0,25 l Dose', 3.50, '0,25 l Dose', 0, 7, '/images/products/img23.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of softgetraenke) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+          [getrCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Getränke Auto-Migration übersprungen:', e.message);
+  }
+
   // Hero-Preise als Single Source (nur Anzeigen): Deal-Produkte von den Slide-Preisen ableiten
   try {
     const slides = await query("SELECT * FROM hero_slides WHERE button_link LIKE '%?add=deal-%'");
