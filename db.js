@@ -1143,12 +1143,13 @@ async function initialize() {
     console.error('Hero-Preis-Sync übersprungen:', e.message);
   }
 
-  // Liefergebiet: echte Restaurant-Koordinaten (Pieperstraße 8, 21357 Bardowick) + 12-km-Limit
+  // Liefergebiet: echte Restaurant-Koordinaten (Pieperstraße 8, 21357 Bardowick) + 15-km-Limit (Zonentabelle)
   // Alte Berlin-Platzhalter (52.520008, 13.404954) und Musteradresse dabei korrigieren
   try {
     await query("UPDATE settings SET value = 'Pieperstraße 8, 21357 Bardowick' WHERE key = 'address' AND value = 'Musterstraße 42, 10117 Berlin'");
     await query("UPDATE settings SET value = '53.295344' WHERE key = 'latitude' AND value = '52.520008'");
     await query("UPDATE settings SET value = '10.391293' WHERE key = 'longitude' AND value = '13.404954'");
+    await query("UPDATE settings SET value = '15' WHERE key = 'max_delivery_km' AND value = '12'");
   } catch (e) {
     console.error('Restaurant-Koordinaten-Migration übersprungen:', e.message);
   }
@@ -1176,7 +1177,7 @@ async function initialize() {
     ['opening_hours', 'Mo–So: 11:30 – 22:30'],
     ['delivery_fee', '4.50'],
     ['free_delivery_from', '30.00'],
-    ['max_delivery_km', '12'],
+    ['max_delivery_km', '15'],
     ['restaurant_lat', '53.295344'],
     ['restaurant_lon', '10.391293'],
     ['social_instagram', 'https://instagram.com/ammaya'],

@@ -117,9 +117,22 @@ var Cart = (function() {
 
   function getDeliveryFee(subtotal) {
     if (orderType === 'abholung') return 0;
+    // Zonenpreis aus der Adressprüfung (OSRM-Fahrstrecke), sonst alte Pauschale als Fallback
+    if (window.DeliveryCheck && window.DeliveryCheck.fee != null && isFinite(window.DeliveryCheck.fee)) {
+      return parseFloat(window.DeliveryCheck.fee);
+    }
     var fee = parseFloat(settings.delivery_fee) || 4.50;
     var freeFrom = parseFloat(settings.free_delivery_from) || 40.00;
     return subtotal >= freeFrom ? 0 : fee;
+  }
+
+  // Mindestbestellwert der ermittelten Zone (null = unbekannt -> keine Prüfung)
+  function getZoneMin() {
+    if (orderType !== 'lieferung') return null;
+    if (window.DeliveryCheck && window.DeliveryCheck.min != null && isFinite(window.DeliveryCheck.min)) {
+      return parseFloat(window.DeliveryCheck.min);
+    }
+    return null;
   }
 
   function getTotal() {
@@ -489,6 +502,7 @@ var Cart = (function() {
     needsPickupOnly: needsPickupOnly,
     applyPickupRules: applyPickupRules,
     isValidPhone: isValidPhone,
+    getZoneMin: getZoneMin,
     getDiscount: function() { return discount; },
     applyDiscount: applyDiscount,
     clearDiscount: clearDiscount,
@@ -537,8 +551,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Liefergebiet: vom Client bereits als außerhalb erkannt -> direkt blocken (Server prüft erneut)
       if (Cart.getOrderType() === 'lieferung' && window.DeliveryCheck && window.DeliveryCheck.blocked) {
-        var dc = window.deliveryConfig || { max_km: 12, phone: '04131 4006817' };
-        alert('Ihre Adresse liegt außerhalb unseres Liefergebiets (über ' + String(dc.max_km).replace('.', ',') + ' km Fahrstrecke). Bitte rufen Sie uns an: ' + dc.phone + ' – oder wählen Sie Abholung.');
+        var dc = window.deliveryConfig || { phone: '04131 4006817' };
+        alert('Ihre Adresse liegt über 15 km Fahrstrecke von uns entfernt. Bitte rufen Sie uns an: ' + dc.phone + ' – oder wählen Sie Abholung.');
+        return;
+      }
+
+      // Zonen-Mindestbestellwert prüfen
+      var zoneMin = Cart.getZoneMin ? Cart.getZoneMin() : null;
+      if (zoneMin != null && Cart.getSubtotal() < zoneMin - 1e-9) {
+        alert('Der Mindestbestellwert für Ihre Entfernung beträgt ' + zoneMin.toFixed(2).replace('.', ',') + ' € (Zwischensumme). Bitte fügen Sie noch Artikel hinzu.');
         return;
       }
 

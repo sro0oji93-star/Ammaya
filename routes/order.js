@@ -21,33 +21,49 @@ const TIME_DEALS = {
 };
 
 // Liefergebiet serverseitig prüfen (Nominatim-Geocoding + OSRM-Fahrstrecke).
-// Ergebnis: { ok:true, km } | { ok:false, km } (außerhalb) | { ok:true, km:null } (Servicefehler -> fail-open, Kunde nie verlieren)
+// Ergebnis: { km } (km=null -> unverifiziert, fail-open) oder { km, noRoute:true } (keine Fahrstrecke -> nicht lieferbar)
+// NEXO Lieferservice-Zonen: Fahrstrecke -> Zuschlag + Mindestbestellwert (bis 15 km, darüber Anruf)
+const DELIVERY_ZONES = [
+  { to: 3, fee: 1.00, min: 15.00 },
+  { to: 5, fee: 1.50, min: 20.00 },
+  { to: 7, fee: 2.50, min: 25.00 },
+  { to: 10, fee: 3.50, min: 30.00 },
+  { to: 12, fee: 4.50, min: 35.00 },
+  { to: 15, fee: 6.00, min: 40.00 }
+];
+
+function findDeliveryZone(km) {
+  for (const z of DELIVERY_ZONES) {
+    if (km <= z.to + 1e-9) return z;
+  }
+  return null;
+}
+
 async function checkDeliveryArea(address, zip, city, settings) {
-  const maxKm = parseFloat((settings && (settings.max_delivery_km)) || 12) || 12;
   const rLat = parseFloat((settings && (settings.restaurant_lat || settings.latitude)) || 53.295344);
   const rLon = parseFloat((settings && (settings.restaurant_lon || settings.longitude)) || 10.391293);
-  if (!isFinite(rLat) || !isFinite(rLon)) return { ok: true, km: null };
+  if (!isFinite(rLat) || !isFinite(rLon)) return { km: null };
   const q = [address, zip, city].filter(Boolean).join(', ');
-  if (!q.trim()) return { ok: true, km: null };
+  if (!q.trim()) return { km: null };
   const fetchOpts = { headers: { 'User-Agent': 'Ammaya-Restaurant-Shop/1.0 (info@ammaya.de)', 'Accept-Language': 'de' }, signal: AbortSignal.timeout(8000) };
   try {
     const geoUrl = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=de&q=' + encodeURIComponent(q);
     const geoRes = await fetch(geoUrl, fetchOpts);
     const geo = await geoRes.json();
-    if (!Array.isArray(geo) || !geo.length || !isFinite(parseFloat(geo[0].lat))) return { ok: true, km: null };
+    if (!Array.isArray(geo) || !geo.length || !isFinite(parseFloat(geo[0].lat))) return { km: null };
     const cLat = parseFloat(geo[0].lat);
     const cLon = parseFloat(geo[0].lon);
     const routeUrl = 'https://router.project-osrm.org/route/v1/driving/' + rLon + ',' + rLat + ';' + cLon + ',' + cLat + '?overview=false';
     const routeRes = await fetch(routeUrl, fetchOpts);
     const route = await routeRes.json();
     if (!route || !route.routes || !route.routes.length || typeof route.routes[0].distance !== 'number') {
-      return { ok: false, km: null }; // keine Fahrstrecke -> nicht lieferbar
+      return { km: null, noRoute: true }; // keine Fahrstrecke -> nicht lieferbar
     }
     const km = route.routes[0].distance / 1000;
-    return { ok: km <= maxKm + 1e-9, km: Math.round(km * 10) / 10 };
+    return { km: Math.round(km * 10) / 10 };
   } catch (e) {
     console.error('Liefergebiets-Prüfung übersprungen:', e.message);
-    return { ok: true, km: null };
+    return { km: null };
   }
 }
 function isValidPhone(p) {
@@ -80,13 +96,23 @@ router.post('/', async (req, res) => {
     const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
     const type = orderType === 'abholung' ? 'abholung' : 'lieferung';
 
-    // Liefergebiet serverseitig prüfen (nur Lieferung; Abholung bleibt immer möglich)
+    // Liefergebiet + Zonenpreise serverseitig prüfen (nur Lieferung; Abholung bleibt immer möglich)
+    let zone = null;
+    let areaKm = null;
     if (type === 'lieferung') {
       const area = await checkDeliveryArea(address, zip, city, res.locals.settings);
-      if (!area.ok) {
-        const s = res.locals.settings || {};
-        const tel = s.phone || '04131 4006817';
-        return res.status(400).json({ success: false, message: 'Ihre Adresse liegt außerhalb unseres Liefergebiets. Bitte rufen Sie uns an: ' + tel + ' – oder wählen Sie Abholung.' });
+      const s = res.locals.settings || {};
+      const tel = s.phone || '04131 4006817';
+      if (area.noRoute) {
+        return res.status(400).json({ success: false, message: 'Ihre Adresse ist mit dem Auto leider nicht erreichbar. Bitte rufen Sie uns an: ' + tel + ' – oder wählen Sie Abholung.' });
+      }
+      if (area.km != null) {
+        areaKm = area.km;
+        const cap = parseFloat(s.max_delivery_km) || 15;
+        if (area.km > cap + 1e-9) {
+          return res.status(400).json({ success: false, message: 'Ihre Adresse liegt über 15 km Fahrstrecke von uns entfernt. Bitte rufen Sie uns an: ' + tel + ' – oder wählen Sie Abholung.' });
+        }
+        zone = findDeliveryZone(area.km);
       }
     }
 
@@ -141,9 +167,18 @@ router.post('/', async (req, res) => {
     if (hasPickupOnlyDeal && type !== 'abholung') {
       return res.status(400).json({ success: false, message: 'Der Night Deal ist nur für Abholer – bitte Abholung wählen.' });
     }
-    const deliveryFee = type === 'abholung' ? 0 : (parseFloat(settings.delivery_fee) || 4.50);
+    // Zonen-Mindestbestellwert prüfen (Zwischensumme vor Rabatt)
+    if (zone && calculatedSubtotal < zone.min - 1e-9) {
+      const kmTxt = areaKm != null ? String(areaKm).replace('.', ',') + ' km' : '';
+      return res.status(400).json({ success: false, message: 'Der Mindestbestellwert für Ihre Entfernung (' + kmTxt + ') beträgt ' + zone.min.toFixed(2).replace('.', ',') + ' €. Bitte fügen Sie noch Artikel hinzu.' });
+    }
+    // Zonen-Lieferzuschlag (fix je Zone); ohne Zone alte Pauschal-Logik als Fallback
+    const deliveryFee = parseFloat(settings.delivery_fee) || 4.50;
     const freeFrom = parseFloat(settings.free_delivery_from) || 0;
-    const calculatedDelivery = (type === 'abholung' || calculatedSubtotal >= freeFrom) ? 0 : deliveryFee;
+    let calculatedDelivery;
+    if (type === 'abholung') calculatedDelivery = 0;
+    else if (zone) calculatedDelivery = zone.fee;
+    else calculatedDelivery = calculatedSubtotal >= freeFrom ? 0 : deliveryFee;
     
     let calculatedDiscount = 0;
     let validCode = null;

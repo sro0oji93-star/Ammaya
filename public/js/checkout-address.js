@@ -12,9 +12,37 @@
   var cfg = window.deliveryConfig || { restaurant_lat: 53.295344, restaurant_lon: 10.391293, max_km: 12, phone: '04131 4006817' };
 
   // Zustand für den Submit-Check in cart.js
-  window.DeliveryCheck = { lat: null, lon: null, km: null, blocked: false };
+  window.DeliveryCheck = { lat: null, lon: null, km: null, fee: null, min: null, blocked: false };
+
+  // NEXO Lieferservice-Zonen: Entfernung -> Zuschlag + Mindestbestellwert (bis 15 km, darüber Anruf)
+  window.DeliveryZones = [
+    { to: 3, fee: 1.00, min: 15.00 },
+    { to: 5, fee: 1.50, min: 20.00 },
+    { to: 7, fee: 2.50, min: 25.00 },
+    { to: 10, fee: 3.50, min: 30.00 },
+    { to: 12, fee: 4.50, min: 35.00 },
+    { to: 15, fee: 6.00, min: 40.00 }
+  ];
+
+  function findZone(km) {
+    for (var i = 0; i < window.DeliveryZones.length; i++) {
+      if (km <= window.DeliveryZones[i].to + 1e-9) return window.DeliveryZones[i];
+    }
+    return null;
+  }
 
   function fmtKm(km) { return km.toFixed(1).replace('.', ',') + ' km'; }
+  function fmtEur(v) { return v.toFixed(2).replace('.', ',') + ' €'; }
+
+  function showOk(km) {
+    if (!noteOk) return;
+    var z = findZone(km);
+    noteOk.style.display = 'block';
+    noteOk.style.background = '#f0fdf4';
+    noteOk.style.border = '1px solid #22c55e';
+    noteOk.style.color = '#15803d';
+    noteOk.textContent = 'Entfernung: ' + fmtKm(km) + ' Fahrstrecke – Lieferzuschlag ' + fmtEur(z.fee) + ', Mindestbestellwert ' + fmtEur(z.min) + '.';
+  }
 
   function showOk(km) {
     if (!noteOk) return;
@@ -33,7 +61,7 @@
     var kmTxt = km != null ? ' (' + fmtKm(km) + ' Fahrstrecke)' : '';
     noteBlocked.innerHTML = '';
     var t = document.createElement('div');
-    t.textContent = 'Ihre Adresse liegt außerhalb unseres Liefergebiets' + kmTxt + '. Die Lieferung ist leider nicht möglich.';
+    t.textContent = 'Ihre Adresse liegt über 15 km Fahrstrecke von uns entfernt' + kmTxt + '. Bitte rufen Sie uns an und fragen Sie nach:';
     var t2 = document.createElement('div');
     t2.style.marginTop = '6px';
     t2.textContent = 'Bitte kontaktieren Sie uns – oder wählen Sie Abholung: ';
@@ -50,6 +78,8 @@
     window.DeliveryCheck.lat = null;
     window.DeliveryCheck.lon = null;
     window.DeliveryCheck.km = null;
+    window.DeliveryCheck.fee = null;
+    window.DeliveryCheck.min = null;
     window.DeliveryCheck.blocked = false;
     if (latField) latField.value = '';
     if (lonField) lonField.value = '';
@@ -68,7 +98,10 @@
       if (!j || !j.routes || !j.routes.length || typeof j.routes[0].distance !== 'number') return; // still -> Server entscheidet
       var km = j.routes[0].distance / 1000;
       window.DeliveryCheck.km = km;
-      if (km <= cfg.max_km + 1e-9) {
+      var zone = findZone(km);
+      if (zone) {
+        window.DeliveryCheck.fee = zone.fee;
+        window.DeliveryCheck.min = zone.min;
         window.DeliveryCheck.blocked = false;
         showOk(km);
       } else {

@@ -152,7 +152,7 @@
   window.deliveryConfig = {
     restaurant_lat: <%- (typeof settings !== 'undefined' && (settings.restaurant_lat || settings.latitude) ? parseFloat(settings.restaurant_lat || settings.latitude) : 53.295344) %>,
     restaurant_lon: <%- (typeof settings !== 'undefined' && (settings.restaurant_lon || settings.longitude) ? parseFloat(settings.restaurant_lon || settings.longitude) : 10.391293) %>,
-    max_km: <%- (typeof settings !== 'undefined' && settings.max_delivery_km ? parseFloat(settings.max_delivery_km) : 12) %>,
+    max_km: <%- (typeof settings !== 'undefined' && settings.max_delivery_km ? parseFloat(settings.max_delivery_km) : 15) %>,
     phone: '<%= (typeof settings !== 'undefined' && settings.phone) ? settings.phone : '04131 4006817' %>'
   };
   var cartCsrfToken = '<%= csrfToken %>';
