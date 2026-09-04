@@ -182,6 +182,7 @@ async function initialize() {
       ['Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9],
       ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
       ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11],
+      ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12],
     ];
     for (const c of categories) {
       await query(
@@ -281,6 +282,11 @@ async function initialize() {
       [11, 'Crêpe Bueno', 'crepe-bueno', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 9.50, null, 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 1, 10, null],
       [11, 'Mini Pancakes', 'mini-pancakes', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '10 oder 20 Stück, 2 Toppings nach Wahl', 1, 11, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
       [11, 'Mini Waffel', 'mini-waffel', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '10 oder 20 Stück, 2 Toppings nach Wahl', 0, 12, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
+      [12, 'Portion Oliven', 'portion-oliven', '', 4.50, null, '', 0, 1, null],
+      [12, 'Portion Peperoni oder Jalapeños', 'portion-peperoni-jalapenos', '', 4.50, null, '', 0, 2, null],
+      [12, 'Knoblauchbrot mit Käse', 'knoblauchbrot', '', 6.90, null, '', 1, 3, null],
+      [12, 'Spezialbrot', 'spezialbrot', 'mit Käse überbacken', 7.50, null, 'mit Käse überbacken', 0, 4, null],
+      [12, 'Formaggi Spezialbrot', 'formaggi-spezialbrot', 'mit verschiedenen Käsesorten', 8.50, null, 'mit verschiedenen Käsesorten', 1, 5, null],
     ];
     for (const p of products) {
       await query(
@@ -465,6 +471,39 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Dessert Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Beilagen 2026-09-04: Kategorie anlegen (falls fehlend) + 5 Produkte per Upsert (idempotent)
+  try {
+    let beilagenCat = await get("SELECT * FROM categories WHERE slug = 'beilagen'");
+    if (!beilagenCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12]
+      );
+      beilagenCat = await get("SELECT * FROM categories WHERE slug = 'beilagen'");
+    }
+    if (beilagenCat) {
+      await query('UPDATE categories SET description = $1, sort_order = 12 WHERE id = $2',
+        ['Knusprige Beilagen für jeden Geschmack.', beilagenCat.id]);
+      const beilagen = [
+        ['Portion Oliven', 'portion-oliven', '', 4.50, '', 0, 1, '/images/products/img4.jpg', null],
+        ['Portion Peperoni oder Jalapeños', 'portion-peperoni-jalapenos', '', 4.50, '', 0, 2, '/images/products/img5.jpg', null],
+        ['Knoblauchbrot mit Käse', 'knoblauchbrot', '', 6.90, '', 1, 3, '/images/products/img7.jpg', null],
+        ['Spezialbrot', 'spezialbrot', 'mit Käse überbacken', 7.50, 'mit Käse überbacken', 0, 4, '/images/products/img8.jpg', null],
+        ['Formaggi Spezialbrot', 'formaggi-spezialbrot', 'mit verschiedenen Käsesorten', 8.50, 'mit verschiedenen Käsesorten', 1, 5, '/images/products/img9.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of beilagen) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [beilagenCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Beilagen Auto-Migration übersprungen:', e.message);
   }
 
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)

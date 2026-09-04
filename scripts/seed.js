@@ -14,7 +14,8 @@ async function seed() {
     ['Getränke', 'getraenke', 'Erfrischende Getränke und Erfrischungen', 8],
     ['Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9],
     ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
-    ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11]
+    ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11],
+    ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12]
   ];
 
   const products = [
@@ -103,7 +104,12 @@ async function seed() {
     [11, 'Crêpe Oreo', 'crepe-oreo', 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, '/images/products/img19.jpg', 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 0, 9, null],
     [11, 'Crêpe Bueno', 'crepe-bueno', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 9.50, null, '/images/products/img20.jpg', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 1, 10, null],
     [11, 'Mini Pancakes', 'mini-pancakes', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '/images/products/img21.jpg', '10 oder 20 Stück, 2 Toppings nach Wahl', 1, 11, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
-    [11, 'Mini Waffel', 'mini-waffel', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '/images/products/img22.jpg', '10 oder 20 Stück, 2 Toppings nach Wahl', 0, 12, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]']
+    [11, 'Mini Waffel', 'mini-waffel', '10 oder 20 Stück, 2 Toppings nach Wahl: Nutella, Weiße Schokolade, Pistaziencreme, Puderzucker', 7.90, null, '/images/products/img22.jpg', '10 oder 20 Stück, 2 Toppings nach Wahl', 0, 12, '[{"label":"10 Stück","price":7.9},{"label":"20 Stück","price":13.9}]'],
+    [12, 'Portion Oliven', 'portion-oliven', '', 4.50, null, '/images/products/img4.jpg', '', 0, 1, null],
+    [12, 'Portion Peperoni oder Jalapeños', 'portion-peperoni-jalapenos', '', 4.50, null, '/images/products/img5.jpg', '', 0, 2, null],
+    [12, 'Knoblauchbrot mit Käse', 'knoblauchbrot', '', 6.90, null, '/images/products/img7.jpg', '', 1, 3, null],
+    [12, 'Spezialbrot', 'spezialbrot', 'mit Käse überbacken', 7.50, null, '/images/products/img8.jpg', 'mit Käse überbacken', 0, 4, null],
+    [12, 'Formaggi Spezialbrot', 'formaggi-spezialbrot', 'mit verschiedenen Käsesorten', 8.50, null, '/images/products/img9.jpg', 'mit verschiedenen Käsesorten', 1, 5, null]
   ];
 
   try {
