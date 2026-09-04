@@ -25,6 +25,7 @@ var Cart = (function() {
     renderCartBadge();
     bindAddToCart();
     applyDealWindows();
+    bindPhoneSanitizer();
     // Kasse: Extra entfernen + Notiz pro Position (delegiert, einmalig)
     document.addEventListener('click', function(e) {
       var x = e.target && e.target.closest ? e.target.closest('.co-extra-x') : null;
@@ -248,6 +249,17 @@ var Cart = (function() {
       var checked = document.querySelector('input[name="orderType"]:checked');
       toggleAddress(checked ? checked.value : orderType);
     }
+  }
+
+  // Telefonfeld: unzulässige Zeichen schon beim Tippen entfernen (Desktop-Schutz)
+  function bindPhoneSanitizer() {
+    var phoneField = document.getElementById('phone');
+    if (!phoneField || phoneField.dataset.sanitized) return;
+    phoneField.dataset.sanitized = '1';
+    phoneField.addEventListener('input', function() {
+      var clean = this.value.replace(/[^0-9+\s\-/().]/g, '');
+      if (clean !== this.value) this.value = clean;
+    });
   }
 
   function bindAddToCart() {
