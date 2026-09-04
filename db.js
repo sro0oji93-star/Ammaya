@@ -909,6 +909,26 @@ async function initialize() {
     console.error('Hero-Deals Auto-Migration übersprungen:', e.message);
   }
 
+  // Auto-Migration Hero Hamburger-Deal 2026-09-05: Produkt für "1 GROSSE Hambuger + 1 GETRÄNK" (19,99/21,99)
+  // + Slides per Inhalt (nicht per Position) dem passenden Deal zuordnen, damit jede Anzeige ihre eigenen Preise zeigt
+  try {
+    const boxCat2 = await get("SELECT * FROM categories WHERE slug = 'nexo-box'");
+    if (boxCat2) {
+      await query(
+        `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+         VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+        [boxCat2.id, '1 Grosser Hamburger + 1 Getränk', 'deal-grosse-hamburger-getraenk', '1 großer Hamburger + 1 Getränk (0,33 l) nach Wahl', 19.99, '/images/products/img14.jpg', 'Hamburger, 1 Getränk (0,33 l)', 0, 12, JSON.stringify([{ label: 'Abholung', price: 19.99 }, { label: 'Lieferung', price: 21.99 }])]
+      );
+    }
+    // Burger-Anzeige (auch mit Tippfehler "Hambuger") -> Hamburger-Deal; Pizza-Anzeige -> Pizza-Deal; Combo -> Mix-Deal
+    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-grosse-hamburger-getraenk' WHERE (button_link = '/warenkorb' OR button_link LIKE '/warenkorb?add=%') AND (line2 ILIKE '%ambuger%' OR line2 ILIKE '%burger%')");
+    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-grosse-pizza-getraenke' WHERE (button_link = '/warenkorb' OR button_link LIKE '/warenkorb?add=%') AND line2 ILIKE '%pizza%'");
+    await query("UPDATE hero_slides SET button_link = '/warenkorb?add=deal-mix-match' WHERE button_link = '/warenkorb' AND line2 ILIKE '%combo%'");
+  } catch (e) {
+    console.error('Hamburger-Deal Auto-Migration übersprungen:', e.message);
+  }
+
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)
   try {
     await query("UPDATE settings SET value = '04131 4006817' WHERE key = 'phone' AND value = '+49 30 123456789'");
