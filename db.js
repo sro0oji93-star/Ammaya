@@ -259,8 +259,20 @@ async function initialize() {
       [4, 'Cheese Salat', 'cheese-salat', 'Gemischter Salat, 3 verschiedene Käsesorten. Dressing nach Wahl.', 10.90, null, 'Gemischter Salat, 3 verschiedene Käsesorten', 0, 4, null],
       [4, 'Tuna Salat', 'tuna-salat', 'Gemischter Salat, Thunfisch, Zwiebeln, Oliven. Dressing nach Wahl.', 10.50, null, 'Gemischter Salat, Thunfisch, Zwiebeln, Oliven', 0, 5, null],
       [4, 'Wunsch Salat', 'wunsch-salat', 'Gemischter Salat, 3 Zutaten nach Wahl. Dressing nach Wahl.', 11.90, null, 'Gemischter Salat, 3 Zutaten nach Wahl', 0, 6, null],
-      [5, 'Spaghetti Bolognese', 'spaghetti-bolognese', 'Spaghetti mit hausgemachter Fleischsoße und Parmesan', 12.90, null, 'Spaghetti, Rinderhack, Tomaten, Parmesan', 1, 12],
-      [5, 'Penne Arrabiata', 'penne-arrabiata', 'Penne in scharfer Tomatensoße mit Knoblauch und Chili', 10.90, null, 'Penne, Tomaten, Knoblauch, Chili', 0, 13],
+      [5, 'NEXO Napoli', 'nexo-napoli', 'Tomatensauce', 8.90, null, 'Tomatensauce', 1, 1, null],
+      [5, 'NEXO Bolognese', 'nexo-bolognese', 'Rinderhack, Tomatensauce', 9.90, null, 'Rinderhack, Tomatensauce', 0, 2, null],
+      [5, 'NEXO Feuer', 'nexo-feuer', 'Tomatensauce, Knoblauch, Oliven, Jalapeños', 9.50, null, 'Tomatensauce, Knoblauch, Oliven, Jalapeños', 0, 3, null],
+      [5, 'NEXO Fusion', 'nexo-fusion', '2 verschiedene Nudelsorten, Hackfleisch, Crème fraîche, Tomatensoße', 11.50, null, '2 verschiedene Nudelsorten, Hackfleisch, Crème fraîche, Tomatensoße', 0, 4, null],
+      [5, 'NEXO Cheese', 'nexo-cheese', 'Vier Käsesorten in Sahnesauce', 11.50, null, 'Vier Käsesorten in Sahnesauce', 0, 5, null],
+      [5, 'NEXO Carbonara', 'nexo-carbonara', 'Schinken, Ei, Sahnesauce', 10.50, null, 'Schinken, Ei, Sahnesauce', 1, 6, null],
+      [5, 'NEXO Pesto', 'nexo-pesto', 'Hähnchen, Mais, Paprika, Basilikumpestosauce', 11.50, null, 'Hähnchen, Mais, Paprika, Basilikumpestosauce', 0, 7, null],
+      [5, 'NEXO Hawaii', 'pasta-hawaii', 'Hähnchen, Ananas, Curry, Sahnesauce', 11.50, null, 'Hähnchen, Ananas, Curry, Sahnesauce', 0, 8, null],
+      [5, 'NEXO Gamberi', 'nexo-gamberi', 'Garnelen, Knoblauch, Tomaten, Tomatensauce', 12.90, null, 'Garnelen, Knoblauch, Tomaten, Tomatensauce', 0, 9, null],
+      [5, 'NEXO Scampi Royal', 'nexo-scampi-royal', 'Scampi, Knoblauch, Tomaten-Sahnesauce', 13.90, null, 'Scampi, Knoblauch, Tomaten-Sahnesauce', 1, 10, null],
+      [5, 'NEXO Wunsch', 'pasta-wunsch', 'Zwei Zutaten und Sauce nach Wahl', 10.90, null, 'Zwei Zutaten und Sauce nach Wahl', 0, 11, null],
+      [5, 'NEXO Hähnchen Genuss', 'nexo-haehnchen-genuss', 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 11.50, null, 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 0, 12, null],
+      [5, 'NEXO Deluxe', 'nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, null, 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, null],
+      [5, 'NEXO Signature', 'nexo-signature', 'Hähnchen, Mais, Brokkoli, Sahnesauce', 12.90, null, 'Hähnchen, Mais, Brokkoli, Sahnesauce', 0, 14, null],
       [6, 'Wiener Schnitzel', 'wiener-schnitzel', 'Kalbfleisch paniert und goldbraun gebraten, mit Preiselbeeren und Zitrone', 16.90, null, 'Kalbfleisch, Panade, Preiselbeeren, Zitrone', 1, 14],
       [6, 'Jägerschnitzel', 'jaegerschnitzel', 'Schweineschnitzel mit cremiger Pilzsoße und Pommes', 15.90, null, 'Schweinefleisch, Pilze, Sahne, Pommes', 0, 15],
       [6, 'Zigeunerschnitzel', 'zigeunerschnitzel', 'Schnitzel mit bunter Paprika-Zwiebel-Soße und Reis', 15.90, null, 'Schweinefleisch, Paprika, Zwiebeln, Reis', 0, 16],
@@ -591,6 +603,40 @@ async function initialize() {
     }
   } catch (e) {
     console.error('NEXO Box Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Pasta 2026-09-04: 2 alte Pasta löschen, 14 NEXO-Pasta per Upsert (idempotent)
+  try {
+    const pastaCat = await get("SELECT * FROM categories WHERE slug = 'pasta'");
+    if (pastaCat) {
+      await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('spaghetti-bolognese','penne-arrabiata')", [pastaCat.id]);
+      const pasten = [
+        ['NEXO Napoli', 'nexo-napoli', 'Tomatensauce', 8.90, 'Tomatensauce', 1, 1, '/images/products/img10.jpg', null],
+        ['NEXO Bolognese', 'nexo-bolognese', 'Rinderhack, Tomatensauce', 9.90, 'Rinderhack, Tomatensauce', 0, 2, '/images/products/img11.jpg', null],
+        ['NEXO Feuer', 'nexo-feuer', 'Tomatensauce, Knoblauch, Oliven, Jalapeños', 9.50, 'Tomatensauce, Knoblauch, Oliven, Jalapeños', 0, 3, '/images/products/img10.jpg', null],
+        ['NEXO Fusion', 'nexo-fusion', '2 verschiedene Nudelsorten, Hackfleisch, Crème fraîche, Tomatensoße', 11.50, '2 verschiedene Nudelsorten, Hackfleisch, Crème fraîche, Tomatensoße', 0, 4, '/images/products/img11.jpg', null],
+        ['NEXO Cheese', 'nexo-cheese', 'Vier Käsesorten in Sahnesauce', 11.50, 'Vier Käsesorten in Sahnesauce', 0, 5, '/images/products/img10.jpg', null],
+        ['NEXO Carbonara', 'nexo-carbonara', 'Schinken, Ei, Sahnesauce', 10.50, 'Schinken, Ei, Sahnesauce', 1, 6, '/images/products/img11.jpg', null],
+        ['NEXO Pesto', 'nexo-pesto', 'Hähnchen, Mais, Paprika, Basilikumpestosauce', 11.50, 'Hähnchen, Mais, Paprika, Basilikumpestosauce', 0, 7, '/images/products/img10.jpg', null],
+        ['NEXO Hawaii', 'pasta-hawaii', 'Hähnchen, Ananas, Curry, Sahnesauce', 11.50, 'Hähnchen, Ananas, Curry, Sahnesauce', 0, 8, '/images/products/img11.jpg', null],
+        ['NEXO Gamberi', 'nexo-gamberi', 'Garnelen, Knoblauch, Tomaten, Tomatensauce', 12.90, 'Garnelen, Knoblauch, Tomaten, Tomatensauce', 0, 9, '/images/products/img10.jpg', null],
+        ['NEXO Scampi Royal', 'nexo-scampi-royal', 'Scampi, Knoblauch, Tomaten-Sahnesauce', 13.90, 'Scampi, Knoblauch, Tomaten-Sahnesauce', 1, 10, '/images/products/img11.jpg', null],
+        ['NEXO Wunsch', 'pasta-wunsch', 'Zwei Zutaten und Sauce nach Wahl', 10.90, 'Zwei Zutaten und Sauce nach Wahl', 0, 11, '/images/products/img10.jpg', null],
+        ['NEXO Hähnchen Genuss', 'nexo-haehnchen-genuss', 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 11.50, 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 0, 12, '/images/products/img11.jpg', null],
+        ['NEXO Deluxe', 'nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, '/images/products/img10.jpg', null],
+        ['NEXO Signature', 'nexo-signature', 'Hähnchen, Mais, Brokkoli, Sahnesauce', 12.90, 'Hähnchen, Mais, Brokkoli, Sahnesauce', 0, 14, '/images/products/img11.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of pasten) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [pastaCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Pasta Auto-Migration übersprungen:', e.message);
   }
 
   // Auto-Migration Salat 2026-09-04: 2 alte Salate löschen, 6 neue per Upsert (idempotent)
