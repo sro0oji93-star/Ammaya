@@ -183,6 +183,7 @@ async function initialize() {
       ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
       ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11],
       ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12],
+      ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13],
     ];
     for (const c of categories) {
       await query(
@@ -300,6 +301,11 @@ async function initialize() {
       [12, 'Knoblauchbrot mit Käse', 'knoblauchbrot', '', 6.90, null, '', 1, 3, null],
       [12, 'Spezialbrot', 'spezialbrot', 'mit Käse überbacken', 7.50, null, 'mit Käse überbacken', 0, 4, null],
       [12, 'Formaggi Spezialbrot', 'formaggi-spezialbrot', 'mit verschiedenen Käsesorten', 8.50, null, 'mit verschiedenen Käsesorten', 1, 5, null],
+      [13, 'Pommes Frites', 'pommes-frites', 'Groß', 5.50, null, 'Kartoffeln', 1, 1, null],
+      [13, 'Chili Cheese Fries', 'chili-cheese-fries', '', 6.90, null, '', 0, 2, null],
+      [13, 'Hotdog Fries', 'hotdog-fries', '', 8.50, null, '', 0, 3, null],
+      [13, 'Kroketten', 'kroketten', '10 Stück', 5.90, null, 'Kartoffeln', 0, 4, null],
+      [13, 'Curly Fries', 'curly-fries', '', 5.90, null, '', 0, 5, null],
     ];
     for (const p of products) {
       await query(
@@ -517,6 +523,39 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Beilagen Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Fries 2026-09-04: Kategorie anlegen (falls fehlend) + 5 Produkte per Upsert (idempotent)
+  try {
+    let friesCat = await get("SELECT * FROM categories WHERE slug = 'fries'");
+    if (!friesCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13]
+      );
+      friesCat = await get("SELECT * FROM categories WHERE slug = 'fries'");
+    }
+    if (friesCat) {
+      await query('UPDATE categories SET description = $1, sort_order = 13 WHERE id = $2',
+        ['Knusprige Fries für jeden Geschmack.', friesCat.id]);
+      const fries = [
+        ['Pommes Frites', 'pommes-frites', 'Groß', 5.50, 'Kartoffeln', 1, 1, '/images/products/img7.jpg', null],
+        ['Chili Cheese Fries', 'chili-cheese-fries', '', 6.90, '', 0, 2, '/images/products/img8.jpg', null],
+        ['Hotdog Fries', 'hotdog-fries', '', 8.50, '', 0, 3, '/images/products/img9.jpg', null],
+        ['Kroketten', 'kroketten', '10 Stück', 5.90, 'Kartoffeln', 0, 4, '/images/products/img7.jpg', null],
+        ['Curly Fries', 'curly-fries', '', 5.90, '', 0, 5, '/images/products/img8.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of fries) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [friesCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Fries Auto-Migration übersprungen:', e.message);
   }
 
   // Auto-Migration Salat 2026-09-04: 2 alte Salate löschen, 6 neue per Upsert (idempotent)

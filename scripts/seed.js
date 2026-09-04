@@ -15,7 +15,8 @@ async function seed() {
     ['Snack Rolls', 'snack-rolls', 'Herzhafte gefüllte Rollen, perfekt zum Teilen', 9],
     ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
     ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11],
-    ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12]
+    ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12],
+    ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13]
   ];
 
   const products = [
@@ -122,7 +123,12 @@ async function seed() {
     [12, 'Portion Peperoni oder Jalapeños', 'portion-peperoni-jalapenos', '', 4.50, null, '/images/products/img5.jpg', '', 0, 2, null],
     [12, 'Knoblauchbrot mit Käse', 'knoblauchbrot', '', 6.90, null, '/images/products/img7.jpg', '', 1, 3, null],
     [12, 'Spezialbrot', 'spezialbrot', 'mit Käse überbacken', 7.50, null, '/images/products/img8.jpg', 'mit Käse überbacken', 0, 4, null],
-    [12, 'Formaggi Spezialbrot', 'formaggi-spezialbrot', 'mit verschiedenen Käsesorten', 8.50, null, '/images/products/img9.jpg', 'mit verschiedenen Käsesorten', 1, 5, null]
+    [12, 'Formaggi Spezialbrot', 'formaggi-spezialbrot', 'mit verschiedenen Käsesorten', 8.50, null, '/images/products/img9.jpg', 'mit verschiedenen Käsesorten', 1, 5, null],
+    [13, 'Pommes Frites', 'pommes-frites', 'Groß', 5.50, null, '/images/products/img7.jpg', 'Kartoffeln', 1, 1, null],
+    [13, 'Chili Cheese Fries', 'chili-cheese-fries', '', 6.90, null, '/images/products/img8.jpg', '', 0, 2, null],
+    [13, 'Hotdog Fries', 'hotdog-fries', '', 8.50, null, '/images/products/img9.jpg', '', 0, 3, null],
+    [13, 'Kroketten', 'kroketten', '10 Stück', 5.90, null, '/images/products/img7.jpg', 'Kartoffeln', 0, 4, null],
+    [13, 'Curly Fries', 'curly-fries', '', 5.90, null, '/images/products/img8.jpg', '', 0, 5, null]
   ];
 
   try {
