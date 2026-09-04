@@ -1118,7 +1118,6 @@ async function initialize() {
         ['NEXO Deals', 'Tageszeit-Angebote: Mittag Deal 12–15 Uhr · Night Deal ab 21:00 Uhr (nur Abholer).', dealsCat.id]);
       const nexoDeals = [
         ['Mittag Deal · Wunsch-Menü', 'nexo-mittag-deal', 'Pizza Ø 26 cm oder Baguette nach Wunsch, bis zu 3 Beläge nach Wahl (Fisch ausgeschlossen) + 1 Getränk 0,33 l nach Wahl. Nur zur Mittagszeit 12–15 Uhr.', 10.99, 'Pizza oder Baguette, 3 Beläge nach Wahl, Getränk 0,33 l', 1, 1, '/images/products/img2.jpg', null],
-        ['Night Deal · Wunsch-Pizza', 'nexo-night-deal', 'Pizza Ø 26 cm nach Wunsch, bis zu 3 Beläge + 1 Sauce nach Wahl (Fisch & Käserand ausgeschlossen). Nur für Abholer, ab 21:00 Uhr.', 6.00, 'Pizza 26 cm, 3 Beläge, 1 Sauce nach Wahl', 1, 2, '/images/products/img3.jpg', null],
       ];
       for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of nexoDeals) {
         await query(
@@ -1131,6 +1130,13 @@ async function initialize() {
     }
   } catch (e) {
     console.error('NEXO-Deals Auto-Migration übersprungen:', e.message);
+  }
+
+  // Night Deal aus NEXO Deals entfernen (auf Wunsch, Mittag Deal bleibt)
+  try {
+    await query("DELETE FROM products WHERE slug = 'nexo-night-deal'");
+  } catch (e) {
+    console.error('Night-Deal-Löschung übersprungen:', e.message);
   }
 
   // Hero-Preise als Single Source (nur Anzeigen): Deal-Produkte von den Slide-Preisen ableiten
