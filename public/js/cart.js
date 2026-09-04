@@ -535,6 +535,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
+      // Liefergebiet: vom Client bereits als außerhalb erkannt -> direkt blocken (Server prüft erneut)
+      if (Cart.getOrderType() === 'lieferung' && window.DeliveryCheck && window.DeliveryCheck.blocked) {
+        var dc = window.deliveryConfig || { max_km: 12, phone: '04131 4006817' };
+        alert('Ihre Adresse liegt außerhalb unseres Liefergebiets (über ' + String(dc.max_km).replace('.', ',') + ' km Fahrstrecke). Bitte rufen Sie uns an: ' + dc.phone + ' – oder wählen Sie Abholung.');
+        return;
+      }
+
       var data = {
         name: formData.get('name'),
         email: formData.get('email'),

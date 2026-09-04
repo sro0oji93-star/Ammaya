@@ -1143,6 +1143,16 @@ async function initialize() {
     console.error('Hero-Preis-Sync übersprungen:', e.message);
   }
 
+  // Liefergebiet: echte Restaurant-Koordinaten (Pieperstraße 8, 21357 Bardowick) + 12-km-Limit
+  // Alte Berlin-Platzhalter (52.520008, 13.404954) und Musteradresse dabei korrigieren
+  try {
+    await query("UPDATE settings SET value = 'Pieperstraße 8, 21357 Bardowick' WHERE key = 'address' AND value = 'Musterstraße 42, 10117 Berlin'");
+    await query("UPDATE settings SET value = '53.295344' WHERE key = 'latitude' AND value = '52.520008'");
+    await query("UPDATE settings SET value = '10.391293' WHERE key = 'longitude' AND value = '13.404954'");
+  } catch (e) {
+    console.error('Restaurant-Koordinaten-Migration übersprungen:', e.message);
+  }
+
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)
   try {
     await query("UPDATE settings SET value = '04131 4006817' WHERE key = 'phone' AND value = '+49 30 123456789'");
@@ -1160,18 +1170,21 @@ async function initialize() {
   const defaultSettings = [
     ['site_name', 'Ammaya'],
     ['site_description', 'Ihr Restaurant für Pizza, Burger und mehr'],
-    ['address', 'Musterstraße 42, 10117 Berlin'],
+    ['address', 'Pieperstraße 8, 21357 Bardowick'],
     ['phone', '04131 4006817'],
     ['email', 'info@ammaya.de'],
     ['opening_hours', 'Mo–So: 11:30 – 22:30'],
     ['delivery_fee', '4.50'],
     ['free_delivery_from', '30.00'],
+    ['max_delivery_km', '12'],
+    ['restaurant_lat', '53.295344'],
+    ['restaurant_lon', '10.391293'],
     ['social_instagram', 'https://instagram.com/ammaya'],
     ['social_facebook', 'https://facebook.com/ammaya'],
     ['social_tiktok', 'https://tiktok.com/@ammaya'],
     ['google_maps_key', 'YOUR_GOOGLE_MAPS_KEY'],
-    ['latitude', '52.520008'],
-    ['longitude', '13.404954'],
+    ['latitude', '53.295344'],
+    ['longitude', '10.391293'],
 
     ['about_title', 'Unsere Philosophie'],
     ['about_text', 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschließlich frische Zutaten und legen größten Wert auf Qualität.'],

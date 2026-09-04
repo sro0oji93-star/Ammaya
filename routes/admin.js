@@ -259,7 +259,7 @@ router.get('/einstellungen', auth, async (req, res) => {
 });
 
 router.post('/einstellungen', auth, async (req, res) => {
-  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude','primary_color','secondary_color','logo_url','font_family'];
+  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','max_delivery_km','restaurant_lat','restaurant_lon','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude','primary_color','secondary_color','logo_url','font_family'];
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
       await db.run('UPDATE settings SET value = $1 WHERE key = $2', [req.body[key], key]);

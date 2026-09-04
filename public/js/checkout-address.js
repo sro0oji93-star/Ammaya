@@ -1,0 +1,147 @@
+/* Lieferadresse: Photon-Autocomplete + OSRM-Fahrstrecke ab Restaurant (nur Checkout-Seite) */
+(function () {
+  var addrInput = document.getElementById('address');
+  var cityInput = document.getElementById('city');
+  var zipInput = document.getElementById('zip');
+  var box = document.getElementById('addrSuggest');
+  var latField = document.getElementById('delivery_lat');
+  var lonField = document.getElementById('delivery_lon');
+  var noteOk = document.getElementById('deliveryDistanceNote');
+  var noteBlocked = document.getElementById('deliveryBlockedNote');
+  if (!addrInput || !box) return;
+  var cfg = window.deliveryConfig || { restaurant_lat: 53.295344, restaurant_lon: 10.391293, max_km: 12, phone: '04131 4006817' };
+
+  // Zustand für den Submit-Check in cart.js
+  window.DeliveryCheck = { lat: null, lon: null, km: null, blocked: false };
+
+  function fmtKm(km) { return km.toFixed(1).replace('.', ',') + ' km'; }
+
+  function showOk(km) {
+    if (!noteOk) return;
+    noteOk.style.display = 'block';
+    noteOk.style.background = '#f0fdf4';
+    noteOk.style.border = '1px solid #22c55e';
+    noteOk.style.color = '#15803d';
+    noteOk.textContent = 'Entfernung: ' + fmtKm(km) + ' Fahrstrecke – Lieferung möglich.';
+  }
+
+  function showBlocked(km) {
+    window.DeliveryCheck.blocked = true;
+    if (noteOk) noteOk.style.display = 'none';
+    if (!noteBlocked) return;
+    noteBlocked.style.display = 'block';
+    var kmTxt = km != null ? ' (' + fmtKm(km) + ' Fahrstrecke)' : '';
+    noteBlocked.innerHTML = '';
+    var t = document.createElement('div');
+    t.textContent = 'Ihre Adresse liegt außerhalb unseres Liefergebiets' + kmTxt + '. Die Lieferung ist leider nicht möglich.';
+    var t2 = document.createElement('div');
+    t2.style.marginTop = '6px';
+    t2.textContent = 'Bitte kontaktieren Sie uns – oder wählen Sie Abholung: ';
+    var a = document.createElement('a');
+    a.href = 'tel:' + String(cfg.phone).replace(/[^+\d]/g, '');
+    a.style.color = '#b8001f';
+    a.textContent = cfg.phone;
+    t2.appendChild(a);
+    noteBlocked.appendChild(t);
+    noteBlocked.appendChild(t2);
+  }
+
+  function resetCheck() {
+    window.DeliveryCheck.lat = null;
+    window.DeliveryCheck.lon = null;
+    window.DeliveryCheck.km = null;
+    window.DeliveryCheck.blocked = false;
+    if (latField) latField.value = '';
+    if (lonField) lonField.value = '';
+    if (noteOk) noteOk.style.display = 'none';
+    if (noteBlocked) noteBlocked.style.display = 'none';
+  }
+
+  function checkDistance(lat, lon) {
+    window.DeliveryCheck.lat = lat;
+    window.DeliveryCheck.lon = lon;
+    if (latField) latField.value = lat;
+    if (lonField) lonField.value = lon;
+    var url = 'https://router.project-osrm.org/route/v1/driving/' +
+      cfg.restaurant_lon + ',' + cfg.restaurant_lat + ';' + lon + ',' + lat + '?overview=false';
+    fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j || !j.routes || !j.routes.length || typeof j.routes[0].distance !== 'number') return; // still -> Server entscheidet
+      var km = j.routes[0].distance / 1000;
+      window.DeliveryCheck.km = km;
+      if (km <= cfg.max_km + 1e-9) {
+        window.DeliveryCheck.blocked = false;
+        showOk(km);
+      } else {
+        showBlocked(km);
+      }
+    }).catch(function () { /* still -> Server entscheidet */ });
+  }
+
+  function pickFeature(f) {
+    var p = f.properties || {};
+    var parts = [];
+    if (p.street) parts.push(p.street + (p.housenumber ? ' ' + p.housenumber : ''));
+    else if (p.name) parts.push(p.name);
+    if (addrInput) addrInput.value = parts.join(' ');
+    if (p.postcode && zipInput && !zipInput.value) zipInput.value = p.postcode;
+    if ((p.city || p.town || p.village) && cityInput && !cityInput.value) cityInput.value = p.city || p.town || p.village;
+    box.style.display = 'none';
+    var coords = (f.geometry && f.geometry.coordinates) || null;
+    if (coords && coords.length === 2) checkDistance(coords[1], coords[0]);
+  }
+
+  var timer = null;
+  var lastQ = '';
+  function search() {
+    var q = (addrInput.value || '').trim();
+    if (cityInput && cityInput.value.trim()) q += ' ' + cityInput.value.trim();
+    if (zipInput && zipInput.value.trim()) q += ' ' + zipInput.value.trim();
+    if (q.length < 3 || q === lastQ) { if (q.length < 3) box.style.display = 'none'; return; }
+    lastQ = q;
+    var url = 'https://photon.komoot.io/api/?q=' + encodeURIComponent(q) +
+      '&lat=' + cfg.restaurant_lat + '&lon=' + cfg.restaurant_lon + '&limit=6&lang=de';
+    fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+      var feats = (j && j.features) || [];
+      feats = feats.filter(function (f) {
+        var c = f.properties && f.properties.countrycode;
+        return !c || c.toLowerCase() === 'de';
+      }).slice(0, 6);
+      if (!feats.length) { box.style.display = 'none'; return; }
+      box.innerHTML = '';
+      feats.forEach(function (f) {
+        var p = f.properties || {};
+        var main = (p.street ? p.street + (p.housenumber ? ' ' + p.housenumber : '') : (p.name || ''));
+        var sub = [p.postcode, (p.city || p.town || p.village)].filter(Boolean).join(' ');
+        var div = document.createElement('div');
+        div.className = 'addr-suggest-item';
+        var b = document.createElement('div');
+        b.textContent = main;
+        var s = document.createElement('small');
+        s.textContent = sub;
+        div.appendChild(b);
+        div.appendChild(s);
+        div.addEventListener('mousedown', function (e) { e.preventDefault(); pickFeature(f); });
+        box.appendChild(div);
+      });
+      box.style.display = 'block';
+    }).catch(function () { box.style.display = 'none'; });
+  }
+
+  ['address', 'city', 'zip'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', function () {
+      if (id === 'address') {
+        resetCheck();
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(search, 350);
+      } else {
+        lastQ = '';
+      }
+    });
+    el.addEventListener('blur', function () { setTimeout(function () { box.style.display = 'none'; }, 200); });
+    el.addEventListener('focus', function () { if (id === 'address' && box.children.length) box.style.display = 'block'; });
+  });
+
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') box.style.display = 'none'; });
+})();
