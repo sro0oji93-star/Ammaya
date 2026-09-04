@@ -26,8 +26,12 @@
 :root {
   --primary: <%= typeof settings !== 'undefined' && settings.primary_color ? settings.primary_color : '#d4af37' %>;
   --secondary: <%= typeof settings !== 'undefined' && settings.secondary_color ? settings.secondary_color : '#f5d67b' %>;
+  --accent: <%= typeof settings !== 'undefined' && settings.accent_color ? settings.accent_color : '#9c7c1a' %>;
   --font-family: '<%= typeof settings !== 'undefined' && settings.font_family ? settings.font_family : 'Inter' %>', sans-serif;
 }
+<% if (typeof settings !== 'undefined' && settings.header_bg) { %>
+#mad-header, .mad-header-section--sticky-xl { background: <%= settings.header_bg %> !important; }
+<% } %>
 @media (max-width: 767px) {
   .mad-mobile-nav-btn { display:none !important; }
   .mad-header-items { display:flex; align-items:center; justify-content:space-between; flex-wrap:nowrap; gap:4px; }

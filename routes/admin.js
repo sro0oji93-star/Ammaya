@@ -259,10 +259,20 @@ router.get('/einstellungen', auth, async (req, res) => {
 });
 
 router.post('/einstellungen', auth, async (req, res) => {
-  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','max_delivery_km','restaurant_lat','restaurant_lon','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude','primary_color','secondary_color','logo_url','font_family'];
+  const allowed = ['site_name','site_description','address','phone','email','opening_hours','delivery_fee','free_delivery_from','max_delivery_km','restaurant_lat','restaurant_lon','social_instagram','social_facebook','social_tiktok','about_title','about_text','latitude','longitude','primary_color','secondary_color','accent_color','header_bg','hero_theme','logo_url','font_family'];
+  const isHexColor = v => typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v);
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
-      await db.run('UPDATE settings SET value = $1 WHERE key = $2', [req.body[key], key]);
+      let val = req.body[key];
+      if (['primary_color','secondary_color','accent_color','header_bg'].includes(key)) {
+        if (key === 'header_bg' && (val === '' || val === null)) {
+          // empty = default header background, allowed
+        } else if (!isHexColor(val)) {
+          continue; // skip invalid colors to avoid breaking CSS
+        }
+      }
+      if (key === 'hero_theme' && !['black-gold','banner'].includes(val)) continue;
+      await db.run('UPDATE settings SET value = $1 WHERE key = $2', [val, key]);
     }
   }
   req.flash = req.flash || {};

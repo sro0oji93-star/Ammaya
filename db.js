@@ -1223,6 +1223,9 @@ async function initialize() {
     ['about_text', 'Bei Ammaya vereinen wir internationale Küche mit Leidenschaft. Jedes Gericht wird mit Sorgfalt zubereitet, um Ihnen ein unvergessliches Geschmackserlebnis zu bieten. Wir verwenden ausschließlich frische Zutaten und legen größten Wert auf Qualität.'],
     ['primary_color', '#d4af37'],
     ['secondary_color', '#f5d67b'],
+    ['accent_color', '#9c7c1a'],
+    ['header_bg', ''],
+    ['hero_theme', 'black-gold'],
     ['logo_url', '/images/nexo-logo.png'],
     ['font_family', 'Inter'],
   ];

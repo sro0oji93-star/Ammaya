@@ -2,53 +2,58 @@
    Ammaya — Hero (ads slider) Black & Gold
    Only the front hero keeps the black & gold look.
    Rest of the site uses the original white theme.
-   Palette: gold #d4af37 | light #f5d67b | dark #9c7c1a
+   Colors follow the admin settings:
+     --primary (default #d4af37), --secondary, --accent
+   Set hero_theme = 'banner' in admin to show the photo
+   banner instead of the black & gold gradient.
    ============================================================ */
-:root {
-  --primary: #d4af37 !important;
-  --secondary: #f5d67b !important;
-  --gold: #d4af37;
-  --gold-light: #f5d67b;
-  --gold-dark: #9c7c1a;
-}
 
 /* ---------- Hero / Ads slider: black & gold (covers red banner) ---------- */
-.mad-hero-animated,
-.hero.mad-hero-animated {
+.mad-hero-animated:not(.hero-banner),
+.hero.mad-hero-animated:not(.hero-banner) {
   background: #0a0a0a !important;
 }
-.hero-slide-items {
+.mad-hero-animated:not(.hero-banner) .hero-slide-items {
+  /* fallback for old browsers */
   background:
     radial-gradient(ellipse 60% 50% at 70% 40%, rgba(212,175,55,.16), transparent 70%),
     radial-gradient(ellipse 40% 35% at 20% 80%, rgba(212,175,55,.08), transparent 70%),
     linear-gradient(135deg, #0a0a0a 0%, #141414 50%, #0a0a0a 100%) !important;
+  /* follows admin primary color */
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%, color-mix(in srgb, var(--primary, #d4af37) 16%, transparent), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 20% 80%, color-mix(in srgb, var(--primary, #d4af37) 8%, transparent), transparent 70%),
+    linear-gradient(135deg, #0a0a0a 0%, #141414 50%, #0a0a0a 100%) !important;
 }
-.hero-slide-items .hero-overlay {
+.mad-hero-animated:not(.hero-banner) .hero-slide-items .hero-overlay {
   background: linear-gradient(135deg, rgba(0,0,0,.55), rgba(0,0,0,.15)) !important;
 }
-.mad-hero-title {
-  text-shadow: 3px 3px 0 rgba(0,0,0,.9), 5px 5px 0 rgba(156,124,26,.55) !important;
+.mad-hero-animated:not(.hero-banner) .mad-hero-title {
+  text-shadow: 3px 3px 0 rgba(0,0,0,.9), 5px 5px 0 color-mix(in srgb, var(--accent, #9c7c1a) 55%, transparent) !important;
 }
-.mad-hero-title span { color: #fff !important; }
+.mad-hero-animated:not(.hero-banner) .mad-hero-title span { color: #fff !important; }
 
-/* gold order button in hero, no red glow */
+/* gold order button in hero, no red glow (follows admin color) */
+.mad-hero-animated .btn-style-3,
 [class*="btn"].btn-style-3 {
-  background: var(--gold) !important;
+  background: var(--primary, #d4af37) !important;
   color: #0a0a0a !important;
 }
+.mad-hero-animated .btn-style-3:hover,
 [class*="btn"].btn-style-3:hover {
   -webkit-box-shadow: 2px 6px 0px 0px rgba(212,175,55,.35) !important;
   -moz-box-shadow: 2px 6px 0px 0px rgba(212,175,55,.35) !important;
-  box-shadow: 2px 6px 0px 0px rgba(212,175,55,.35) !important;
+  box-shadow: 2px 6px 0px 0px color-mix(in srgb, var(--primary, #d4af37) 35%, transparent) !important;
 }
 
-/* hero deal pills: gold when selected */
+/* hero deal pills: primary color when selected */
 .hero-deal-picker label {
   border-color: rgba(255,255,255,.5) !important;
   background: rgba(255,255,255,.08) !important;
   color: #fff !important;
 }
 .hero-deal-picker label:has(input:checked) {
-  border-color: var(--gold) !important;
+  border-color: var(--primary, #d4af37) !important;
   background: rgba(212,175,55,.15) !important;
+  background: color-mix(in srgb, var(--primary, #d4af37) 15%, transparent) !important;
 }
