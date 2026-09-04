@@ -187,6 +187,7 @@ async function initialize() {
       ['NEXO Box', 'nexo-box', 'Gemeinsam genießen & sparen.', 14],
       ['Kids Menü', 'kids-menue', 'Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', 15],
       ['Milkshake', 'milkshake', 'Frisch gemixte Milkshakes.', 16],
+      ['Rings', 'rings', 'Inklusive 1 Sauce nach Wahl.', 17],
     ];
     for (const c of categories) {
       await query(
@@ -840,6 +841,40 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Snacks Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Rings 2026-09-04: Kategorie anlegen (falls fehlend) + 4 Rings per Upsert (idempotent)
+  // ① Käsering 10,90 € / ② Bacon Ring 12,90 € / ③ Chicken Ring 12,90 € / ④ Feuerring 13,90 €
+  // Inklusive 1 Sauce nach Wahl
+  try {
+    let ringsCat = await get("SELECT * FROM categories WHERE slug = 'rings'");
+    if (!ringsCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Rings', 'rings', 'Inklusive 1 Sauce nach Wahl.', 17]
+      );
+      ringsCat = await get("SELECT * FROM categories WHERE slug = 'rings'");
+    }
+    if (ringsCat) {
+      await query('UPDATE categories SET name = $1, description = $2, sort_order = 17, active = 1 WHERE id = $3',
+        ['Rings', 'Inklusive 1 Sauce nach Wahl.', ringsCat.id]);
+      const rings = [
+        ['① Käsering', 'kaesering', 'Käsefüllung', 10.90, 'Käsefüllung', 1, 1, '/images/products/img7.jpg', null],
+        ['② Bacon Ring', 'bacon-ring', 'Bacon · Hackfleisch · BBQ-Sauce · Käsefüllung', 12.90, 'Bacon · Hackfleisch · BBQ-Sauce · Käsefüllung', 1, 2, '/images/products/img8.jpg', null],
+        ['③ Chicken Ring', 'chicken-ring', 'Hähnchen · Hollandaise · Käsefüllung', 12.90, 'Hähnchen · Hollandaise · Käsefüllung', 0, 3, '/images/products/img9.jpg', null],
+        ['④ Feuerring', 'feuerring', 'Hackfleisch · Jalapeños · Hollandaise · Feta · Käsefüllung', 13.90, 'Hackfleisch · Jalapeños · Hollandaise · Feta · Käsefüllung', 1, 4, '/images/products/img7.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of rings) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [ringsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Rings Auto-Migration übersprungen:', e.message);
   }
 
   // Telefon auf echte Nummer umstellen (nur wenn noch der alte Platzhalter drinsteht)
