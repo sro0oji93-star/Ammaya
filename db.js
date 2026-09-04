@@ -222,6 +222,7 @@ async function initialize() {
       ['Kids Menü', 'kids-menue', 'Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', 15],
       ['Milkshake', 'milkshake', 'Frisch gemixte Milkshakes.', 16],
       ['Rings', 'rings', 'Inklusive 1 Sauce nach Wahl.', 17],
+      ['Wraps', 'wraps', 'Frisch gerollte Wraps mit knackigem Salat.', 18],
     ];
     for (const c of categories) {
       await query(
@@ -992,6 +993,39 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Getränke Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Wraps 2026-09-05: Kategorie anlegen (falls fehlend) + 4 Wraps per Upsert (idempotent)
+  // ① Teriyaki Chicken 9,90 € / ② Crispy Chicken 9,90 € / ③ BBQ Beef 10,90 € / ④ Spicy Crispy Chicken 10,90 €
+  try {
+    let wrapsCat = await get("SELECT * FROM categories WHERE slug = 'wraps'");
+    if (!wrapsCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Wraps', 'wraps', 'Frisch gerollte Wraps mit knackigem Salat.', 18]
+      );
+      wrapsCat = await get("SELECT * FROM categories WHERE slug = 'wraps'");
+    }
+    if (wrapsCat) {
+      await query('UPDATE categories SET name = $1, description = $2, sort_order = 18, active = 1 WHERE id = $3',
+        ['Wraps', 'Frisch gerollte Wraps mit knackigem Salat.', wrapsCat.id]);
+      const wraps = [
+        ['① Teriyaki Chicken Wrap', 'teriyaki-chicken-wrap', 'Chicken · Salat · Tomate · rote Zwiebeln · Karotten · Sesam', 9.90, 'Chicken · Salat · Tomate · rote Zwiebeln · Karotten · Sesam', 1, 1, '/images/products/img8.jpg', null],
+        ['② Crispy Chicken Wrap', 'crispy-chicken-wrap', 'Crispy Chicken · Salat · Tomate · rote Zwiebeln · Cheddar', 9.90, 'Crispy Chicken · Salat · Tomate · rote Zwiebeln · Cheddar', 0, 2, '/images/products/img7.jpg', null],
+        ['③ BBQ Beef Wrap', 'bbq-beef-wrap', 'Beef · Salat · Tomate · rote Zwiebeln · Cheddar · Bacon · Röstzwiebeln', 10.90, 'Beef · Salat · Tomate · rote Zwiebeln · Cheddar · Bacon · Röstzwiebeln', 0, 3, '/images/products/img9.jpg', null],
+        ['④ Spicy Crispy Chicken Wrap', 'spicy-crispy-chicken-wrap', 'Crispy Chicken · Salat · Tomate · rote Zwiebeln · Cheddar · Jalapeños · Röstzwiebeln', 10.90, 'Crispy Chicken · Salat · Tomate · rote Zwiebeln · Cheddar · Jalapeños · Röstzwiebeln', 1, 4, '/images/products/img8.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of wraps) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [wrapsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Wraps Auto-Migration übersprungen:', e.message);
   }
 
   // Hero-Preise als Single Source (nur Anzeigen): Deal-Produkte von den Slide-Preisen ableiten
