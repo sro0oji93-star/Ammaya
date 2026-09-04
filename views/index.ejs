@@ -25,7 +25,8 @@
           </div>
           <p style="margin-top:15px;font-size:16px;color:rgba(255,255,255,.85);max-width:80%"><%= slide.description || '' %></p>
           <% var heroAddSlug = null; if (slide.button_link && slide.button_link.indexOf('?add=') !== -1) { heroAddSlug = slide.button_link.split('?add=')[1].split('&')[0]; } %>
-          <% var heroDeal = heroAddSlug ? products.find(function(x) { return x.slug === heroAddSlug; }) : null; %>
+          <% var heroDealList = (typeof heroDeals !== 'undefined' && heroDeals) ? heroDeals : products; %>
+          <% var heroDeal = heroAddSlug ? heroDealList.find(function(x) { return x.slug === heroAddSlug; }) : null; %>
           <% if (heroDeal && heroDeal.sizes) { var heroSizes = JSON.parse(heroDeal.sizes); %>
           <div class="hero-deal-picker" data-deal-id="<%= heroDeal.id %>" style="margin-top:22px;display:flex;gap:8px;flex-wrap:wrap">
             <% heroSizes.forEach(function(s, si) { %>
