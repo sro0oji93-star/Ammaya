@@ -402,7 +402,7 @@ var Cart = (function() {
         }).join('') + '</div>';
       }
       var noteVal = item.note ? escapeHtml(item.note) : '';
-      var noteHtml = '<input type="text" class="co-note" data-key="' + escapeHtml(item._key) + '" value="' + noteVal + '" maxlength="200" placeholder="Anmerkung zu diesem Artikel…" style="margin-top:6px;width:100%;max-width:280px;padding:6px 10px;border:1px solid #3a3a41;border-radius:8px;font-size:12px;color:#f0ead8;background:#1d1d21">';
+      var noteHtml = '<input type="text" class="co-note" data-key="' + escapeHtml(item._key) + '" value="' + noteVal + '" maxlength="200" placeholder="Anmerkung zu diesem Artikel…" style="margin-top:6px;width:100%;max-width:280px;padding:6px 10px;border:1px solid #e8e4de;border-radius:8px;font-size:12px;color:#232223;background:#fff">';
       return '<div class="cart-item">' +
         '<div class="cart-item-image"><i class="fas fa-utensils"></i></div>' +
         '<div class="cart-item-info"><h4>' + nameHtml + '</h4>' + extrasHtml + noteHtml + '</div>' +
