@@ -223,6 +223,7 @@ async function initialize() {
       ['Milkshake', 'milkshake', 'Frisch gemixte Milkshakes.', 16],
       ['Rings', 'rings', 'Inklusive 1 Sauce nach Wahl.', 17],
       ['Wraps', 'wraps', 'Frisch gerollte Wraps mit knackigem Salat.', 18],
+      ['Bowls', 'bowls', 'Beilage nach Wahl: Reis oder Pommes. 1 Sauce inklusive, jede weitere +0,80 €.', 19],
     ];
     for (const c of categories) {
       await query(
@@ -1026,6 +1027,40 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Wraps Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Bowls 2026-09-05: Kategorie anlegen (falls fehlend) + 4 Bowls per Upsert (idempotent)
+  // ① Teriyaki Chicken 15,90 € / ② Crispy Chicken 16,90 € / ③ Beef Bacon 18,90 € / ④ NEXO Scampi 18,90 €
+  // Beilage: Reis oder Pommes · 1 Sauce inklusive (NEXO Haus, Knoblauch, BBQ, American, Cheddar), jede weitere +0,80 €
+  try {
+    let bowlsCat = await get("SELECT * FROM categories WHERE slug = 'bowls'");
+    if (!bowlsCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['Bowls', 'bowls', 'Beilage nach Wahl: Reis oder Pommes. 1 Sauce inklusive, jede weitere +0,80 €.', 19]
+      );
+      bowlsCat = await get("SELECT * FROM categories WHERE slug = 'bowls'");
+    }
+    if (bowlsCat) {
+      await query('UPDATE categories SET name = $1, description = $2, sort_order = 19, active = 1 WHERE id = $3',
+        ['Bowls', 'Beilage nach Wahl: Reis oder Pommes. Sauce nach Wahl: NEXO Haussoße, Knoblauchsoße, BBQ-Soße, American-Soße oder Cheddar-Soße. 1 Sauce inklusive, jede weitere +0,80 €.', bowlsCat.id]);
+      const bowls = [
+        ['① Teriyaki Chicken Bowl', 'teriyaki-chicken-bowl', 'Teriyaki Chicken · Mais · Karotten · Sesam. Beilage nach Wahl: Reis oder Pommes.', 15.90, 'Teriyaki Chicken · Mais · Karotten · Sesam', 1, 1, '/images/products/img4.jpg', null],
+        ['② Crispy Chicken Bowl', 'crispy-chicken-bowl', 'Crispy Chicken · Cheddar · Röstzwiebeln · Mais · Karotten · Sesam. Beilage nach Wahl: Reis oder Pommes.', 16.90, 'Crispy Chicken · Cheddar · Röstzwiebeln · Mais · Karotten · Sesam', 0, 2, '/images/products/img5.jpg', null],
+        ['③ Beef Bacon Bowl', 'beef-bacon-bowl', 'Rinderstreifen · Bacon · Cheddar · Mais · Karotten · Sesam. Beilage nach Wahl: Reis oder Pommes.', 18.90, 'Rinderstreifen · Bacon · Cheddar · Mais · Karotten · Sesam', 0, 3, '/images/products/img4.jpg', null],
+        ['④ NEXO Scampi Bowl', 'nexo-scampi-bowl', 'Gegrillte Scampi · Knoblauch · Mais · Karotten · Sesam. Beilage nach Wahl: Reis oder Pommes.', 18.90, 'Gegrillte Scampi · Knoblauch · Mais · Karotten · Sesam', 1, 4, '/images/products/img5.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of bowls) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [bowlsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('Bowls Auto-Migration übersprungen:', e.message);
   }
 
   // Hero-Preise als Single Source (nur Anzeigen): Deal-Produkte von den Slide-Preisen ableiten
