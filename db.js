@@ -184,6 +184,7 @@ async function initialize() {
       ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11],
       ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12],
       ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13],
+      ['NEXO Box', 'nexo-box', 'Gemeinsam genießen & sparen.', 14],
     ];
     for (const c of categories) {
       await query(
@@ -306,6 +307,9 @@ async function initialize() {
       [13, 'Hotdog Fries', 'hotdog-fries', '', 8.50, null, '', 0, 3, null],
       [13, 'Kroketten', 'kroketten', '10 Stück', 5.90, null, 'Kartoffeln', 0, 4, null],
       [13, 'Curly Fries', 'curly-fries', '', 5.90, null, '', 0, 5, null],
+      [14, 'BOX 1', 'box-1', '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 38.90, null, '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 1, 1, null],
+      [14, 'BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snack Rolls nach Wahl, Pommes, 3 Saucen', 49.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snack Rolls, Pommes, Saucen', 0, 2, null],
+      [14, 'BOX 3', 'box-3', 'Pizza Wunsch Ø 30 cm, 1 Cheeseburger oder 1 Chickenburger, Pasta Wunsch, Pommes, 2 Saucen', 38.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Pasta Wunsch, Pommes, Saucen', 0, 3, null],
     ];
     for (const p of products) {
       await query(
@@ -556,6 +560,37 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Fries Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration NEXO Box 2026-09-04: Kategorie anlegen (falls fehlend) + 3 Boxen per Upsert (idempotent)
+  try {
+    let boxCat = await get("SELECT * FROM categories WHERE slug = 'nexo-box'");
+    if (!boxCat) {
+      await query(
+        'INSERT INTO categories (name, slug, description, sort_order) VALUES ($1, $2, $3, $4) ON CONFLICT (slug) DO NOTHING',
+        ['NEXO Box', 'nexo-box', 'Gemeinsam genießen & sparen.', 14]
+      );
+      boxCat = await get("SELECT * FROM categories WHERE slug = 'nexo-box'");
+    }
+    if (boxCat) {
+      await query('UPDATE categories SET description = $1, sort_order = 14 WHERE id = $2',
+        ['Gemeinsam genießen & sparen.', boxCat.id]);
+      const boxen = [
+        ['BOX 1', 'box-1', '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 38.90, '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 1, 1, '/images/products/img16.jpg', null],
+        ['BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snack Rolls nach Wahl, Pommes, 3 Saucen', 49.90, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snack Rolls, Pommes, Saucen', 0, 2, '/images/products/img17.jpg', null],
+        ['BOX 3', 'box-3', 'Pizza Wunsch Ø 30 cm, 1 Cheeseburger oder 1 Chickenburger, Pasta Wunsch, Pommes, 2 Saucen', 38.90, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Pasta Wunsch, Pommes, Saucen', 0, 3, '/images/products/img18.jpg', null],
+      ];
+      for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of boxen) {
+        await query(
+          `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+           VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+          [boxCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
+        );
+      }
+    }
+  } catch (e) {
+    console.error('NEXO Box Auto-Migration übersprungen:', e.message);
   }
 
   // Auto-Migration Salat 2026-09-04: 2 alte Salate löschen, 6 neue per Upsert (idempotent)

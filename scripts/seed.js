@@ -16,7 +16,8 @@ async function seed() {
     ['Saucen & Dips', 'saucen-dips', 'Hausgemachte Saucen und Dips für jeden Geschmack', 10],
     ['Dessert', 'dessert', 'Süße Klassiker, Crêpes, Mini Pancakes & Mini Waffeln. Alle Crêpes inklusive 2 Schokoladensorten nach Wahl.', 11],
     ['Beilagen', 'beilagen', 'Knusprige Beilagen für jeden Geschmack.', 12],
-    ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13]
+    ['Fries', 'fries', 'Knusprige Fries für jeden Geschmack.', 13],
+    ['NEXO Box', 'nexo-box', 'Gemeinsam genießen & sparen.', 14]
   ];
 
   const products = [
@@ -128,7 +129,10 @@ async function seed() {
     [13, 'Chili Cheese Fries', 'chili-cheese-fries', '', 6.90, null, '/images/products/img8.jpg', '', 0, 2, null],
     [13, 'Hotdog Fries', 'hotdog-fries', '', 8.50, null, '/images/products/img9.jpg', '', 0, 3, null],
     [13, 'Kroketten', 'kroketten', '10 Stück', 5.90, null, '/images/products/img7.jpg', 'Kartoffeln', 0, 4, null],
-    [13, 'Curly Fries', 'curly-fries', '', 5.90, null, '/images/products/img8.jpg', '', 0, 5, null]
+    [13, 'Curly Fries', 'curly-fries', '', 5.90, null, '/images/products/img8.jpg', '', 0, 5, null],
+    [14, 'BOX 1', 'box-1', '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 38.90, null, '/images/products/img16.jpg', '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 1, 1, null],
+    [14, 'BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snack Rolls nach Wahl, Pommes, 3 Saucen', 49.90, null, '/images/products/img17.jpg', 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snack Rolls, Pommes, Saucen', 0, 2, null],
+    [14, 'BOX 3', 'box-3', 'Pizza Wunsch Ø 30 cm, 1 Cheeseburger oder 1 Chickenburger, Pasta Wunsch, Pommes, 2 Saucen', 38.90, null, '/images/products/img18.jpg', 'Pizza Wunsch, Cheeseburger oder Chickenburger, Pasta Wunsch, Pommes, Saucen', 0, 3, null]
   ];
 
   try {
