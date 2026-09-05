@@ -207,7 +207,7 @@ async function initialize() {
   if (catCount === 0) {
     const categories = [
       ['Pizza', 'pizza', 'Steinofenpizza in 4 Größen: 26 cm, 30 cm, Familien Pizza und Party. Alle Pizzen in 26 cm und 30 cm auch als Calzone erhältlich.', 1],
-      ['Burger', 'burger', 'Smash Burger frisch für dich gesmasht. Für nur 5,00 € Aufpreis als Menü: 4 Zwiebelringe oder Pommes und ein 0,33 l Softdrink nach Wahl.', 2],
+      ['Burger', 'burger', 'Smash Burger frisch für dich gesmasht. Als Menü (+5,00 €) mit Pommes und 0,33 l Softdrink nach Wahl.', 2],
       ['Croque', 'croque', 'Frisch überbackene Croques. Inklusive 1 Sauce nach Wahl.', 3],
       ['Salat', 'salat', 'Frische Salate mit Dressing nach Wahl: Knoblauch, Hausdressing, Yoghurt, American, Kräuter.', 4],
       ['Pasta', 'pasta', 'Italienische Pastagerichte, traditionell und kreativ', 5],
@@ -392,7 +392,7 @@ async function initialize() {
     const burgerCat = await get("SELECT * FROM categories WHERE slug = 'burger'");
     if (burgerCat) {
       await query('UPDATE categories SET description = $1 WHERE id = $2',
-        ['Smash Burger frisch für dich gesmasht. Für nur 5,00 € Aufpreis als Menü: 4 Zwiebelringe oder Pommes und ein 0,33 l Softdrink nach Wahl.', burgerCat.id]);
+        ['Smash Burger frisch für dich gesmasht. Als Menü (+5,00 €) mit Pommes und 0,33 l Softdrink nach Wahl.', burgerCat.id]);
       await query("DELETE FROM products WHERE category_id = $1 AND slug IN ('classic-burger','cheese-burger','chicken-burger')", [burgerCat.id]);
       const smashBurgers = [
         ['Hamburger Smash', 'hamburger-smash', '110 g Smash Beef, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 8.90, '110 g Smash Beef, Salat, Gewürzgurken, Tomate, rote Zwiebeln, Burgersauce', 0, 4, '/images/products/img13.jpg'],
@@ -846,6 +846,26 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Croque-Saucen übersprungen:', e.message);
+  }
+
+  // Auto-Migration Burger-Menü 2026-09-06: Solo oder Menü (+5 €, Pommes + 0,33l Softdrink nach Wahl).
+  // Nur setzen, wenn noch keine Auswahl da ist.
+  try {
+    const burgerCat = await get("SELECT id FROM categories WHERE slug = 'burger'");
+    if (burgerCat) {
+      const drinks = ['Coca-Cola', 'Fanta', 'Sprite', 'Mezzo Mix', 'Coca-Cola Zero'];
+      const burgers = await all('SELECT id, price FROM products WHERE category_id = $1 AND sizes IS NULL', [burgerCat.id]);
+      for (const b of burgers) {
+        const base = parseFloat(b.price);
+        const opts = [{ label: 'Solo', price: base }];
+        for (const d of drinks) {
+          opts.push({ label: 'Menü mit ' + d, price: parseFloat((base + 5).toFixed(2)) });
+        }
+        await query('UPDATE products SET sizes = $1 WHERE id = $2', [JSON.stringify(opts), b.id]);
+      }
+    }
+  } catch (e) {
+    console.error('Burger-Menü übersprungen:', e.message);
   }
 
   // Auto-Migration Schnitzel 2026-09-04: altes Wiener Schnitzel löschen, 4 neue per Upsert (idempotent)
