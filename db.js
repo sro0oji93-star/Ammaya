@@ -368,7 +368,7 @@ async function initialize() {
       [14, 'BOX 1', 'box-1', '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 38.90, null, '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 1, 1, null],
       [14, 'BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snack Rolls nach Wahl, Pommes, 3 Saucen', 49.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snack Rolls, Pommes, Saucen', 0, 2, null],
       [14, 'BOX 3', 'box-3', 'Pizza Wunsch Ø 30 cm, 1 Cheeseburger oder 1 Chickenburger, Pasta Wunsch, Pommes, 2 Saucen', 38.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Pasta Wunsch, Pommes, Saucen', 0, 3, null],
-      [15, 'Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm, Margherita oder Salami', 7.90, null, 'Pizza, Margherita oder Salami', 1, 1, null],
+      [15, 'Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm – bitte wählen: Margherita oder Salami', 7.90, null, 'Pizza, Margherita oder Salami', 1, 1, '[{"label":"Margherita","price":7.9},{"label":"Salami","price":7.9}]'],
       [15, 'Kids Nuggets', 'kids-nuggets', '5 Chicken Nuggets, Pommes', 7.50, null, 'Chicken Nuggets, Pommes', 0, 2, null],
       [15, 'Happy Fish', 'happy-fish', '4 Happy Fish, Pommes', 7.90, null, 'Fisch, Pommes', 0, 3, null],
       [16, 'Vanille', 'vanille', '', 5.99, null, '', 0, 1, null],
@@ -673,7 +673,7 @@ async function initialize() {
       await query('UPDATE categories SET description = $1, sort_order = 15 WHERE id = $2',
         ['Bei allen Kids-Menüs inklusive: Capri-Sun, Überraschungsei.', kidsCat.id]);
       const kids = [
-        ['Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm, Margherita oder Salami', 7.90, 'Pizza, Margherita oder Salami', 1, 1, '/images/products/img1.jpg', null],
+        ['Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm – bitte wählen: Margherita oder Salami', 7.90, 'Pizza, Margherita oder Salami', 1, 1, '/images/products/img1.jpg', '[{"label":"Margherita","price":7.9},{"label":"Salami","price":7.9}]'],
         ['Kids Nuggets', 'kids-nuggets', '5 Chicken Nuggets, Pommes', 7.50, 'Chicken Nuggets, Pommes', 0, 2, '/images/products/img8.jpg', null],
         ['Happy Fish', 'happy-fish', '4 Happy Fish, Pommes', 7.90, 'Fisch, Pommes', 0, 3, '/images/products/img9.jpg', null],
       ];
