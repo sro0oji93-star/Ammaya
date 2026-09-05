@@ -25,9 +25,14 @@
           </div>
           <p style="margin-top:15px;font-size:16px;color:rgba(255,255,255,.85);max-width:80%"><%= slide.description || '' %></p>
           <% var heroAddSlug = null; if (slide.button_link && slide.button_link.indexOf('?add=') !== -1) { heroAddSlug = slide.button_link.split('?add=')[1].split('&')[0]; } %>
+          <% var isNightDeal = heroAddSlug === 'deal-night-abholung'; %>
+          <% var telHref = 'tel:' + String((typeof settings !== 'undefined' && settings.phone) ? settings.phone : '041314006817').replace(/[^+\d]/g, ''); %>
           <% var heroDealList = (typeof heroDeals !== 'undefined' && heroDeals) ? heroDeals : products; %>
           <% var heroDeal = heroAddSlug ? heroDealList.find(function(x) { return x.slug === heroAddSlug; }) : null; %>
-          <% if (heroDeal && heroDeal.sizes) { var heroSizes = JSON.parse(heroDeal.sizes); %>
+          <% if (isNightDeal) { %>
+          <a href="<%= telHref %>" class="btn btn-big btn-style-3" style="margin-top:25px;display:inline-block">📞 JETZT ANRUFEN</a>
+          <% } else { %>
+          <% if (!isNightDeal && heroDeal && heroDeal.sizes) { var heroSizes = JSON.parse(heroDeal.sizes); %>
           <div class="hero-deal-picker" data-deal-id="<%= heroDeal.id %>" style="margin-top:22px;display:flex;gap:8px;flex-wrap:wrap">
             <% heroSizes.forEach(function(s, si) { %>
             <label style="cursor:pointer;padding:8px 18px;border:2px solid <%= si === 0 ? '#d4af37' : 'rgba(255,255,255,.5)' %>;border-radius:12px;font-size:14px;background:<%= si === 0 ? 'rgba(212,175,55,.15)' : 'rgba(255,255,255,.08)' %>;color:#fff;font-weight:700">
@@ -41,6 +46,7 @@
           <button type="button" class="btn btn-big btn-style-3 hero-add-to-cart" data-id="<%= heroDeal.id %>" data-name="<%= heroDeal.name %>" data-price="<%= heroDeal.price %>" data-slide="<%= idx %>"<%- heroDeal.slug === 'deal-night-abholung' ? ' data-pickup-only="1"' : '' %> style="margin-top:25px;display:inline-block;cursor:pointer"><%= slide.button_text || 'JETZT BESTELLEN' %></button>
           <% } else { %>
           <a href="<%= slide.button_link || '/speisekarte' %>" class="btn btn-big btn-style-3" style="margin-top:25px;display:inline-block"><%= slide.button_text || 'JETZT BESTELLEN' %></a>
+          <% } %>
           <% } %>
         </div>
         <div style="flex:1;min-width:350px;max-width:700px;position:relative;min-height:550px;display:flex;align-items:center;justify-content:center">
