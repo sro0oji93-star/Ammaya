@@ -1,0 +1,22 @@
+<% /* Burger: Solo oder Menü – Locals: productId, productName, sizeData, optional radioName. Solo zuerst, dann Menü-Varianten. */ %>
+<% var radioName = (typeof radioName !== 'undefined' && radioName) ? radioName : ('size_' + productId); %>
+<% var soloOpt = sizeData[0]; var drinkOpts = sizeData.slice(1); %>
+<div class="size-picker size-picker-detail" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start">
+  <label class="size-option size-option-detail" style="cursor:pointer;padding:6px 14px;border:2px solid #3a3a41;border-radius:10px;font-size:13px;transition:all .25s ease;background:#1d1d21;color:#f0ead8;box-shadow:0 1px 4px rgba(0,0,0,0.4);text-align:center">
+    <input type="radio" name="<%= radioName %>" value="<%= soloOpt.price %>" data-label="<%= soloOpt.label %>" data-id="<%= productId %>" data-name="<%= productName %>" style="display:none" checked>
+    <span style="display:block;font-weight:600;font-size:13px"><%= soloOpt.label %></span>
+    <span class="size-price" style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= soloOpt.price.toFixed(2) %>€</span>
+  </label>
+  <details class="menue-box" style="border:1px dashed #e5c8ce;border-radius:10px;padding:8px 12px;background:#fffdf7;min-width:230px;flex:1">
+    <summary style="cursor:pointer;font-weight:700;font-size:13px;color:#232223">Menü (+5,00 €) <span style="font-weight:400;color:#7a7879;font-size:12px">– mit Pommes + Softdrink wählen</span></summary>
+    <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
+      <% drinkOpts.forEach(function(s) { %>
+      <label class="size-option size-option-detail" style="cursor:pointer;padding:6px 14px;border:2px solid #3a3a41;border-radius:10px;font-size:13px;transition:all .25s ease;background:#1d1d21;color:#f0ead8;box-shadow:0 1px 4px rgba(0,0,0,0.4);text-align:center">
+        <input type="radio" name="<%= radioName %>" value="<%= s.price %>" data-label="<%= s.label %>" data-id="<%= productId %>" data-name="<%= productName %>" style="display:none">
+        <span style="display:block;font-weight:600;font-size:13px"><%= s.label %></span>
+        <span class="size-price" style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
+      </label>
+      <% }); %>
+    </div>
+  </details>
+</div>
