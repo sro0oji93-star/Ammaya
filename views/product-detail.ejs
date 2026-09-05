@@ -37,13 +37,13 @@
             <% if (product.sizes) { var sizeData = JSON.parse(product.sizes); %>
             <div class="form-control content-element-6">
               <div class="content-element-2">
-                <p class="mad-text-color-2 content-element">Größe wählen:</p>
-                <div class="size-picker-detail" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+                <p class="mad-text-color-2 content-element"><%= product.category_name === 'Croque' ? '1 Sauce nach Wahl (inklusive):' : 'Größe wählen:' %></p>
+                <div class="size-picker-detail<%= product.category_name === 'Croque' ? ' sauce-picker' : '' %>" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">
                   <% sizeData.forEach(function(s) { %>
                   <label class="size-option-detail" style="cursor:pointer;padding:12px 20px;border:2px solid #3a3a41;border-radius:12px;font-size:15px;transition:all .25s ease;text-align:center;min-width:100px;background:#1d1d21;color:#f0ead8;box-shadow:0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:hidden">
                     <input type="radio" name="detailSize" value="<%= s.price %>" data-label="<%= s.label %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:16px;margin-bottom:4px"><%= s.label %></span>
-                    <span style="display:block;color:var(--primary);font-weight:700;font-size:15px"><%= s.price.toFixed(2) %> €</span>
+                    <span class="size-price" style="display:block;color:var(--primary);font-weight:700;font-size:15px"><%= s.price.toFixed(2) %> €</span>
                   </label>
                   <% }); %>
                 </div>

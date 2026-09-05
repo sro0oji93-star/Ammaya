@@ -159,6 +159,9 @@
   color: #6b6b6b;
 }
 
+/* ---------- Sauce picker (Croque): no repeated prices, choice is included ---------- */
+.sauce-picker .size-price { display: none !important; }
+
 /* ---------- Footer: gold accents ---------- */
 .footer {
   border-top: 2px solid var(--primary, #d4af37) !important;

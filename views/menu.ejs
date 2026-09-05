@@ -126,12 +126,13 @@
                   <div class="mad-spec-el"><%= p.description %></div>
                 </div>
                 <% if (p.sizes) { var sizeData = JSON.parse(p.sizes); %>
-                <div class="size-picker" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
+                <% if (cat.slug === 'croque') { %><div style="font-size:12px;color:#6b6b6b;margin:10px 0 2px">1 Sauce nach Wahl (inklusive):</div><% } %>
+                <div class="size-picker<%= cat.slug === 'croque' ? ' sauce-picker' : '' %>" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
                   <% sizeData.forEach(function(s) { %>
                   <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #3a3a41;border-radius:10px;font-size:13px;transition:all .25s ease;background:#1d1d21;color:#f0ead8;box-shadow:0 1px 4px rgba(0,0,0,0.4);text-align:center">
                     <input type="radio" name="size_<%= p.id %>" value="<%= s.price %>" data-label="<%= s.label %>" data-id="<%= p.id %>" data-name="<%= p.name %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:13px"><%= s.label %></span>
-                    <span style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
+                    <span class="size-price" style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
                   </label>
                   <% }); %>
                 </div>
@@ -164,12 +165,13 @@
                   <div class="mad-spec-el"><%= p.description %></div>
                 </div>
                 <% if (p.sizes) { var sizeData = JSON.parse(p.sizes); %>
-                <div class="size-picker" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
+                <% if (cat.slug === 'croque') { %><div style="font-size:12px;color:#6b6b6b;margin:10px 0 2px">1 Sauce nach Wahl (inklusive):</div><% } %>
+                <div class="size-picker<%= cat.slug === 'croque' ? ' sauce-picker' : '' %>" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
                   <% sizeData.forEach(function(s) { %>
                   <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #3a3a41;border-radius:10px;font-size:13px;transition:all .25s ease;background:#1d1d21;color:#f0ead8;box-shadow:0 1px 4px rgba(0,0,0,0.4);text-align:center">
                     <input type="radio" name="size_<%= p.id %>" value="<%= s.price %>" data-label="<%= s.label %>" data-id="<%= p.id %>" data-name="<%= p.name %>" style="display:none" <%= sizeData.indexOf(s) === 0 ? 'checked' : '' %>>
                     <span style="display:block;font-weight:600;font-size:13px"><%= s.label %></span>
-                    <span style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
+                    <span class="size-price" style="display:block;color:var(--primary);font-weight:700;font-size:12px"><%= s.price.toFixed(2) %>€</span>
                   </label>
                   <% }); %>
                 </div>

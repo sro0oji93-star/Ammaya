@@ -829,6 +829,25 @@ async function initialize() {
     console.error('Eigentümer-Migration übersprungen:', e.message);
   }
 
+  // Auto-Migration Croque-Saucen 2026-09-06: 1 Sauce nach Wahl (inklusive) als Auswahl.
+  // Saucenliste kommt aus der Kategorie Saucen & Dips (nur setzen, wenn noch keine Auswahl da ist).
+  try {
+    const sauceCat = await get("SELECT id FROM categories WHERE slug = 'saucen-dips'");
+    const croqueCat = await get("SELECT id FROM categories WHERE slug = 'croque'");
+    if (sauceCat && croqueCat) {
+      const sauces = await all('SELECT name FROM products WHERE category_id = $1 AND is_available = 1 ORDER BY sort_order', [sauceCat.id]);
+      const croques = await all('SELECT id, price FROM products WHERE category_id = $1 AND sizes IS NULL', [croqueCat.id]);
+      for (const c of croques) {
+        const opts = sauces.map(s => ({ label: 'Sauce: ' + s.name, price: parseFloat(c.price) }));
+        if (opts.length) {
+          await query('UPDATE products SET sizes = $1 WHERE id = $2', [JSON.stringify(opts), c.id]);
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Croque-Saucen übersprungen:', e.message);
+  }
+
   // Auto-Migration Schnitzel 2026-09-04: altes Wiener Schnitzel löschen, 4 neue per Upsert (idempotent)
   try {
     const schnitzelCat = await get("SELECT * FROM categories WHERE slug = 'schnitzel'");
