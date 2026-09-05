@@ -873,7 +873,7 @@ async function initialize() {
       const burgers = await all('SELECT id, price FROM products WHERE category_id = $1 AND sizes IS NULL', [burgerCat.id]);
       for (const b of burgers) {
         const base = parseFloat(b.price);
-        const opts = [{ label: 'Solo', price: base }];
+        const opts = [];
         for (const d of drinks) {
           opts.push({ label: 'Menü mit ' + d, price: parseFloat((base + 5).toFixed(2)) });
         }
@@ -882,6 +882,27 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Burger-Menü übersprungen:', e.message);
+  }
+
+  // Auto-Migration Burger-Solo-Entfernen 2026-09-06: Solo ist kein Standard mehr,
+  // Menü nur auf Wunsch. Solo-Option aus allen Burger-Auswahlen entfernen.
+  try {
+    const burgerCat3 = await get("SELECT id FROM categories WHERE slug = 'burger'");
+    if (burgerCat3) {
+      const rows = await all('SELECT id, sizes FROM products WHERE category_id = $1 AND sizes IS NOT NULL', [burgerCat3.id]);
+      for (const r of rows) {
+        try {
+          const arr = JSON.parse(r.sizes);
+          if (!Array.isArray(arr)) continue;
+          const filtered = arr.filter(o => o.label !== 'Solo');
+          if (filtered.length && filtered.length !== arr.length) {
+            await query('UPDATE products SET sizes = $1 WHERE id = $2', [JSON.stringify(filtered), r.id]);
+          }
+        } catch (e) { /* ungültiges JSON ignorieren */ }
+      }
+    }
+  } catch (e) {
+    console.error('Burger-Solo-Entfernen übersprungen:', e.message);
   }
 
   // Auto-Migration Burger-Menü-Update 2026-09-06: Solo-Option entfernen, nur Menü mit Softdrink-Auswahl.
@@ -902,25 +923,6 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Burger-Menü-Update übersprungen:', e.message);
-  }
-
-  // Auto-Migration Burger-Solo-Restore 2026-09-06: Solo (Grundpreis) ist Standard,
-  // Menü nur auf Wunsch. Fehlende Solo-Option wieder vorne einfügen.
-  try {
-    const burgerCat4 = await get("SELECT id FROM categories WHERE slug = 'burger'");
-    if (burgerCat4) {
-      const rows = await all('SELECT id, price, sizes FROM products WHERE category_id = $1 AND sizes IS NOT NULL', [burgerCat4.id]);
-      for (const r of rows) {
-        try {
-          const arr = JSON.parse(r.sizes);
-          if (!Array.isArray(arr) || arr.some(o => o.label === 'Solo')) continue;
-          arr.unshift({ label: 'Solo', price: parseFloat(r.price) });
-          await query('UPDATE products SET sizes = $1 WHERE id = $2', [JSON.stringify(arr), r.id]);
-        } catch (e) { /* ungültiges JSON ignorieren */ }
-      }
-    }
-  } catch (e) {
-    console.error('Burger-Solo-Restore übersprungen:', e.message);
   }
 
   // Auto-Migration Schnitzel 2026-09-04: altes Wiener Schnitzel löschen, 4 neue per Upsert (idempotent)

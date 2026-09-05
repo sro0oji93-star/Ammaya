@@ -282,6 +282,7 @@ var Cart = (function() {
       var id = btn.getAttribute('data-id');
       var name = btn.getAttribute('data-name');
       var hasSizes = btn.getAttribute('data-has-sizes');
+      var hasMenue = btn.getAttribute('data-has-menue');
       var pickupOnly = btn.getAttribute('data-pickup-only') === '1';
       var qtyInput = document.getElementById('qtyInput');
       var qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
@@ -307,6 +308,17 @@ var Cart = (function() {
         extras.forEach(function(e) { unit += e.price; });
         unit = parseFloat(unit.toFixed(2));
         addItem(id, name, unit, qty, size, extras, pickupOnly);
+      } else if (hasMenue) {
+        // Optionales Menü: nur wenn ein Softdrink gewählt wurde, sonst Grundpreis
+        var scope = btn.closest('.mad-spec-info') || btn.closest('.content-element-2') || document;
+        var drink = scope ? scope.querySelector('.menue-box input[type="radio"]:checked') : null;
+        if (drink) {
+          var msize = { label: drink.getAttribute('data-label'), price: parseFloat(drink.value) };
+          addItem(id, name, msize.price, qty, msize, [], pickupOnly);
+        } else {
+          var basePrice = btn.getAttribute('data-price');
+          addItem(id, name, basePrice, qty, null, [], pickupOnly);
+        }
       } else {
         var price = btn.getAttribute('data-price');
         addItem(id, name, price, qty, null, [], pickupOnly);

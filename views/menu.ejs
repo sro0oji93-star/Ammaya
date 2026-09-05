@@ -117,7 +117,7 @@
                   <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
                   <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
                   <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); var maxP = Math.max.apply(null, sz.map(function(s){return s.price})); %>
-                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= minP === maxP ? '' : 'ab ' %><%= minP.toFixed(2) %> €</div>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= cat.slug === 'burger' ? ('ab ' + p.price.toFixed(2)) : ((minP === maxP ? '' : 'ab ') + minP.toFixed(2)) %> €</div>
                   <% } else { %>
                   <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
                   <% } %>
@@ -138,7 +138,7 @@
                 </div>
                 <% } %>
                 <% if (cat.slug === 'pizza') { %><%- include('partials/pizza-extras', { productId: p.id }) %><% } %>
-                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1" style="margin-top:10px">In den Warenkorb</button>
+                <% if (cat.slug === 'burger') { %><button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" data-has-menue="1" style="margin-top:10px">In den Warenkorb</button><% } else { %><button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1" style="margin-top:10px">In den Warenkorb</button><% } %>
                 <% } else { %>
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%- dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %><%- p.slug === 'nexo-night-deal' ? ' data-pickup-only="1"' : '' %> style="margin-top:8px">In den Warenkorb</button>
                 <% } %>
@@ -157,7 +157,7 @@
                   <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
                   <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
                   <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); var maxP = Math.max.apply(null, sz.map(function(s){return s.price})); %>
-                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= minP === maxP ? '' : 'ab ' %><%= minP.toFixed(2) %> €</div>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= cat.slug === 'burger' ? ('ab ' + p.price.toFixed(2)) : ((minP === maxP ? '' : 'ab ') + minP.toFixed(2)) %> €</div>
                   <% } else { %>
                   <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
                   <% } %>
@@ -178,7 +178,7 @@
                 </div>
                 <% } %>
                 <% if (cat.slug === 'pizza') { %><%- include('partials/pizza-extras', { productId: p.id }) %><% } %>
-                <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1" style="margin-top:8px">In den Warenkorb</button>
+                <% if (cat.slug === 'burger') { %><button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" data-has-menue="1" style="margin-top:8px">In den Warenkorb</button><% } else { %><button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1" style="margin-top:8px">In den Warenkorb</button><% } %>
                 <% } else { %>
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%- dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %><%- p.slug === 'nexo-night-deal' ? ' data-pickup-only="1"' : '' %> style="margin-top:8px">In den Warenkorb</button>
                 <% } %>

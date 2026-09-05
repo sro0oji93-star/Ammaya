@@ -29,7 +29,7 @@
                 <span class="mad-product-price" style="text-decoration:line-through;color:#999;font-size:16px;margin-right:8px"><%= product.old_price.toFixed(2) %> €</span>
               <% } %>
               <% if (product.sizes) { var sizeData = JSON.parse(product.sizes); var minPrice = Math.min.apply(null, sizeData.map(function(s){return s.price})); var maxPrice = Math.max.apply(null, sizeData.map(function(s){return s.price})); %>
-              <span class="mad-product-price" id="detailPrice"><%= minPrice === maxPrice ? '' : 'ab ' %><%= minPrice.toFixed(2) %> €</span>
+              <span class="mad-product-price" id="detailPrice"><%= product.category_name === 'Burger' ? ('ab ' + product.price.toFixed(2)) : ((minPrice === maxPrice ? '' : 'ab ') + minPrice.toFixed(2)) %> €</span>
               <% } else { %>
               <span class="mad-product-price" id="detailPrice"><%= product.price.toFixed(2) %> €</span>
               <% } %>
@@ -61,7 +61,7 @@
                     <button type="button" class="qty-plus"><i class="material-icons">add</i></button>
                     <button type="button" class="qty-minus"><i class="material-icons">remove</i></button>
                   </div>
-                  <button class="btn btn-big btn-style-3 add-to-cart" data-id="<%= product.id %>" data-name="<%= product.name %>" data-has-sizes="1">
+                  <button class="btn btn-big btn-style-3 add-to-cart" data-id="<%= product.id %>" data-name="<%= product.name %>" <%- product.category_name === 'Burger' ? 'data-price="' + product.price + '" data-has-menue="1"' : 'data-has-sizes="1"' %>>
                     <i class="material-icons-outlined">shopping_cart</i><span>In den Warenkorb</span>
                   </button>
                 </div>
