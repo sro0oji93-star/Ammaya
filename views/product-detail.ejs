@@ -42,7 +42,7 @@
                 <% } else if (product.category_name === 'Burger') { %>
                 <%- include('partials/burger-menue', { productId: product.id, productName: product.name, sizeData: sizeData, radioName: 'detailSize' }) %>
                 <% } else { %>
-                <p class="mad-text-color-2 content-element"><%= product.category_name === 'Burger' ? 'Solo oder Menü (+5 € mit Pommes + Softdrink):' : 'Größe wählen:' %></p>
+                <p class="mad-text-color-2 content-element">Größe wählen:</p>
                 <div class="size-picker-detail" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">
                   <% sizeData.forEach(function(s) { %>
                   <label class="size-option-detail" style="cursor:pointer;padding:12px 20px;border:2px solid #3a3a41;border-radius:12px;font-size:15px;transition:all .25s ease;text-align:center;min-width:100px;background:#1d1d21;color:#f0ead8;box-shadow:0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:hidden">

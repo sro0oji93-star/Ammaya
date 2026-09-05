@@ -161,9 +161,11 @@
 
 /* ---------- Sauce picker (Croque): no repeated prices, choice is included ---------- */
 .sauce-picker .size-price { display: none !important; }
-/* green check + gold border on selected sauce (pure CSS, like Extras & Beläge) */
-.croque-sauces input[type="radio"]:checked ~ .sauce-tick { display: inline !important; }
-.croque-sauces .sauce-row:has(input[type="radio"]:checked) { border-color: var(--primary, #d4af37) !important; background: rgba(212,175,55,.08); }
+/* green check + gold border on selected sauce/drink (pure CSS, like Extras & Beläge) */
+.croque-sauces input[type="radio"]:checked ~ .sauce-tick,
+.menue-box input[type="radio"]:checked ~ .sauce-tick { display: inline !important; }
+.croque-sauces .sauce-row:has(input[type="radio"]:checked),
+.menue-box label:has(input[type="radio"]:checked) { border-color: var(--primary, #d4af37) !important; background: rgba(212,175,55,.08); }
 
 /* ---------- Footer: gold accents ---------- */
 .footer {
