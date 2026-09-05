@@ -28,6 +28,7 @@ var Cart = (function() {
     load();
     renderCartBadge();
     bindAddToCart();
+    bindDrinkToggle();
     applyDealWindows();
     bindPhoneSanitizer();
     // Kasse: Extra entfernen + Notiz pro Position (delegiert, einmalig)
@@ -278,6 +279,35 @@ var Cart = (function() {
     phoneField.addEventListener('input', function() {
       var clean = this.value.replace(/[^0-9+\s\-/().]/g, '');
       if (clean !== this.value) this.value = clean;
+    });
+  }
+
+  // Menü-Getränke (Burger/Snacks): zweiter Klick auf dieselbe Auswahl hebt sie wieder auf
+  function drinkRadioFromEvent(e) {
+    var lab = e.target && e.target.closest ? e.target.closest('.menue-box label, .snacks-menue label') : null;
+    if (!lab) return null;
+    var r = lab.querySelector('input[type="radio"]');
+    return r || null;
+  }
+  function bindDrinkToggle() {
+    var armed = null;
+    document.addEventListener('mousedown', function(e) {
+      var r = drinkRadioFromEvent(e);
+      armed = (r && r.checked) ? r : null;
+    });
+    document.addEventListener('click', function(e) {
+      var r = drinkRadioFromEvent(e);
+      if (r && r === armed) {
+        r.checked = false;
+        r.dispatchEvent(new Event('change', { bubbles: true }));
+        // Snacks: ohne Getränk kein Menü – Haken automatisch raus
+        var box = r.closest('.snacks-menue');
+        if (box && !box.querySelector('input[type="radio"]:checked')) {
+          var chk = box.querySelector('.menue-check');
+          if (chk) chk.checked = false;
+        }
+      }
+      armed = null;
     });
   }
 
