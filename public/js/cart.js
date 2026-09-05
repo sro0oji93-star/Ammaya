@@ -298,8 +298,16 @@ var Cart = (function() {
     document.addEventListener('click', function(e) {
       var r = drinkRadioFromEvent(e);
       if (r && r === armed) {
+        // Standard-Aktion (erneutes Aktivieren) verhindern, sonst wäre der Radio sofort wieder an
+        if (e.cancelable) e.preventDefault();
         r.checked = false;
         r.dispatchEvent(new Event('change', { bubbles: true }));
+        // Detailseite: Preis-Anzeige zurück auf Grundpreis
+        var dp = document.getElementById('detailPrice');
+        if (dp) {
+          var btn = document.querySelector('.add-to-cart[data-price]');
+          if (btn) dp.textContent = parseFloat(btn.getAttribute('data-price')).toFixed(2) + ' €';
+        }
         // Snacks: ohne Getränk kein Menü – Haken automatisch raus
         var box = r.closest('.snacks-menue');
         if (box && !box.querySelector('input[type="radio"]:checked')) {
