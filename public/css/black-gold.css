@@ -167,12 +167,15 @@
 .burger-menue input[type="radio"]:checked ~ span .sauce-tick,
 .snacks-menue input[type="radio"]:checked ~ .sauce-tick,
 .free-sauce input[type="radio"]:checked ~ .sauce-tick,
-.bowls-sauces input[type="checkbox"]:checked ~ .sauce-tick { display: inline !important; }
+.bowls-sauces input[type="checkbox"]:checked ~ .sauce-tick,
+.box-choices input[type="checkbox"]:checked ~ .sauce-tick,
+.box-choices input[type="radio"]:checked ~ .sauce-tick { display: inline !important; }
 .croque-sauces .sauce-row:has(input[type="radio"]:checked),
 .menue-box label:has(input[type="radio"]:checked),
 .snacks-menue label:has(input[type="radio"]:checked),
 .free-sauce label:has(input[type="radio"]:checked),
-.bowls-sauces label:has(input[type="checkbox"]:checked) { border-color: var(--primary, #d4af37) !important; background: rgba(212,175,55,.08); }
+.bowls-sauces label:has(input[type="checkbox"]:checked),
+.box-choices label:has(input:checked) { border-color: var(--primary, #d4af37) !important; background: rgba(212,175,55,.08); }
 /* Snacks-Menü: Softdrinks nur bei angehaktem Menü zeigen */
 .snacks-menue .menue-drinks { display: none; }
 .snacks-menue:has(.menue-check:checked) .menue-drinks { display: flex; }

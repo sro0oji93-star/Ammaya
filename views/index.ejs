@@ -187,7 +187,11 @@
             <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1">In den Warenkorb</button>
             <% } else { %>
             <span class="mad-product-price"><%= p.price.toFixed(2) %> €</span>
+            <% if (['box-1', 'box-2', 'box-3'].indexOf(p.slug) !== -1) { %>
+            <a href="/speisekarte/produkt/<%= p.slug %>" class="btn btn-style-3 btn-small">Auswählen</a>
+            <% } else { %>
             <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">In den Warenkorb</button>
+            <% } %>
             <% } %>
           </div>
         </div>

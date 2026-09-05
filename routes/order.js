@@ -125,6 +125,22 @@ router.post('/', async (req, res) => {
     const validSauces = sauceCatRow
       ? (await db.all('SELECT name FROM products WHERE category_id = $1', [sauceCatRow.id])).map(r => r.name)
       : [];
+    // Listen für NEXO Box-Konfiguration – einmal laden
+    const { validateBox, BOX_SLUGS } = require('../boxen');
+    const { TOPPINGS } = require('../extras');
+    const needBoxLists = parsedItems.some(it => it && it.box);
+    let boxLists = null;
+    if (needBoxLists) {
+      const boxNames = async (slug) => (await db.all(
+        "SELECT name FROM products WHERE category_id = (SELECT id FROM categories WHERE slug = $1) AND is_available = 1 ORDER BY sort_order", [slug]
+      )).map(r => r.name);
+      boxLists = {
+        sauces: validSauces,
+        snacks: await boxNames('snacks'),
+        pastas: await boxNames('pasta'),
+        toppings: TOPPINGS
+      };
+    }
     for (const item of parsedItems) {
       const product = await db.get('SELECT p.id, p.slug, p.price, p.sizes, c.slug AS catslug FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.id = $1', [item.id]);
       if (!product) {
@@ -137,7 +153,26 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ success: false, message: rule.message });
       }
       let realPrice;
-      if (item.size && product.sizes) {
+      // NEXO Box: Konfiguration serverseitig prüfen (alles inklusive, Preis fix)
+      if (item.box && item.box.slug && BOX_SLUGS.includes(item.box.slug)) {
+        const found = await db.get('SELECT id, price FROM products WHERE id = $1 AND slug = $2', [item.id, item.box.slug]);
+        if (!found) {
+          return res.status(400).json({ success: false, message: 'Produkt nicht gefunden: ' + item.name });
+        }
+        const check = validateBox(item.box.slug, item.box.choices, boxLists);
+        if (!check.ok) {
+          return res.status(400).json({ success: false, message: check.error + ' (' + item.name + ')' });
+        }
+        realPrice = parseFloat(found.price);
+        item.extras = check.lines;
+        delete item.box;
+        delete item.size;
+        delete item.menue;
+        delete item.sauce;
+        delete item.sauces;
+      } else if (item.box) {
+        return res.status(400).json({ success: false, message: 'Ungültige Box für: ' + item.name });
+      } else if (item.size && product.sizes) {
         const sizes = JSON.parse(product.sizes);
         const matchedSize = sizes.find(s => s.label === item.size.label && parseFloat(s.price) === parseFloat(item.size.price));
         if (!matchedSize) {

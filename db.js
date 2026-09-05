@@ -366,7 +366,7 @@ async function initialize() {
       [13, 'Kroketten', 'kroketten', '10 Stück', 5.90, null, 'Kartoffeln', 0, 4, null],
       [13, 'Curly Fries', 'curly-fries', '', 5.90, null, '', 0, 5, null],
       [14, 'BOX 1', 'box-1', '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 38.90, null, '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 1, 1, null],
-      [14, 'BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snack Rolls nach Wahl, Pommes, 3 Saucen', 49.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snack Rolls, Pommes, Saucen', 0, 2, null],
+      [14, 'BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snacks nach Wahl, Pommes, 3 Saucen', 49.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snacks, Pommes, Saucen', 0, 2, null],
       [14, 'BOX 3', 'box-3', 'Pizza Wunsch Ø 30 cm, 1 Cheeseburger oder 1 Chickenburger, Pasta Wunsch, Pommes, 2 Saucen', 38.90, null, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Pasta Wunsch, Pommes, Saucen', 0, 3, null],
       [15, 'Kids Pizza', 'kids-pizza', 'Pizza Ø 22 cm – bitte wählen: Margherita oder Salami', 7.90, null, 'Pizza, Margherita oder Salami', 1, 1, '[{"label":"Margherita","price":7.9},{"label":"Salami","price":7.9}]'],
       [15, 'Kids Nuggets', 'kids-nuggets', '5 Chicken Nuggets, Pommes', 7.50, null, 'Chicken Nuggets, Pommes', 0, 2, null],
@@ -643,7 +643,7 @@ async function initialize() {
         ['Gemeinsam genießen & sparen.', boxCat.id]);
       const boxen = [
         ['BOX 1', 'box-1', '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 38.90, '2 Cheeseburger oder 2 Chickenburger, 6 Chicken Nuggets, 6 Chicken Wings, Pommes, 3 Saucen', 1, 1, '/images/products/img16.jpg', null],
-        ['BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snack Rolls nach Wahl, Pommes, 3 Saucen', 49.90, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snack Rolls, Pommes, Saucen', 0, 2, '/images/products/img17.jpg', null],
+        ['BOX 2', 'box-2', 'Pizza Wunsch Ø 30 cm, 2 Cheeseburger oder 2 Chickenburger, 6 Snacks nach Wahl, Pommes, 3 Saucen', 49.90, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Snacks, Pommes, Saucen', 0, 2, '/images/products/img17.jpg', null],
         ['BOX 3', 'box-3', 'Pizza Wunsch Ø 30 cm, 1 Cheeseburger oder 1 Chickenburger, Pasta Wunsch, Pommes, 2 Saucen', 38.90, 'Pizza Wunsch, Cheeseburger oder Chickenburger, Pasta Wunsch, Pommes, Saucen', 0, 3, '/images/products/img18.jpg', null],
       ];
       for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of boxen) {
@@ -913,6 +913,13 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Bowls-Beilage übersprungen:', e.message);
+  }
+
+  // Textfix BOX 2: "Snack Rolls" → "Snacks" (Auswahl aus der Snacks-Karte)
+  try {
+    await query("UPDATE products SET description = REPLACE(description, '6 Snack Rolls nach Wahl', '6 Snacks nach Wahl') WHERE slug = 'box-2'");
+  } catch (e) {
+    console.error('Box-Textfix übersprungen:', e.message);
   }
 
   // Auto-Migration Burger-Menü 2026-09-06: Solo oder Menü (+5 €, Pommes + 0,33l Softdrink nach Wahl).
