@@ -848,6 +848,22 @@ async function initialize() {
     console.error('Croque-Saucen übersprungen:', e.message);
   }
 
+  // Auto-Migration Salat-Dressing 2026-09-06: 1 Dressing nach Wahl (inklusive) als Auswahl.
+  // Nur setzen, wenn noch keine Auswahl da ist.
+  try {
+    const salatCat = await get("SELECT id FROM categories WHERE slug = 'salat'");
+    if (salatCat) {
+      const dressings = ['Knoblauch', 'Hausdressing', 'Yoghurt', 'American', 'Kräuter'];
+      const salate = await all('SELECT id, price FROM products WHERE category_id = $1 AND sizes IS NULL', [salatCat.id]);
+      for (const s of salate) {
+        const opts = dressings.map(d => ({ label: 'Dressing: ' + d, price: parseFloat(s.price) }));
+        await query('UPDATE products SET sizes = $1 WHERE id = $2', [JSON.stringify(opts), s.id]);
+      }
+    }
+  } catch (e) {
+    console.error('Salat-Dressing übersprungen:', e.message);
+  }
+
   // Auto-Migration Burger-Menü 2026-09-06: Solo oder Menü (+5 €, Pommes + 0,33l Softdrink nach Wahl).
   // Nur setzen, wenn noch keine Auswahl da ist.
   try {

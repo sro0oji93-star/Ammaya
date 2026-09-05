@@ -37,7 +37,7 @@
             <% if (product.sizes) { var sizeData = JSON.parse(product.sizes); %>
             <div class="form-control content-element-6">
               <div class="content-element-2">
-                <% if (product.category_name === 'Croque') { %>
+                <% if (product.category_name === 'Croque' || product.category_name === 'Salat') { %>
                 <%- include('partials/croque-sauces', { productId: product.id, sizeData: sizeData, radioName: 'detailSize' }) %>
                 <% } else if (product.category_name === 'Burger') { %>
                 <%- include('partials/burger-menue', { productId: product.id, productName: product.name, sizeData: sizeData, radioName: 'detailSize' }) %>
