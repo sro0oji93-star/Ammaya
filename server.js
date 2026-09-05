@@ -9,6 +9,11 @@ const PORT = process.env.PORT || 3000;
 
 app.set('trust proxy', 1);
 
+// Leichter Keep-Alive-Endpunkt für Uptime-Bots (ohne DB/Session) – z.B. alle 5 Min. aufrufen
+app.get('/ping', (req, res) => {
+  res.type('text').send('OK');
+});
+
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false,
