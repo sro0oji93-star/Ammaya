@@ -54,11 +54,12 @@ const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
+const ownerRoutes = require('./routes/owner');
 const { csrfProtection, generateToken } = require('./middleware/csrf');
 
-// CSRF for public routes only (admin routes skip validation)
+// CSRF for public routes only (admin + owner routes skip validation, use session token)
 app.use((req, res, next) => {
-  if (req.path.startsWith('/admin')) {
+  if (req.path.startsWith('/admin') || req.path.startsWith('/eigentuemer')) {
     if (!req.session.csrfToken) req.session.csrfToken = generateToken();
     res.locals.csrfToken = req.session.csrfToken;
     return next();
@@ -94,6 +95,7 @@ app.use('/warenkorb', cartRoutes);
 app.use('/bestellung', orderRoutes);
 app.use('/kontakt', contactRoutes);
 app.use('/admin', adminRoutes);
+app.use('/eigentuemer', ownerRoutes);
 
 app.use((req, res) => {
   res.status(404).render('404', { title: 'Seite nicht gefunden' });

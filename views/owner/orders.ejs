@@ -1,0 +1,59 @@
+<%- include('layout') %>
+<div class="section-header-row">
+  <h2><i class="fas fa-clipboard-list"></i> Alle Bestellungen – <%= datum %></h2>
+  <form method="GET" action="/eigentuemer/bestellungen" class="date-filter">
+    <input type="date" name="datum" value="<%= datum %>">
+    <button type="submit" class="btn btn-primary">Anzeigen</button>
+  </form>
+</div>
+
+<div class="owner-cards">
+  <div class="owner-card">
+    <div class="v"><%= received %></div>
+    <div class="l">Eingegangen (alle)</div>
+  </div>
+  <div class="owner-card">
+    <div class="v"><%= received - deleted %></div>
+    <div class="l">Aktiv</div>
+  </div>
+  <div class="owner-card">
+    <div class="v"><%= deleted %></div>
+    <div class="l">Gelöscht</div>
+  </div>
+  <div class="owner-card">
+    <div class="v"><%= parseFloat(revenue).toFixed(2) %> €</div>
+    <div class="l">Umsatz Tag</div>
+  </div>
+  <div class="owner-card gold">
+    <div class="v"><%= parseFloat(commission).toFixed(2) %> €</div>
+    <div class="l">Provision (<%= received %> × <%= rate.toFixed(2) %> €)</div>
+  </div>
+</div>
+
+<div class="table-container">
+  <table class="admin-table">
+    <thead><tr><th>Nr.</th><th>Zeit</th><th>Kunde</th><th>Artikel</th><th>Typ</th><th>Gesamt</th><th>Status</th></tr></thead>
+    <tbody>
+      <% if (!orders || orders.length === 0) { %>
+      <tr><td colspan="7" class="empty-state">Keine Bestellungen an diesem Tag.</td></tr>
+      <% } %>
+      <% orders.forEach(function(o) { %>
+      <tr class="<%= o.is_deleted ? 'row-deleted' : '' %>">
+        <td><strong><%= o.order_number %></strong><% if (o.is_deleted) { %><br><span class="badge-deleted">Gelöscht</span><% } %></td>
+        <td><%= new Date(o.created_at).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) %></td>
+        <td><%= o.customer_name %><br><small><%= o.customer_phone || '' %></small></td>
+        <td>
+          <% (o.itemsParsed || []).forEach(function(it) { %>
+          <div><%= it.qty %>× <%= it.name %><% if (it.size && it.size.label) { %> (<%= it.size.label %>)<% } %></div>
+          <% }); %>
+          <div class="items-mini"><%= parseFloat(o.total).toFixed(2) %> € via <%= o.payment_method === 'bar' ? 'Bar' : (o.payment_method === 'karte' ? 'Karte' : 'Online') %></div>
+        </td>
+        <td><%= o.order_type === 'abholung' ? 'Abholung' : 'Lieferung' %></td>
+        <td><strong><%= parseFloat(o.total).toFixed(2) %> €</strong></td>
+        <td><span class="badge-ok"><%= o.order_status %></span></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+<%- include('footer') %>

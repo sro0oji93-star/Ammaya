@@ -817,6 +817,18 @@ async function initialize() {
     console.error('Bild-Komprimierung übersprungen:', e.message);
   }
 
+  // Auto-Migration Eigentümer-Bereich 2026-09-06: Soft-Delete für Bestellungen +
+  // Rollen für Admins (bestehende Admins werden Eigentümer). Idempotent.
+  try {
+    await query('ALTER TABLE orders ADD COLUMN IF NOT EXISTS is_deleted INTEGER DEFAULT 0');
+    await query('ALTER TABLE orders ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP');
+    await query('ALTER TABLE admins ADD COLUMN IF NOT EXISTS role TEXT');
+    await query("UPDATE admins SET role = 'owner' WHERE role IS NULL OR role = ''");
+    await query("ALTER TABLE admins ALTER COLUMN role SET DEFAULT 'manager'");
+  } catch (e) {
+    console.error('Eigentümer-Migration übersprungen:', e.message);
+  }
+
   // Auto-Migration Schnitzel 2026-09-04: altes Wiener Schnitzel löschen, 4 neue per Upsert (idempotent)
   try {
     const schnitzelCat = await get("SELECT * FROM categories WHERE slug = 'schnitzel'");
@@ -1281,6 +1293,7 @@ async function initialize() {
     ['hero_theme', 'black-gold'],
     ['logo_url', '/images/nexo-logo.png'],
     ['font_family', 'Inter'],
+    ['commission_per_order', '0.40'],
   ];
   for (const [key, value] of defaultSettings) {
     await query(

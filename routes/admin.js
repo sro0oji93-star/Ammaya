@@ -51,10 +51,10 @@ router.get('/', auth, async (req, res) => {
   const stats = {
     products: (await db.get('SELECT COUNT(*) as count FROM products')).count,
     categories: (await db.get('SELECT COUNT(*) as count FROM categories')).count,
-    orders: (await db.get('SELECT COUNT(*) as count FROM orders')).count,
-    pending: (await db.get("SELECT COUNT(*) as count FROM orders WHERE order_status = 'neu' OR order_status = 'in_bearbeitung'")).count,
-    revenue: (await db.get("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE order_status != 'storniert'")).total,
-    recentOrders: await db.all('SELECT * FROM orders ORDER BY created_at DESC LIMIT 5'),
+    orders: (await db.get('SELECT COUNT(*) as count FROM orders WHERE COALESCE(is_deleted,0) = 0')).count,
+    pending: (await db.get("SELECT COUNT(*) as count FROM orders WHERE (order_status = 'neu' OR order_status = 'in_bearbeitung') AND COALESCE(is_deleted,0) = 0")).count,
+    revenue: (await db.get("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE order_status != 'storniert' AND COALESCE(is_deleted,0) = 0")).total,
+    recentOrders: await db.all('SELECT * FROM orders WHERE COALESCE(is_deleted,0) = 0 ORDER BY created_at DESC LIMIT 5'),
     unreadMessages: (await db.get("SELECT COUNT(*) as count FROM contact_messages WHERE is_read = 0")).count
   };
   const settings = res.locals.settings;
@@ -158,21 +158,21 @@ router.get('/bestellungen', auth, async (req, res) => {
   const status = req.query.status || 'alle';
   let orders;
   if (status === 'alle') {
-    orders = await db.all('SELECT * FROM orders ORDER BY created_at DESC');
+    orders = await db.all('SELECT * FROM orders WHERE COALESCE(is_deleted,0) = 0 ORDER BY created_at DESC');
   } else {
-    orders = await db.all('SELECT * FROM orders WHERE order_status = $1 ORDER BY created_at DESC', [status]);
+    orders = await db.all('SELECT * FROM orders WHERE order_status = $1 AND COALESCE(is_deleted,0) = 0 ORDER BY created_at DESC', [status]);
   }
   res.render('admin/orders', { title: 'Bestellungen – Admin', orders, currentStatus: status });
 });
 
 router.post('/bestellungen/status/:id', auth, async (req, res) => {
   const { status } = req.body;
-  await db.run('UPDATE orders SET order_status = $1 WHERE id = $2', [status, req.params.id]);
+  await db.run('UPDATE orders SET order_status = $1 WHERE id = $2 AND COALESCE(is_deleted,0) = 0', [status, req.params.id]);
   res.redirect('/admin/bestellungen');
 });
 
 router.get('/bestellungen/:id', auth, async (req, res) => {
-  const order = await db.get('SELECT * FROM orders WHERE id = $1', [req.params.id]);
+  const order = await db.get('SELECT * FROM orders WHERE id = $1 AND COALESCE(is_deleted,0) = 0', [req.params.id]);
   if (!order) return res.status(404).send('Bestellung nicht gefunden');
   order.items = JSON.parse(order.items);
   const settings = res.locals.settings;
@@ -180,7 +180,8 @@ router.get('/bestellungen/:id', auth, async (req, res) => {
 });
 
 router.post('/bestellungen/loeschen/:id', auth, async (req, res) => {
-  await db.run('DELETE FROM orders WHERE id = $1', [req.params.id]);
+  // Soft-Delete: Bestellung bleibt für den Eigentümer sichtbar + provisionspflichtig
+  await db.run('UPDATE orders SET is_deleted = 1, deleted_at = NOW() WHERE id = $1', [req.params.id]);
   res.redirect('/admin/bestellungen');
 });
 

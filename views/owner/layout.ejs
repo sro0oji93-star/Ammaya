@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> – Eigentümer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    .owner-badge { display:inline-block;font-size:10px;padding:2px 10px;background:rgba(212,175,55,.15);color:#9c7c1a;border-radius:50px;margin-top:4px;text-transform:uppercase;letter-spacing:1px;font-weight:700 }
+    .owner-cards { display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px }
+    .owner-card { background:#fff;border-radius:12px;padding:20px;border:1px solid #e8e4de;box-shadow:0 2px 12px rgba(0,0,0,.06) }
+    .owner-card .v { font-size:26px;font-weight:700;font-family:'Josefin Sans',sans-serif }
+    .owner-card .l { font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:1px }
+    .owner-card.gold { border-color:#d4af37;background:linear-gradient(135deg,#fffdf4,#fff) }
+    .owner-card.gold .v { color:#9c7c1a }
+    tr.row-deleted td { background:rgba(220,53,53,.06) !important }
+    .badge-deleted { display:inline-block;padding:2px 10px;border-radius:50px;background:rgba(220,53,53,.12);color:#dc3545;font-size:11px;font-weight:700 }
+    .badge-ok { display:inline-block;padding:2px 10px;border-radius:50px;background:rgba(45,138,78,.1);color:#2d8a4e;font-size:11px;font-weight:700 }
+    .date-filter { display:flex;gap:8px;align-items:center;flex-wrap:wrap }
+    .date-filter input { padding:10px 14px;border-radius:8px;border:1px solid #e8e4de;font-size:14px }
+    .items-mini { font-size:12px;color:#6b6b6b;margin-top:4px }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-logo" style="color:#d4af37">👑</span>
+        <h2>Eigentümer</h2>
+        <span class="owner-badge">Privat</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/eigentuemer" class="nav-item <% if (title.includes('Dashboard')) { %>active<% } %>"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        <a href="/eigentuemer/bestellungen" class="nav-item <% if (title.includes('Bestellungen')) { %>active<% } %>"><i class="fas fa-clipboard-list"></i> Alle Bestellungen</a>
+        <a href="/eigentuemer/benutzer" class="nav-item <% if (title.includes('Benutzer')) { %>active<% } %>"><i class="fas fa-users"></i> Benutzer</a>
+        <div class="sidebar-divider"></div>
+        <form method="POST" action="/eigentuemer/logout" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="nav-item logout" style="background:none;border:none;cursor:pointer;width:100%;text-align:left;font:inherit;color:inherit"><i class="fas fa-sign-out-alt"></i> Abmelden</button></form>
+      </nav>
+    </aside>
+    <main class="admin-main">
+      <header class="admin-header">
+        <h1><%= title.replace(' – Eigentümer', '') %></h1>
+        <div class="header-user">
+          <span><%= session.owner.display_name || session.owner.username %></span>
+          <div class="header-avatar" style="background:#d4af37;color:#0a0a0a"><%= (session.owner.display_name || session.owner.username).charAt(0).toUpperCase() %></div>
+        </div>
+      </header>
+      <div class="admin-content">

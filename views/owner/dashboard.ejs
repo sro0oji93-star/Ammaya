@@ -1,0 +1,47 @@
+<%- include('layout') %>
+<div class="section-header-row">
+  <h2><i class="fas fa-crown" style="color:#d4af37"></i> Übersicht</h2>
+</div>
+
+<div class="owner-cards">
+  <div class="owner-card">
+    <div class="v"><%= dayCount %></div>
+    <div class="l">Bestellungen heute</div>
+  </div>
+  <div class="owner-card">
+    <div class="v"><%= parseFloat(dayRevenue).toFixed(2) %> €</div>
+    <div class="l">Umsatz heute</div>
+  </div>
+  <div class="owner-card gold">
+    <div class="v"><%= (dayCount * rate).toFixed(2) %> €</div>
+    <div class="l">Deine Provision heute (<%= dayCount %> × <%= rate.toFixed(2) %> €)</div>
+  </div>
+  <div class="owner-card">
+    <div class="v"><%= dayDeleted %></div>
+    <div class="l">Gelöschte heute</div>
+  </div>
+  <div class="owner-card">
+    <div class="v"><%= monthCount %></div>
+    <div class="l">Bestellungen Monat</div>
+  </div>
+  <div class="owner-card gold">
+    <div class="v"><%= (monthCount * rate).toFixed(2) %> €</div>
+    <div class="l">Provision Monat</div>
+  </div>
+</div>
+
+<div class="settings-card">
+  <h3>Provision pro Bestellung</h3>
+  <form method="POST" action="/eigentuemer/provision" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="text" name="commission_per_order" value="<%= rate.toFixed(2) %>" style="padding:10px 14px;border-radius:8px;border:1px solid #e8e4de;font-size:14px;width:120px">
+    <span>€</span>
+    <button type="submit" class="btn btn-primary">Speichern</button>
+  </form>
+  <p style="font-size:12px;color:#6b6b6b;margin-top:8px">Gelöschte Bestellungen zählen trotzdem – Löschen reduziert deine Provision nicht.</p>
+</div>
+
+<% if (typeof success !== 'undefined' && success) { %>
+<div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success %></div>
+<% } %>
+<%- include('footer') %>
