@@ -13,7 +13,7 @@ const BOX_DEFS = {
   'box-2': [
     { key: 'burger1', type: 'radio', label: 'Burger 1', options: BURGER_OPTS },
     { key: 'burger2', type: 'radio', label: 'Burger 2', options: BURGER_OPTS },
-    { key: 'snacks', type: 'check', min: 6, max: 6, label: 'Snacks', title: '6 Snacks nach Wahl', source: 'snacks' },
+    { key: 'snacks', type: 'radio', label: 'Snacks', title: '6 Snacks nach Wahl', source: 'snacks' },
     { key: 'toppings', type: 'check', min: 3, max: 3, label: 'Pizza-Zutaten', title: 'Pizza: 3 Zutaten nach Wahl', source: 'toppings' },
     { key: 'sauces', type: 'check', min: 3, max: 3, label: 'Saucen', title: '3 Saucen nach Wahl', source: 'sauces' },
   ],

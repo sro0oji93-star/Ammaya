@@ -2,7 +2,7 @@
 <div class="box-choices" data-box-for="<%= productId %>" data-box-slug="<%= boxSlug %>" style="margin-top:10px;border:1px dashed #e5c8ce;border-radius:10px;padding:10px 12px;background:#fffdf7">
   <% boxGroups.forEach(function(g) { %>
     <% if (g.type === 'radio') { %>
-    <details class="box-radio-group" data-group="<%= g.key %>" style="margin-top:8px" open>
+    <details class="box-radio-group" data-group="<%= g.key %>" style="margin-top:8px">
       <summary style="cursor:pointer;font-weight:700;font-size:13px;color:#232223"><%= g.label %>: <span class="box-current" style="font-weight:400;color:#9c7c1a;font-size:12px"><%= g.options[0] %></span></summary>
       <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">
         <% g.options.forEach(function(opt, oi) { %>
@@ -15,7 +15,7 @@
       </div>
     </details>
     <% } else { %>
-    <details style="margin-top:8px" open>
+    <details style="margin-top:8px">
       <summary style="cursor:pointer;font-weight:700;font-size:13px;color:#232223"><%= g.title %> <span style="font-weight:400;color:#7a7879;font-size:12px">– bitte <%= g.max %> wählen</span></summary>
       <div style="margin-top:8px;display:flex;flex-direction:column;gap:2px;max-height:220px;overflow-y:auto;padding-right:4px">
         <% g.options.forEach(function(opt) { %>
