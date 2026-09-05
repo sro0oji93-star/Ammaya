@@ -7,8 +7,10 @@ var Cart = (function() {
   // Snacks-Menü: Aufpreis + erlaubte Softdrinks (Server prüft alles erneut – hier nur Anzeige)
   var MENUE_PRICE = 4.00;
   var MENUE_DRINKS = ['Coca-Cola', 'Fanta', 'Sprite', 'Mezzo Mix', 'Coca-Cola Zero'];
+  // Bowls-Saucen: 1× inklusive, jede weitere +0,80 €
+  var BOWL_SAUCE_PRICE = 0.80;
 
-  function makeKey(id, size, extras, menue, sauce) {
+  function makeKey(id, size, extras, menue, sauce, sauces) {
     var base = size && size.label ? id + '-' + size.label : String(id);
     if (extras && extras.length) {
       var names = extras.map(function(e) { return e.name; }).sort();
@@ -16,12 +18,13 @@ var Cart = (function() {
     }
     if (menue && menue.drink) base += '|m:' + menue.drink;
     if (sauce) base += '|s:' + sauce;
+    if (sauces && sauces.length) base += '|b:' + sauces.slice().sort().join('+');
     return base;
   }
 
   function migrateKeys() {
     items.forEach(function(i) {
-      i._key = makeKey(i.id, i.size, i.extras, i.menue, i.sauce);
+      i._key = makeKey(i.id, i.size, i.extras, i.menue, i.sauce, i.sauces);
     });
   }
 
@@ -54,7 +57,8 @@ var Cart = (function() {
         if (typeof i.pickupOnly === 'undefined') i.pickupOnly = false;
         if (!i.menue || !i.menue.drink) delete i.menue;
         if (typeof i.sauce !== 'string' || !i.sauce) delete i.sauce;
-        i._key = makeKey(i.id, i.size, i.extras, i.menue, i.sauce);
+        if (!Array.isArray(i.sauces)) delete i.sauces;
+        i._key = makeKey(i.id, i.size, i.extras, i.menue, i.sauce, i.sauces);
       });
       var disc = localStorage.getItem('feinDiscount');
       if (disc) discount = JSON.parse(disc);
@@ -83,18 +87,19 @@ var Cart = (function() {
     return items.some(function(i) { return !!i.pickupOnly; });
   }
 
-  function addItem(id, name, price, qty, size, extras, pickupOnly, menue, sauce) {
+  function addItem(id, name, price, qty, size, extras, pickupOnly, menue, sauce, sauces) {
     qty = qty || 1;
     extras = extras || [];
     if (!menue || !menue.drink) menue = null;
     if (typeof sauce !== 'string' || !sauce) sauce = null;
-    var key = makeKey(id, size, extras, menue, sauce);
+    if (!Array.isArray(sauces) || !sauces.length) sauces = null;
+    var key = makeKey(id, size, extras, menue, sauce, sauces);
     var existing = items.find(function(i) { return i._key === key; });
     if (existing) {
       existing.qty += qty;
       if (pickupOnly) existing.pickupOnly = true;
     } else {
-      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras, pickupOnly: !!pickupOnly, menue: menue, sauce: sauce });
+      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras, pickupOnly: !!pickupOnly, menue: menue, sauce: sauce, sauces: sauces });
     }
     save();
     renderCartBadge();
@@ -355,8 +360,16 @@ var Cart = (function() {
         }
         var unit = size.price;
         extras.forEach(function(e) { unit += e.price; });
+        // Bowls-Saucen: 1× inklusive, jede weitere +0,80 €
+        var bowlSauces = [];
+        var bowlBox = document.querySelector('[data-bowlsauces-for="' + id + '"]');
+        if (bowlBox) {
+          var bchecked = bowlBox.querySelectorAll('input[type="checkbox"]:checked');
+          for (var bi = 0; bi < bchecked.length; bi++) bowlSauces.push(bchecked[bi].getAttribute('data-bowl-sauce'));
+        }
+        if (bowlSauces.length > 1) unit += BOWL_SAUCE_PRICE * (bowlSauces.length - 1);
         unit = parseFloat(unit.toFixed(2));
-        addItem(id, name, unit, qty, size, extras, pickupOnly);
+        addItem(id, name, unit, qty, size, extras, pickupOnly, null, null, bowlSauces.length ? bowlSauces : null);
       } else if (hasMenue) {
         // Optionales Menü: nur wenn ein Softdrink gewählt wurde, sonst Grundpreis
         var scope = btn.closest('.mad-spec-info') || btn.closest('.content-element-2') || document;
@@ -489,6 +502,7 @@ var Cart = (function() {
       var nameHtml = item.size ? escapeHtml(item.name) + ' <small>(' + escapeHtml(item.size.label) + ')</small>' : escapeHtml(item.name);
       if (item.menue && item.menue.drink) nameHtml += '<br><small style="color:#9c7c1a">+ Menü mit ' + escapeHtml(item.menue.drink) + '</small>';
       if (item.sauce) nameHtml += '<br><small style="color:#9c7c1a">+ Sauce: ' + escapeHtml(item.sauce) + '</small>';
+      if (item.sauces && item.sauces.length) nameHtml += '<br><small style="color:#9c7c1a">+ Saucen: ' + escapeHtml(item.sauces.join(', ')) + '</small>';
       var extrasHtml = '';
       if (item.extras && item.extras.length) {
         extrasHtml = '<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px">' + item.extras.map(function(e) {
@@ -548,6 +562,7 @@ var Cart = (function() {
       var nameHtml = item.size ? escapeHtml(item.name) + ' (' + escapeHtml(item.size.label) + ')' : escapeHtml(item.name);
       if (item.menue && item.menue.drink) nameHtml += ' + Menü mit ' + escapeHtml(item.menue.drink);
       if (item.sauce) nameHtml += ' + Sauce: ' + escapeHtml(item.sauce);
+      if (item.sauces && item.sauces.length) nameHtml += ' + Saucen: ' + escapeHtml(item.sauces.join(', '));
       if (item.extras && item.extras.length) {
         var exNames = item.extras.map(function(e) { return escapeHtml(e.name); }).join(', ');
         nameHtml += '<br><small style="color:#7a7879">+ ' + exNames + '</small>';
@@ -669,7 +684,7 @@ document.addEventListener('DOMContentLoaded', function() {
         notes: formData.get('notes'),
         payment: formData.get('payment'),
         orderType: Cart.getOrderType(),
-        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }), note: i.note || '', menue: i.menue || null, sauce: i.sauce || null }; }),
+        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }), note: i.note || '', menue: i.menue || null, sauce: i.sauce || null, sauces: (i.sauces && i.sauces.length) ? i.sauces : null }; }),
         subtotal: Cart.getSubtotal(),
         delivery_fee: Cart.getDeliveryFee(Cart.getSubtotal()),
         discount: Cart.getDiscount().value,

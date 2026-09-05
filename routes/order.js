@@ -174,6 +174,23 @@ router.post('/', async (req, res) => {
         } else {
           delete item.sauce;
         }
+        // Bowls-Saucen: 1× inklusive, jede weitere +0,80 €
+        const BOWL_SAUCES = ['NEXO Haussoße', 'Knoblauchsoße', 'BBQ-Soße', 'American-Soße', 'Cheddar-Soße'];
+        if (item.sauces && item.sauces.length) {
+          if (product.catslug !== 'bowls') {
+            return res.status(400).json({ success: false, message: 'Ungültige Saucen für: ' + item.name });
+          }
+          const clean = [...new Set(item.sauces)].filter(s => BOWL_SAUCES.includes(s));
+          if (!clean.length) {
+            delete item.sauces;
+          } else {
+            clean.forEach((sn, si) => item.extras.push({ name: 'Sauce: ' + sn, price: si === 0 ? 0 : 0.80 }));
+            realPrice = parseFloat((realPrice + 0.80 * (clean.length - 1)).toFixed(2));
+            item.sauces = clean;
+          }
+        } else {
+          delete item.sauces;
+        }
       } else {
         realPrice = parseFloat(product.price);
         delete item.extras;
@@ -188,6 +205,7 @@ router.post('/', async (req, res) => {
         } else {
           delete item.sauce;
         }
+        delete item.sauces;
       }
       // Notiz pro Position (aus der Kasse), max. 200 Zeichen
       if (typeof item.note === 'string' && item.note.trim()) {
