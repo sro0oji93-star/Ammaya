@@ -126,7 +126,7 @@
                   <div class="mad-spec-el"><%= p.description %></div>
                 </div>
                 <% if (p.sizes) { var sizeData = JSON.parse(p.sizes); %>
-                <% if (cat.slug === 'croque' || cat.slug === 'salat') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData }) %><% } else if (cat.slug === 'burger') { %><%- include('partials/burger-menue', { productId: p.id, productName: p.name, sizeData: sizeData }) %><% } else { %>
+                <% if (cat.slug === 'croque' || cat.slug === 'salat') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData }) %><% } else if (cat.slug === 'schnitzel') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData, boxTitle: '1 Beilage nach Wahl' }) %><% } else if (cat.slug === 'burger') { %><%- include('partials/burger-menue', { productId: p.id, productName: p.name, sizeData: sizeData }) %><% } else { %>
                 <div class="size-picker" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
                   <% sizeData.forEach(function(s) { %>
                   <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #3a3a41;border-radius:10px;font-size:13px;transition:all .25s ease;background:#1d1d21;color:#f0ead8;box-shadow:0 1px 4px rgba(0,0,0,0.4);text-align:center">
@@ -166,7 +166,7 @@
                   <div class="mad-spec-el"><%= p.description %></div>
                 </div>
                 <% if (p.sizes) { var sizeData = JSON.parse(p.sizes); %>
-                <% if (cat.slug === 'croque' || cat.slug === 'salat') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData }) %><% } else if (cat.slug === 'burger') { %><%- include('partials/burger-menue', { productId: p.id, productName: p.name, sizeData: sizeData }) %><% } else { %>
+                <% if (cat.slug === 'croque' || cat.slug === 'salat') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData }) %><% } else if (cat.slug === 'schnitzel') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData, boxTitle: '1 Beilage nach Wahl' }) %><% } else if (cat.slug === 'burger') { %><%- include('partials/burger-menue', { productId: p.id, productName: p.name, sizeData: sizeData }) %><% } else { %>
                 <div class="size-picker" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
                   <% sizeData.forEach(function(s) { %>
                   <label class="size-option" style="cursor:pointer;padding:6px 14px;border:2px solid #3a3a41;border-radius:10px;font-size:13px;transition:all .25s ease;background:#1d1d21;color:#f0ead8;box-shadow:0 1px 4px rgba(0,0,0,0.4);text-align:center">

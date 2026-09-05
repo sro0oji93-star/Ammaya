@@ -864,6 +864,22 @@ async function initialize() {
     console.error('Salat-Dressing übersprungen:', e.message);
   }
 
+  // Auto-Migration Schnitzel-Beilage 2026-09-06: 1 Beilage nach Wahl (Pommes oder Kroketten, inklusive).
+  // Nur setzen, wenn noch keine Auswahl da ist.
+  try {
+    const schnitzelCat = await get("SELECT id FROM categories WHERE slug = 'schnitzel'");
+    if (schnitzelCat) {
+      const beilagen = ['Pommes', 'Kroketten'];
+      const schnitzel = await all('SELECT id, price FROM products WHERE category_id = $1 AND sizes IS NULL', [schnitzelCat.id]);
+      for (const s of schnitzel) {
+        const opts = beilagen.map(b => ({ label: 'Beilage: ' + b, price: parseFloat(s.price) }));
+        await query('UPDATE products SET sizes = $1 WHERE id = $2', [JSON.stringify(opts), s.id]);
+      }
+    }
+  } catch (e) {
+    console.error('Schnitzel-Beilage übersprungen:', e.message);
+  }
+
   // Auto-Migration Burger-Menü 2026-09-06: Solo oder Menü (+5 €, Pommes + 0,33l Softdrink nach Wahl).
   // Nur setzen, wenn noch keine Auswahl da ist.
   try {

@@ -1,8 +1,9 @@
-<% /* 1 Sauce nach Wahl für Croque – Locals: productId, sizeData, optional radioName. Genau 1 Auswahl (inklusive). */ %>
+<% /* Auswahl-Box (Sauce/Beilage) – Locals: productId, sizeData, optional radioName, optional boxTitle. Genau 1 Auswahl (inklusive). */ %>
 <% var radioName = (typeof radioName !== 'undefined' && radioName) ? radioName : ('size_' + productId); %>
+<% var boxTitle = (typeof boxTitle !== 'undefined' && boxTitle) ? boxTitle : '1 Sauce nach Wahl'; %>
 <div class="croque-sauces" data-sauces-for="<%= productId %>" style="margin-top:10px;border:1px dashed #e5c8ce;border-radius:10px;padding:10px 12px;background:#fffdf7">
   <details>
-    <summary style="cursor:pointer;font-weight:700;font-size:13px;color:#232223">1 Sauce nach Wahl <span style="font-weight:400;color:#7a7879;font-size:12px">– inklusive, bitte wählen</span></summary>
+    <summary style="cursor:pointer;font-weight:700;font-size:13px;color:#232223"><%= boxTitle %> <span style="font-weight:400;color:#7a7879;font-size:12px">– inklusive, bitte wählen</span></summary>
     <div style="margin-top:8px;display:flex;flex-direction:column;gap:2px;max-height:220px;overflow-y:auto;padding-right:4px">
       <% sizeData.forEach(function(s) { %>
       <label class="sauce-row" style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:4px 6px;border-radius:8px;border:1.5px solid transparent">

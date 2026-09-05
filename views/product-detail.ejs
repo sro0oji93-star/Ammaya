@@ -39,6 +39,8 @@
               <div class="content-element-2">
                 <% if (product.category_name === 'Croque' || product.category_name === 'Salat') { %>
                 <%- include('partials/croque-sauces', { productId: product.id, sizeData: sizeData, radioName: 'detailSize' }) %>
+                <% } else if (product.category_name === 'Schnitzel') { %>
+                <%- include('partials/croque-sauces', { productId: product.id, sizeData: sizeData, radioName: 'detailSize', boxTitle: '1 Beilage nach Wahl' }) %>
                 <% } else if (product.category_name === 'Burger') { %>
                 <%- include('partials/burger-menue', { productId: product.id, productName: product.name, sizeData: sizeData, radioName: 'detailSize' }) %>
                 <% } else { %>
