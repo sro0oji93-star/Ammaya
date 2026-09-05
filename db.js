@@ -899,6 +899,22 @@ async function initialize() {
     console.error('Rings-Sauce übersprungen:', e.message);
   }
 
+  // Auto-Migration Bowls-Beilage 2026-09-06: 1 Beilage nach Wahl (Reis oder Pommes, inklusive).
+  // Nur setzen, wenn noch keine Auswahl da ist.
+  try {
+    const bowlsCat = await get("SELECT id FROM categories WHERE slug = 'bowls'");
+    if (bowlsCat) {
+      const beilagen2 = ['Reis', 'Pommes'];
+      const bowls = await all('SELECT id, price FROM products WHERE category_id = $1 AND sizes IS NULL', [bowlsCat.id]);
+      for (const b of bowls) {
+        const opts = beilagen2.map(x => ({ label: 'Beilage: ' + x, price: parseFloat(b.price) }));
+        await query('UPDATE products SET sizes = $1 WHERE id = $2', [JSON.stringify(opts), b.id]);
+      }
+    }
+  } catch (e) {
+    console.error('Bowls-Beilage übersprungen:', e.message);
+  }
+
   // Auto-Migration Burger-Menü 2026-09-06: Solo oder Menü (+5 €, Pommes + 0,33l Softdrink nach Wahl).
   // Nur setzen, wenn noch keine Auswahl da ist.
   try {
