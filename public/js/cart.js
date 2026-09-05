@@ -470,6 +470,19 @@ var Cart = (function() {
           box[gk].push(c.getAttribute('data-box-value'));
         });
         if (!boxOk) { showToast('Bitte Box konfigurieren'); return; }
+        // Pflicht: Checkbox-Gruppen müssen vollständig sein (z.B. genau 3 Saucen)
+        var BOX_GROUP_LABELS = { sauces: 'Saucen', snacks: 'Snacks', toppings: 'Zutaten' };
+        var seenBoxGroups = {};
+        var needMsg = null;
+        bbox.querySelectorAll('input[type="checkbox"][data-max]').forEach(function(c) {
+          var gk = c.getAttribute('data-box-group');
+          if (seenBoxGroups[gk]) return;
+          seenBoxGroups[gk] = true;
+          var gmax = parseInt(c.getAttribute('data-max')) || 0;
+          var gcnt = bbox.querySelectorAll('input[type="checkbox"][data-box-group="' + gk + '"]:checked').length;
+          if (gcnt !== gmax) needMsg = 'Bitte ' + gmax + '× ' + (BOX_GROUP_LABELS[gk] || gk) + ' wählen (noch ' + (gmax - gcnt) + ')';
+        });
+        if (needMsg) { showToast(needMsg); return; }
         var bunit = parseFloat(btn.getAttribute('data-price'));
         addItem(id, name, bunit, qty, null, [], pickupOnly, null, null, null, { slug: bboxSlug, choices: box });
       } else {

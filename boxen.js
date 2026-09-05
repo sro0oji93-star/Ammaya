@@ -8,20 +8,20 @@ const BOX_DEFS = {
   'box-1': [
     { key: 'burger1', type: 'radio', label: 'Burger 1', options: BURGER_OPTS },
     { key: 'burger2', type: 'radio', label: 'Burger 2', options: BURGER_OPTS },
-    { key: 'sauces', type: 'check', max: 3, label: 'Saucen', title: '3 Saucen nach Wahl', source: 'sauces' },
+    { key: 'sauces', type: 'check', min: 3, max: 3, label: 'Saucen', title: '3 Saucen nach Wahl', source: 'sauces' },
   ],
   'box-2': [
     { key: 'burger1', type: 'radio', label: 'Burger 1', options: BURGER_OPTS },
     { key: 'burger2', type: 'radio', label: 'Burger 2', options: BURGER_OPTS },
-    { key: 'snacks', type: 'check', max: 6, label: 'Snacks', title: '6 Snacks nach Wahl', source: 'snacks' },
-    { key: 'toppings', type: 'check', max: 3, label: 'Pizza-Zutaten', title: 'Pizza: 3 Zutaten nach Wahl', source: 'toppings' },
-    { key: 'sauces', type: 'check', max: 3, label: 'Saucen', title: '3 Saucen nach Wahl', source: 'sauces' },
+    { key: 'snacks', type: 'check', min: 6, max: 6, label: 'Snacks', title: '6 Snacks nach Wahl', source: 'snacks' },
+    { key: 'toppings', type: 'check', min: 3, max: 3, label: 'Pizza-Zutaten', title: 'Pizza: 3 Zutaten nach Wahl', source: 'toppings' },
+    { key: 'sauces', type: 'check', min: 3, max: 3, label: 'Saucen', title: '3 Saucen nach Wahl', source: 'sauces' },
   ],
   'box-3': [
     { key: 'burger', type: 'radio', label: 'Burger', options: BURGER_OPTS },
     { key: 'pasta', type: 'radio', label: 'Pasta', source: 'pastas' },
-    { key: 'toppings', type: 'check', max: 3, label: 'Pizza-Zutaten', title: 'Pizza: 3 Zutaten nach Wahl', source: 'toppings' },
-    { key: 'sauces', type: 'check', max: 2, label: 'Saucen', title: '2 Saucen nach Wahl', source: 'sauces' },
+    { key: 'toppings', type: 'check', min: 3, max: 3, label: 'Pizza-Zutaten', title: 'Pizza: 3 Zutaten nach Wahl', source: 'toppings' },
+    { key: 'sauces', type: 'check', min: 2, max: 2, label: 'Saucen', title: '2 Saucen nach Wahl', source: 'sauces' },
   ],
 };
 
@@ -58,8 +58,12 @@ function validateBox(boxSlug, box, lists) {
       lines.push({ name: g.label + ': ' + val, price: 0 });
     } else {
       const arr = Array.isArray(val) ? [...new Set(val)] : [];
-      if (arr.length > g.max || arr.some(v => !allowed.includes(v))) {
+      const min = (g.min != null) ? g.min : 0;
+      if (arr.some(v => !allowed.includes(v)) || arr.length > g.max) {
         return { ok: false, error: 'Maximal ' + g.max + '× ' + g.label };
+      }
+      if (arr.length < min) {
+        return { ok: false, error: 'Bitte ' + min + '× ' + g.label + ' wählen (noch ' + (min - arr.length) + ')' };
       }
       if (arr.length) lines.push({ name: g.label + ': ' + arr.join(', '), price: 0 });
     }
