@@ -96,7 +96,7 @@ async function seed() {
     [5, 'NEXO Scampi Royal', 'nexo-scampi-royal', 'Scampi, Knoblauch, Tomaten-Sahnesauce', 13.90, null, '/images/products/img11.jpg', 'Scampi, Knoblauch, Tomaten-Sahnesauce', 1, 10, null],
     [5, 'NEXO Wunsch', 'pasta-wunsch', 'Zwei Zutaten und Sauce nach Wahl', 10.90, null, '/images/products/img10.jpg', 'Zwei Zutaten und Sauce nach Wahl', 0, 11, null],
     [5, 'NEXO Hähnchen Genuss', 'nexo-haehnchen-genuss', 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 11.50, null, '/images/products/img11.jpg', 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 0, 12, null],
-    [5, 'NEXO Deluxe', 'nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, null, '/images/products/img10.jpg', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, null],
+    [5, 'NEXO Deluxe', 'pasta-nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, null, '/images/products/img10.jpg', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, null],
     [5, 'NEXO Signature', 'nexo-signature', 'Hähnchen, Mais, Brokkoli, Sahnesauce', 12.90, null, '/images/products/img11.jpg', 'Hähnchen, Mais, Brokkoli, Sahnesauce', 0, 14, null],
     [6, 'Schnitzel Wiener Art', 'schnitzel-wiener-art', 'Schnitzel, Zitrone', 13.90, null, '/images/products/img16.jpg', 'Schnitzel, Zitrone', 1, 1, null],
     [6, 'Jägerschnitzel', 'jaegerschnitzel', 'Schnitzel, Champignons, Jägersauce', 15.90, null, '/images/products/img17.jpg', 'Schnitzel, Champignons, Jägersauce', 0, 2, null],

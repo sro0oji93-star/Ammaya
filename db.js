@@ -313,7 +313,7 @@ async function initialize() {
       [5, 'NEXO Scampi Royal', 'nexo-scampi-royal', 'Scampi, Knoblauch, Tomaten-Sahnesauce', 13.90, null, 'Scampi, Knoblauch, Tomaten-Sahnesauce', 1, 10, null],
       [5, 'NEXO Wunsch', 'pasta-wunsch', 'Zwei Zutaten und Sauce nach Wahl', 10.90, null, 'Zwei Zutaten und Sauce nach Wahl', 0, 11, null],
       [5, 'NEXO Hähnchen Genuss', 'nexo-haehnchen-genuss', 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 11.50, null, 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 0, 12, null],
-      [5, 'NEXO Deluxe', 'nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, null, 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, null],
+      [5, 'NEXO Deluxe', 'pasta-nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, null, 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, null],
       [5, 'NEXO Signature', 'nexo-signature', 'Hähnchen, Mais, Brokkoli, Sahnesauce', 12.90, null, 'Hähnchen, Mais, Brokkoli, Sahnesauce', 0, 14, null],
       [6, 'Schnitzel Wiener Art', 'schnitzel-wiener-art', 'Schnitzel, Zitrone', 13.90, null, 'Schnitzel, Zitrone', 1, 1, null],
       [6, 'Jägerschnitzel', 'jaegerschnitzel', 'Schnitzel, Champignons, Jägersauce', 15.90, null, 'Schnitzel, Champignons, Jägersauce', 0, 2, null],
@@ -748,7 +748,7 @@ async function initialize() {
         ['NEXO Scampi Royal', 'nexo-scampi-royal', 'Scampi, Knoblauch, Tomaten-Sahnesauce', 13.90, 'Scampi, Knoblauch, Tomaten-Sahnesauce', 1, 10, '/images/products/img11.jpg', null],
         ['NEXO Wunsch', 'pasta-wunsch', 'Zwei Zutaten und Sauce nach Wahl', 10.90, 'Zwei Zutaten und Sauce nach Wahl', 0, 11, '/images/products/img10.jpg', null],
         ['NEXO Hähnchen Genuss', 'nexo-haehnchen-genuss', 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 11.50, 'Hähnchen, Champignons, Paprika, Zwiebel, Sahnesauce', 0, 12, '/images/products/img11.jpg', null],
-        ['NEXO Deluxe', 'nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, '/images/products/img10.jpg', null],
+        ['NEXO Deluxe', 'pasta-nexo-deluxe', 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 12.90, 'Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce', 0, 13, '/images/products/img10.jpg', null],
         ['NEXO Signature', 'nexo-signature', 'Hähnchen, Mais, Brokkoli, Sahnesauce', 12.90, 'Hähnchen, Mais, Brokkoli, Sahnesauce', 0, 14, '/images/products/img11.jpg', null],
       ];
       for (const [name, slug, description, price, ingredients, is_featured, sort_order, image, sizes] of pasten) {
@@ -762,6 +762,35 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Pasta Auto-Migration übersprungen:', e.message);
+  }
+
+  // Auto-Migration Pasta-Deluxe-Fix 2026-09-06: der Pasta-Upsert hat die Pizza-Zeile
+  // 'nexo-deluxe' per ON CONFLICT in die Pasta-Kategorie verschoben (mit Pizza-Größen).
+  // Pizza-Zeile wiederherstellen + eigene Pasta-Zeile mit eigenem Slug (idempotent).
+  try {
+    const pizzaCatFix = await get("SELECT * FROM categories WHERE slug = 'pizza'");
+    const pastaCatFix = await get("SELECT * FROM categories WHERE slug = 'pasta'");
+    if (pizzaCatFix) {
+      await query(
+        `UPDATE products SET category_id=$1, description='Crème fraîche, Lachs, Paprika, Rucola', price=15.20, ingredients='Crème fraîche, Lachs, Paprika, Rucola', is_featured=0, is_available=1, sort_order=28, sizes=$2, image=COALESCE(products.image, '/images/products/img2.jpg') WHERE slug='nexo-deluxe'`,
+        [pizzaCatFix.id, '[{"label":"26 cm","price":15.2},{"label":"30 cm","price":17.5},{"label":"Familien Pizza","price":26.9},{"label":"Party 60x40","price":37.9}]']
+      );
+    }
+    if (pastaCatFix) {
+      await query(
+        `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
+         VALUES ($1,'NEXO Deluxe','pasta-nexo-deluxe','Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce',12.90,NULL,'/images/products/img10.jpg','Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce',0,1,13,NULL)
+         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=NULL, image=COALESCE(products.image, EXCLUDED.image)`,
+        [pastaCatFix.id]
+      );
+      // Falsche Pasta-Deluxe-Duplikate (mit Pizza-Größen) entfernen
+      await query(
+        `DELETE FROM products WHERE category_id=$1 AND name='NEXO Deluxe' AND slug != 'pasta-nexo-deluxe' AND sizes IS NOT NULL`,
+        [pastaCatFix.id]
+      );
+    }
+  } catch (e) {
+    console.error('Pasta-Deluxe-Fix übersprungen:', e.message);
   }
 
   // Auto-Migration Schnitzel 2026-09-04: altes Wiener Schnitzel löschen, 4 neue per Upsert (idempotent)
