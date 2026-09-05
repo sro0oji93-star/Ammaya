@@ -5,10 +5,7 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const slugify = require('slugify');
 const auth = require('../middleware/auth');
-
-function bufferToDataUri(buffer, mimetype) {
-  return 'data:' + mimetype + ';base64,' + buffer.toString('base64');
-}
+const { optimizeUpload } = require('../image');
 
 const storage = multer.memoryStorage();
 const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
@@ -93,7 +90,7 @@ router.get('/produkte', auth, async (req, res) => {
 router.post('/produkte', auth, upload.single('image'), async (req, res) => {
   const { name, category_id, description, price, old_price, ingredients, is_featured, is_available, sort_order, sizes } = req.body;
   const slug = slugify(name, { lower: true, strict: true });
-  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : null;
+  const image = req.file ? await optimizeUpload(req.file.buffer, req.file.mimetype) : null;
   const existing = await db.get('SELECT id FROM products WHERE name = $1', [name]);
   if (existing) {
     return res.redirect('/admin/produkte?duplicate=1');
@@ -115,7 +112,7 @@ router.post('/produkte/bearbeiten/:id', auth, upload.single('image'), async (req
   const product = await db.get('SELECT * FROM products WHERE id = $1', [req.params.id]);
   if (!product) return res.status(404).send('Produkt nicht gefunden');
   const slug = slugify(name, { lower: true, strict: true }) + '-' + req.params.id;
-  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : product.image;
+  const image = req.file ? await optimizeUpload(req.file.buffer, req.file.mimetype) : product.image;
   let sizesJson = product.sizes;
   if (sizes !== undefined) {
     try { sizesJson = JSON.stringify(JSON.parse(sizes)); } catch (e) { sizesJson = product.sizes; }
@@ -211,7 +208,7 @@ router.get('/banner', auth, async (req, res) => {
 
 router.post('/banner', auth, upload.single('image'), async (req, res) => {
   const { title, subtitle, link, sort_order } = req.body;
-  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : null;
+  const image = req.file ? await optimizeUpload(req.file.buffer, req.file.mimetype) : null;
   await db.run('INSERT INTO banners (title, subtitle, image, link, sort_order) VALUES ($1, $2, $3, $4, $5)',
     [title, subtitle, image, link, sort_order || 0]);
   res.redirect('/admin/banner');
@@ -229,7 +226,7 @@ router.get('/testimonials', auth, async (req, res) => {
 
 router.post('/testimonials', auth, upload.single('image'), async (req, res) => {
   const { name, text, rating } = req.body;
-  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : null;
+  const image = req.file ? await optimizeUpload(req.file.buffer, req.file.mimetype) : null;
   await db.run('INSERT INTO testimonials (name, text, rating, image) VALUES ($1, $2, $3, $4)',
     [name, text, rating || 5, image]);
   res.redirect('/admin/testimonials');
@@ -239,7 +236,7 @@ router.post('/testimonials/bearbeiten/:id', auth, upload.single('image'), async 
   const { name, text, rating, active } = req.body;
   const t = await db.get('SELECT * FROM testimonials WHERE id = $1', [req.params.id]);
   if (!t) return res.status(404).send('Testimonial nicht gefunden');
-  const image = req.file ? bufferToDataUri(req.file.buffer, req.file.mimetype) : t.image;
+  const image = req.file ? await optimizeUpload(req.file.buffer, req.file.mimetype) : t.image;
   await db.run('UPDATE testimonials SET name=$1, text=$2, rating=$3, image=$4, active=$5 WHERE id=$6',
     [name, text, rating || 5, image, active ? 1 : 0, req.params.id]);
   res.redirect('/admin/testimonials');
@@ -306,9 +303,9 @@ const hsUpload = upload.fields([
   { name: 'drink_br_file', maxCount: 1 }
 ]);
 
-function imgVal(files, field, textVal) {
+async function imgVal(files, field, textVal) {
   if (files && files[field] && files[field][0]) {
-    return bufferToDataUri(files[field][0].buffer, files[field][0].mimetype);
+    return optimizeUpload(files[field][0].buffer, files[field][0].mimetype);
   }
   return textVal || '';
 }
@@ -317,11 +314,11 @@ router.post('/einstellungen/hero-slides', auth, hsUpload, async (req, res) => {
   const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, sort_order } = req.body;
   await db.run(`INSERT INTO hero_slides (sort_order, line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, bg_image, main_image, drink_tl, drink_tr, drink_br) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)`,
     [sort_order || 0, line1 || '', line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/warenkorb',
-    imgVal(req.files, 'bg_image_file', req.body.bg_image) || '/images/revolution/6cbea-bg1.jpg',
-    imgVal(req.files, 'main_image_file', req.body.main_image) || '/images/revolution/75ec1-big1.png',
-    imgVal(req.files, 'drink_tl_file', req.body.drink_tl),
-    imgVal(req.files, 'drink_tr_file', req.body.drink_tr),
-    imgVal(req.files, 'drink_br_file', req.body.drink_br)]);
+    await imgVal(req.files, 'bg_image_file', req.body.bg_image) || '/images/revolution/6cbea-bg1.jpg',
+    await imgVal(req.files, 'main_image_file', req.body.main_image) || '/images/revolution/75ec1-big1.png',
+    await imgVal(req.files, 'drink_tl_file', req.body.drink_tl),
+    await imgVal(req.files, 'drink_tr_file', req.body.drink_tr),
+    await imgVal(req.files, 'drink_br_file', req.body.drink_br)]);
   // Anzeige-Preise sind Single Source: Deal-Produkt sofort von den Slide-Preisen ableiten
   try {
     await db.syncDealPricesFromSlide({ button_link: button_link || '/warenkorb', price1, price1_cents, price1_tag, price2, price2_cents, price2_tag });
@@ -337,18 +334,18 @@ router.post('/einstellungen/hero-slides/bearbeiten/:id', auth, hsUpload, async (
   const slide = await db.get('SELECT * FROM hero_slides WHERE id = $1', [req.params.id]);
   if (!slide) return res.status(404).send('Slide nicht gefunden');
   const { line1, line2, line3, price1, price1_cents, price1_tag, price2, price2_cents, price2_tag, description, button_text, button_link, sort_order, active, remove_bg_image, remove_main_image, remove_drink_tl, remove_drink_tr, remove_drink_br } = req.body;
-  function imgValEdit(field, fileField, oldVal, defaultVal) {
-    if (req.files && req.files[fileField] && req.files[fileField][0]) return bufferToDataUri(req.files[fileField][0].buffer, req.files[fileField][0].mimetype);
+  async function imgValEdit(field, fileField, oldVal, defaultVal) {
+    if (req.files && req.files[fileField] && req.files[fileField][0]) return optimizeUpload(req.files[fileField][0].buffer, req.files[fileField][0].mimetype);
     if (req.body['remove_' + field]) return '';
     return oldVal || defaultVal || '';
   }
   await db.run(`UPDATE hero_slides SET sort_order=$1, line2=$2, line3=$3, price1=$4, price1_cents=$5, price1_tag=$6, price2=$7, price2_cents=$8, price2_tag=$9, description=$10, button_text=$11, button_link=$12, bg_image=$13, main_image=$14, drink_tl=$15, drink_tr=$16, drink_br=$17, active=$18, line1=$19 WHERE id=$20`,
     [sort_order || 0, line2 || '', line3 || '', price1 || '', price1_cents || '', price1_tag || '', price2 || '', price2_cents || '', price2_tag || '', description || '', button_text || 'JETZT BESTELLEN', button_link || '/warenkorb',
-    imgValEdit('bg_image', 'bg_image_file', slide.bg_image, '/images/revolution/6cbea-bg1.jpg'),
-    imgValEdit('main_image', 'main_image_file', slide.main_image, '/images/revolution/75ec1-big1.png'),
-    imgValEdit('drink_tl', 'drink_tl_file', slide.drink_tl),
-    imgValEdit('drink_tr', 'drink_tr_file', slide.drink_tr),
-    imgValEdit('drink_br', 'drink_br_file', slide.drink_br),
+    await imgValEdit('bg_image', 'bg_image_file', slide.bg_image, '/images/revolution/6cbea-bg1.jpg'),
+    await imgValEdit('main_image', 'main_image_file', slide.main_image, '/images/revolution/75ec1-big1.png'),
+    await imgValEdit('drink_tl', 'drink_tl_file', slide.drink_tl),
+    await imgValEdit('drink_tr', 'drink_tr_file', slide.drink_tr),
+    await imgValEdit('drink_br', 'drink_br_file', slide.drink_br),
     active ? 1 : 0, line1 || '', req.params.id]);
   // Anzeige-Preise sind Single Source: Deal-Produkt sofort von den Slide-Preisen ableiten
   try {

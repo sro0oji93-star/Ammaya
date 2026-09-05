@@ -793,6 +793,30 @@ async function initialize() {
     console.error('Pasta-Deluxe-Fix übersprungen:', e.message);
   }
 
+  // Auto-Migration Bild-Komprimierung 2026-09-06: riesige Data-URI-Bilder
+  // (z.B. per Datei-Upload) verkleinern, damit die Seiten schnell laden (idempotent)
+  try {
+    const { shrinkDataUri } = require('./image');
+    const jobs = [
+      ['hero_slides', 'bg_image'], ['hero_slides', 'main_image'],
+      ['hero_slides', 'drink_tl'], ['hero_slides', 'drink_tr'], ['hero_slides', 'drink_br'],
+      ['products', 'image'], ['banners', 'image'], ['testimonials', 'image'],
+    ];
+    for (const [table, col] of jobs) {
+      const rows = await all(`SELECT id, ${col} AS val FROM ${table} WHERE ${col} LIKE 'data:image%'`);
+      for (const r of rows) {
+        if (!r.val || r.val.length < 400 * 1024) continue;
+        const smaller = await shrinkDataUri(r.val);
+        if (smaller && smaller !== r.val) {
+          await query(`UPDATE ${table} SET ${col}=$1 WHERE id=$2`, [smaller, r.id]);
+          console.log(`Bild komprimiert: ${table}.${col} id=${r.id} (${Math.round(r.val.length / 1024)}KB -> ${Math.round(smaller.length / 1024)}KB)`);
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Bild-Komprimierung übersprungen:', e.message);
+  }
+
   // Auto-Migration Schnitzel 2026-09-04: altes Wiener Schnitzel löschen, 4 neue per Upsert (idempotent)
   try {
     const schnitzelCat = await get("SELECT * FROM categories WHERE slug = 'schnitzel'");
