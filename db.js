@@ -880,6 +880,25 @@ async function initialize() {
     console.error('Schnitzel-Beilage übersprungen:', e.message);
   }
 
+  // Auto-Migration Rings-Sauce 2026-09-06: 1 Sauce nach Wahl (inklusive) aus Saucen & Dips.
+  // Nur setzen, wenn noch keine Auswahl da ist.
+  try {
+    const sauceCat2 = await get("SELECT id FROM categories WHERE slug = 'saucen-dips'");
+    const ringsCat = await get("SELECT id FROM categories WHERE slug = 'rings'");
+    if (sauceCat2 && ringsCat) {
+      const sauces2 = await all('SELECT name FROM products WHERE category_id = $1 AND is_available = 1 ORDER BY sort_order', [sauceCat2.id]);
+      const rings = await all('SELECT id, price FROM products WHERE category_id = $1 AND sizes IS NULL', [ringsCat.id]);
+      for (const r of rings) {
+        const opts = sauces2.map(s => ({ label: 'Sauce: ' + s.name, price: parseFloat(r.price) }));
+        if (opts.length) {
+          await query('UPDATE products SET sizes = $1 WHERE id = $2', [JSON.stringify(opts), r.id]);
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Rings-Sauce übersprungen:', e.message);
+  }
+
   // Auto-Migration Burger-Menü 2026-09-06: Solo oder Menü (+5 €, Pommes + 0,33l Softdrink nach Wahl).
   // Nur setzen, wenn noch keine Auswahl da ist.
   try {

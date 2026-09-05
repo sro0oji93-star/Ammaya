@@ -120,6 +120,11 @@ router.post('/', async (req, res) => {
     let calculatedSubtotal = 0;
     const nowBerlinMin = berlinMinutes();
     let hasPickupOnlyDeal = false;
+    // Saucenliste für Gratis-Sauce (Rings, Pizza Brötchen) – einmal laden
+    const sauceCatRow = await db.get("SELECT id FROM categories WHERE slug = 'saucen-dips'");
+    const validSauces = sauceCatRow
+      ? (await db.all('SELECT name FROM products WHERE category_id = $1', [sauceCatRow.id])).map(r => r.name)
+      : [];
     for (const item of parsedItems) {
       const product = await db.get('SELECT p.id, p.slug, p.price, p.sizes, c.slug AS catslug FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.id = $1', [item.id]);
       if (!product) {
@@ -159,10 +164,30 @@ router.post('/', async (req, res) => {
         } else {
           delete item.menue;
         }
+        // Gratis-Sauce (Rings, Pizza Brötchen): Name gegen Saucen-Liste prüfen, Preis 0
+        if (typeof item.sauce === 'string' && item.sauce) {
+          if ((product.catslug !== 'rings' && product.catslug !== 'pizza-broetchen') || !validSauces.includes(item.sauce)) {
+            return res.status(400).json({ success: false, message: 'Ungültige Sauce für: ' + item.name });
+          }
+          item.extras.push({ name: 'Sauce: ' + item.sauce, price: 0 });
+          delete item.sauce;
+        } else {
+          delete item.sauce;
+        }
       } else {
         realPrice = parseFloat(product.price);
         delete item.extras;
         delete item.menue;
+        // Gratis-Sauce auch ohne Größe möglich (Rings)
+        if (typeof item.sauce === 'string' && item.sauce) {
+          if ((product.catslug !== 'rings' && product.catslug !== 'pizza-broetchen') || !validSauces.includes(item.sauce)) {
+            return res.status(400).json({ success: false, message: 'Ungültige Sauce für: ' + item.name });
+          }
+          item.extras = [{ name: 'Sauce: ' + item.sauce, price: 0 }];
+          delete item.sauce;
+        } else {
+          delete item.sauce;
+        }
       }
       // Notiz pro Position (aus der Kasse), max. 200 Zeichen
       if (typeof item.note === 'string' && item.note.trim()) {

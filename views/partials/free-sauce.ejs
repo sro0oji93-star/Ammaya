@@ -1,0 +1,17 @@
+<% /* Gratis-Sauce (z.B. Pizza Brötchen) – Locals: productId, options (Array Sauce-Namen), optional boxTitle. Pflicht-Auswahl, erste vorausgewählt. */ %>
+<% var boxTitle = (typeof boxTitle !== 'undefined' && boxTitle) ? boxTitle : '1 Sauce nach Wahl'; %>
+<% var sauceOptions = (typeof options !== 'undefined' && options && options.length) ? options : ['Knoblauch', 'American', 'Remoulade', 'NEXO Haus', 'Chili', 'BBQ', 'Curry']; %>
+<div class="free-sauce" style="margin-top:10px;border:1px dashed #e5c8ce;border-radius:10px;padding:10px 12px;background:#fffdf7">
+  <details>
+    <summary style="cursor:pointer;font-weight:700;font-size:13px;color:#232223"><%= boxTitle %> <span style="font-weight:400;color:#7a7879;font-size:12px">– inklusive, bitte wählen</span></summary>
+    <div style="margin-top:8px;display:flex;flex-direction:column;gap:2px;max-height:220px;overflow-y:auto;padding-right:4px">
+      <% sauceOptions.forEach(function(nm, ni) { %>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:4px 6px;border-radius:8px;border:1.5px solid transparent">
+        <input type="radio" name="sauce_<%= productId %>" value="<%= nm %>" data-sauce="<%= nm %>" style="display:none" <%= ni === 0 ? 'checked' : '' %>>
+        <span style="flex:1;font-weight:600;color:#232223"><%= nm %></span>
+        <span class="sauce-tick" style="display:none;color:#16a34a;font-weight:900;font-size:14px">✓</span>
+      </label>
+      <% }); %>
+    </div>
+  </details>
+</div>

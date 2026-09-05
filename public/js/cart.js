@@ -8,19 +8,20 @@ var Cart = (function() {
   var MENUE_PRICE = 4.00;
   var MENUE_DRINKS = ['Coca-Cola', 'Fanta', 'Sprite', 'Mezzo Mix', 'Coca-Cola Zero'];
 
-  function makeKey(id, size, extras, menue) {
+  function makeKey(id, size, extras, menue, sauce) {
     var base = size && size.label ? id + '-' + size.label : String(id);
     if (extras && extras.length) {
       var names = extras.map(function(e) { return e.name; }).sort();
       base += '|x:' + names.join('+');
     }
     if (menue && menue.drink) base += '|m:' + menue.drink;
+    if (sauce) base += '|s:' + sauce;
     return base;
   }
 
   function migrateKeys() {
     items.forEach(function(i) {
-      i._key = makeKey(i.id, i.size, i.extras, i.menue);
+      i._key = makeKey(i.id, i.size, i.extras, i.menue, i.sauce);
     });
   }
 
@@ -52,7 +53,8 @@ var Cart = (function() {
         if (!i.extras) i.extras = [];
         if (typeof i.pickupOnly === 'undefined') i.pickupOnly = false;
         if (!i.menue || !i.menue.drink) delete i.menue;
-        i._key = makeKey(i.id, i.size, i.extras, i.menue);
+        if (typeof i.sauce !== 'string' || !i.sauce) delete i.sauce;
+        i._key = makeKey(i.id, i.size, i.extras, i.menue, i.sauce);
       });
       var disc = localStorage.getItem('feinDiscount');
       if (disc) discount = JSON.parse(disc);
@@ -81,17 +83,18 @@ var Cart = (function() {
     return items.some(function(i) { return !!i.pickupOnly; });
   }
 
-  function addItem(id, name, price, qty, size, extras, pickupOnly, menue) {
+  function addItem(id, name, price, qty, size, extras, pickupOnly, menue, sauce) {
     qty = qty || 1;
     extras = extras || [];
     if (!menue || !menue.drink) menue = null;
-    var key = makeKey(id, size, extras, menue);
+    if (typeof sauce !== 'string' || !sauce) sauce = null;
+    var key = makeKey(id, size, extras, menue, sauce);
     var existing = items.find(function(i) { return i._key === key; });
     if (existing) {
       existing.qty += qty;
       if (pickupOnly) existing.pickupOnly = true;
     } else {
-      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras, pickupOnly: !!pickupOnly, menue: menue });
+      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras, pickupOnly: !!pickupOnly, menue: menue, sauce: sauce });
     }
     save();
     renderCartBadge();
@@ -328,6 +331,7 @@ var Cart = (function() {
       var hasSizes = btn.getAttribute('data-has-sizes');
       var hasMenue = btn.getAttribute('data-has-menue');
       var hasSnacksMenue = btn.getAttribute('data-has-snacks-menue');
+      var hasSauce = btn.getAttribute('data-has-sauce');
       var pickupOnly = btn.getAttribute('data-pickup-only') === '1';
       var qtyInput = document.getElementById('qtyInput');
       var qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
@@ -380,6 +384,21 @@ var Cart = (function() {
           sunit = parseFloat((sunit + MENUE_PRICE).toFixed(2));
         }
         addItem(id, name, sunit, qty, ssize, [], pickupOnly, smenue);
+      } else if (hasSauce) {
+        // Gratis-Sauce (z.B. Pizza Brötchen): Größe falls vorhanden, Sauce Pflicht
+        var tscope = btn.closest('.mad-spec-info') || btn.closest('.content-element-2') || document;
+        var tsize = null;
+        var tsradio = tscope.querySelector('input[name="size_' + id + '"]:checked') || tscope.querySelector('input[name="detailSize"]:checked');
+        if (tsradio) {
+          tsize = { label: tsradio.getAttribute('data-label'), price: parseFloat(tsradio.value) };
+        } else if (tscope.querySelector('input[name="size_' + id + '"], input[name="detailSize"]')) {
+          showToast('Bitte wählen Sie eine Größe'); return;
+        }
+        var tsauceEl = tscope.querySelector('.free-sauce input[type="radio"]:checked');
+        if (!tsauceEl) { showToast('Bitte Sauce wählen'); return; }
+        var tsauce = tsauceEl.getAttribute('data-sauce');
+        var tunit = tsize ? tsize.price : parseFloat(btn.getAttribute('data-price'));
+        addItem(id, name, tunit, qty, tsize, [], pickupOnly, null, tsauce);
       } else {
         var price = btn.getAttribute('data-price');
         addItem(id, name, price, qty, null, [], pickupOnly);
@@ -469,6 +488,7 @@ var Cart = (function() {
     list.innerHTML = pickupBanner + items.map(function(item) {
       var nameHtml = item.size ? escapeHtml(item.name) + ' <small>(' + escapeHtml(item.size.label) + ')</small>' : escapeHtml(item.name);
       if (item.menue && item.menue.drink) nameHtml += '<br><small style="color:#9c7c1a">+ Menü mit ' + escapeHtml(item.menue.drink) + '</small>';
+      if (item.sauce) nameHtml += '<br><small style="color:#9c7c1a">+ Sauce: ' + escapeHtml(item.sauce) + '</small>';
       var extrasHtml = '';
       if (item.extras && item.extras.length) {
         extrasHtml = '<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px">' + item.extras.map(function(e) {
@@ -527,6 +547,7 @@ var Cart = (function() {
     container.innerHTML = items.map(function(item) {
       var nameHtml = item.size ? escapeHtml(item.name) + ' (' + escapeHtml(item.size.label) + ')' : escapeHtml(item.name);
       if (item.menue && item.menue.drink) nameHtml += ' + Menü mit ' + escapeHtml(item.menue.drink);
+      if (item.sauce) nameHtml += ' + Sauce: ' + escapeHtml(item.sauce);
       if (item.extras && item.extras.length) {
         var exNames = item.extras.map(function(e) { return escapeHtml(e.name); }).join(', ');
         nameHtml += '<br><small style="color:#7a7879">+ ' + exNames + '</small>';
@@ -648,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
         notes: formData.get('notes'),
         payment: formData.get('payment'),
         orderType: Cart.getOrderType(),
-        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }), note: i.note || '', menue: i.menue || null }; }),
+        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }), note: i.note || '', menue: i.menue || null, sauce: i.sauce || null }; }),
         subtotal: Cart.getSubtotal(),
         delivery_fee: Cart.getDeliveryFee(Cart.getSubtotal()),
         discount: Cart.getDiscount().value,
