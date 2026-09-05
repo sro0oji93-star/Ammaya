@@ -1,0 +1,17 @@
+<% /* Snacks-Menü (optional) – Locals: productId. Größe wählen + optional Menü (+4 €, Pommes + Softdrink). */ %>
+<% var menueDrinks = ['Coca-Cola', 'Fanta', 'Sprite', 'Mezzo Mix', 'Coca-Cola Zero']; %>
+<div class="snacks-menue" style="margin-top:10px;border:1px dashed #e5c8ce;border-radius:10px;padding:10px 12px;background:#fffdf7">
+  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;font-weight:700;color:#232223">
+    <input type="checkbox" class="menue-check" data-menue-for="<%= productId %>" style="width:16px;height:16px;accent-color:#d4af37">
+    <span>Als Menü <span style="color:var(--primary)">+4,00 €</span> <span style="font-weight:400;color:#7a7879;font-size:12px">– mit Pommes + Softdrink</span></span>
+  </label>
+  <div class="menue-drinks" style="margin-top:8px;flex-direction:column;gap:2px;max-height:220px;overflow-y:auto;padding-right:4px">
+    <% menueDrinks.forEach(function(d, di) { %>
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:4px 6px;border-radius:8px;border:1.5px solid transparent">
+      <input type="radio" name="drink_<%= productId %>" value="<%= d %>" data-drink="<%= d %>" style="display:none" <%= di === 0 ? 'checked' : '' %>>
+      <span style="flex:1;font-weight:600;color:#232223"><%= d %></span>
+      <span class="sauce-tick" style="display:none;color:#16a34a;font-weight:900;font-size:14px">✓</span>
+    </label>
+    <% }); %>
+  </div>
+</div>

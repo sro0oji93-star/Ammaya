@@ -4,19 +4,23 @@ var Cart = (function() {
   var discount = { code: null, value: 0 };
   var orderType = 'lieferung';
   var settings = window.restaurantSettings || { delivery_fee: 4.50, free_delivery_from: 40.00 };
+  // Snacks-Menü: Aufpreis + erlaubte Softdrinks (Server prüft alles erneut – hier nur Anzeige)
+  var MENUE_PRICE = 4.00;
+  var MENUE_DRINKS = ['Coca-Cola', 'Fanta', 'Sprite', 'Mezzo Mix', 'Coca-Cola Zero'];
 
-  function makeKey(id, size, extras) {
+  function makeKey(id, size, extras, menue) {
     var base = size && size.label ? id + '-' + size.label : String(id);
     if (extras && extras.length) {
       var names = extras.map(function(e) { return e.name; }).sort();
       base += '|x:' + names.join('+');
     }
+    if (menue && menue.drink) base += '|m:' + menue.drink;
     return base;
   }
 
   function migrateKeys() {
     items.forEach(function(i) {
-      i._key = makeKey(i.id, i.size, i.extras);
+      i._key = makeKey(i.id, i.size, i.extras, i.menue);
     });
   }
 
@@ -46,7 +50,8 @@ var Cart = (function() {
       items.forEach(function(i) {
         if (!i.extras) i.extras = [];
         if (typeof i.pickupOnly === 'undefined') i.pickupOnly = false;
-        i._key = makeKey(i.id, i.size, i.extras);
+        if (!i.menue || !i.menue.drink) delete i.menue;
+        i._key = makeKey(i.id, i.size, i.extras, i.menue);
       });
       var disc = localStorage.getItem('feinDiscount');
       if (disc) discount = JSON.parse(disc);
@@ -75,16 +80,17 @@ var Cart = (function() {
     return items.some(function(i) { return !!i.pickupOnly; });
   }
 
-  function addItem(id, name, price, qty, size, extras, pickupOnly) {
+  function addItem(id, name, price, qty, size, extras, pickupOnly, menue) {
     qty = qty || 1;
     extras = extras || [];
-    var key = makeKey(id, size, extras);
+    if (!menue || !menue.drink) menue = null;
+    var key = makeKey(id, size, extras, menue);
     var existing = items.find(function(i) { return i._key === key; });
     if (existing) {
       existing.qty += qty;
       if (pickupOnly) existing.pickupOnly = true;
     } else {
-      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras, pickupOnly: !!pickupOnly });
+      items.push({ _key: key, id: id, name: name, price: parseFloat(price), qty: qty, size: size || null, extras: extras, pickupOnly: !!pickupOnly, menue: menue });
     }
     save();
     renderCartBadge();
@@ -283,6 +289,7 @@ var Cart = (function() {
       var name = btn.getAttribute('data-name');
       var hasSizes = btn.getAttribute('data-has-sizes');
       var hasMenue = btn.getAttribute('data-has-menue');
+      var hasSnacksMenue = btn.getAttribute('data-has-snacks-menue');
       var pickupOnly = btn.getAttribute('data-pickup-only') === '1';
       var qtyInput = document.getElementById('qtyInput');
       var qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
@@ -319,6 +326,22 @@ var Cart = (function() {
           var basePrice = btn.getAttribute('data-price');
           addItem(id, name, basePrice, qty, null, [], pickupOnly);
         }
+      } else if (hasSnacksMenue) {
+        // Snacks: Größe Pflicht, Menü (+4 € mit Softdrink) optional
+        var sscope = btn.closest('.mad-spec-info') || btn.closest('.content-element-2') || document;
+        var sradio = sscope.querySelector('input[name="size_' + id + '"]:checked') || sscope.querySelector('input[name="detailSize"]:checked');
+        if (!sradio) { showToast('Bitte wählen Sie eine Größe'); return; }
+        var ssize = { label: sradio.getAttribute('data-label'), price: parseFloat(sradio.value) };
+        var sbox = sscope.querySelector('.snacks-menue input.menue-check');
+        var smenue = null;
+        var sunit = ssize.price;
+        if (sbox && sbox.checked) {
+          var sdrink = sscope.querySelector('.snacks-menue input[type="radio"]:checked');
+          if (!sdrink || MENUE_DRINKS.indexOf(sdrink.getAttribute('data-drink')) === -1) { showToast('Bitte Softdrink wählen'); return; }
+          smenue = { drink: sdrink.getAttribute('data-drink') };
+          sunit = parseFloat((sunit + MENUE_PRICE).toFixed(2));
+        }
+        addItem(id, name, sunit, qty, ssize, [], pickupOnly, smenue);
       } else {
         var price = btn.getAttribute('data-price');
         addItem(id, name, price, qty, null, [], pickupOnly);
@@ -407,6 +430,7 @@ var Cart = (function() {
 
     list.innerHTML = pickupBanner + items.map(function(item) {
       var nameHtml = item.size ? escapeHtml(item.name) + ' <small>(' + escapeHtml(item.size.label) + ')</small>' : escapeHtml(item.name);
+      if (item.menue && item.menue.drink) nameHtml += '<br><small style="color:#9c7c1a">+ Menü mit ' + escapeHtml(item.menue.drink) + '</small>';
       var extrasHtml = '';
       if (item.extras && item.extras.length) {
         extrasHtml = '<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px">' + item.extras.map(function(e) {
@@ -464,6 +488,7 @@ var Cart = (function() {
 
     container.innerHTML = items.map(function(item) {
       var nameHtml = item.size ? escapeHtml(item.name) + ' (' + escapeHtml(item.size.label) + ')' : escapeHtml(item.name);
+      if (item.menue && item.menue.drink) nameHtml += ' + Menü mit ' + escapeHtml(item.menue.drink);
       if (item.extras && item.extras.length) {
         var exNames = item.extras.map(function(e) { return escapeHtml(e.name); }).join(', ');
         nameHtml += '<br><small style="color:#7a7879">+ ' + exNames + '</small>';
@@ -585,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
         notes: formData.get('notes'),
         payment: formData.get('payment'),
         orderType: Cart.getOrderType(),
-        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }), note: i.note || '' }; }),
+        items: items.map(function(i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty, size: i.size, extras: (i.extras || []).map(function(e) { return e.name; }), note: i.note || '', menue: i.menue || null }; }),
         subtotal: Cart.getSubtotal(),
         delivery_fee: Cart.getDeliveryFee(Cart.getSubtotal()),
         discount: Cart.getDiscount().value,

@@ -121,7 +121,7 @@ router.post('/', async (req, res) => {
     const nowBerlinMin = berlinMinutes();
     let hasPickupOnlyDeal = false;
     for (const item of parsedItems) {
-      const product = await db.get('SELECT id, slug, price, sizes FROM products WHERE id = $1', [item.id]);
+      const product = await db.get('SELECT p.id, p.slug, p.price, p.sizes, c.slug AS catslug FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.id = $1', [item.id]);
       if (!product) {
         return res.status(400).json({ success: false, message: 'Produkt nicht gefunden: ' + item.name });
       }
@@ -147,9 +147,22 @@ router.post('/', async (req, res) => {
         } catch (e) {
           return res.status(400).json({ success: false, message: 'Ungültige Extras für: ' + item.name });
         }
+        // Snacks-Menü (+4 € mit Softdrink): nur für Snacks, Drink aus fester Liste
+        if (item.menue && item.menue.drink) {
+          const menueDrinks = ['Coca-Cola', 'Fanta', 'Sprite', 'Mezzo Mix', 'Coca-Cola Zero'];
+          if (product.catslug !== 'snacks' || !menueDrinks.includes(item.menue.drink)) {
+            return res.status(400).json({ success: false, message: 'Ungültiges Menü für: ' + item.name });
+          }
+          item.extras.push({ name: 'Menü mit ' + item.menue.drink, price: 4.00 });
+          realPrice = parseFloat((realPrice + 4).toFixed(2));
+          delete item.menue;
+        } else {
+          delete item.menue;
+        }
       } else {
         realPrice = parseFloat(product.price);
         delete item.extras;
+        delete item.menue;
       }
       // Notiz pro Position (aus der Kasse), max. 200 Zeichen
       if (typeof item.note === 'string' && item.note.trim()) {
