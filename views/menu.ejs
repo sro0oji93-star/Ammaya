@@ -116,8 +116,8 @@
                 <div class="mad-spec-header" style="display:flex;font-family:'Josefin Sans',sans-serif;font-weight:bold;font-size:1.5rem;line-height:2rem;color:#232223;justify-content:space-between;margin:0 -1.5rem">
                   <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
                   <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
-                  <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); %>
-                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap">ab <%= minP.toFixed(2) %> €</div>
+                  <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); var maxP = Math.max.apply(null, sz.map(function(s){return s.price})); %>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= minP === maxP ? '' : 'ab ' %><%= minP.toFixed(2) %> €</div>
                   <% } else { %>
                   <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
                   <% } %>
@@ -156,8 +156,8 @@
                 <div class="mad-spec-header" style="display:flex;font-family:'Josefin Sans',sans-serif;font-weight:bold;font-size:1.5rem;line-height:2rem;color:#232223;justify-content:space-between;margin:0 -1.5rem">
                   <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
                   <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
-                  <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); %>
-                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap">ab <%= minP.toFixed(2) %> €</div>
+                  <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); var maxP = Math.max.apply(null, sz.map(function(s){return s.price})); %>
+                  <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= minP === maxP ? '' : 'ab ' %><%= minP.toFixed(2) %> €</div>
                   <% } else { %>
                   <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= p.price.toFixed(2) %> €</div>
                   <% } %>
