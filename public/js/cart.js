@@ -311,7 +311,7 @@ var Cart = (function() {
     var r = lab.querySelector('input[type="radio"]');
     return r || null;
   }
-  // Box-Auswahl: Checkbox-Maximum erzwingen (z.B. max. 3 Saucen)
+  // Box-Auswahl: Checkbox-Maximum erzwingen (z.B. max. 3 Saucen, max. 2 Schoko)
   function bindBoxMax() {
     document.addEventListener('change', function(e) {
       var cb = e.target && e.target.matches && e.target.matches('.box-choices input[type="checkbox"]') ? e.target : null;
@@ -320,7 +320,10 @@ var Cart = (function() {
       if (!max) return;
       var box = cb.closest('.box-choices');
       var group = cb.getAttribute('data-box-group');
-      var checked = box.querySelectorAll('input[type="checkbox"][data-box-group="' + group + '"]:checked');
+      var sel = group
+        ? 'input[type="checkbox"][data-box-group="' + group + '"]:checked'
+        : 'input[type="checkbox"]:checked';
+      var checked = box.querySelectorAll(sel);
       if (checked.length > max) {
         cb.checked = false;
         showToast('Maximal ' + max + '× wählbar');
