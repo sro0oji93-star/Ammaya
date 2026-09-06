@@ -344,12 +344,6 @@ var Cart = (function() {
           var btn = document.querySelector('.add-to-cart[data-price]');
           if (btn) dp.textContent = parseFloat(btn.getAttribute('data-price')).toFixed(2) + ' €';
         }
-        // Snacks: ohne Getränk kein Menü – Haken automatisch raus
-        var box = r.closest('.snacks-menue');
-        if (box && !box.querySelector('input[type="radio"]:checked')) {
-          var chk = box.querySelector('.menue-check');
-          if (chk) chk.checked = false;
-        }
       }
       armed = null;
     });
@@ -471,7 +465,7 @@ var Cart = (function() {
         });
         if (!boxOk) { showToast('Bitte Box konfigurieren'); return; }
         // Pflicht: Checkbox-Gruppen müssen vollständig sein (z.B. genau 3 Saucen)
-        var BOX_GROUP_LABELS = { sauces: 'Saucen', snacks: 'Snacks', toppings: 'Zutaten' };
+        var BOX_GROUP_LABELS = { sauces: 'Saucen', snacks: 'Snacks', toppings: 'Zutaten', sorten: 'Sorten' };
         var seenBoxGroups = {};
         var needMsg = null;
         bbox.querySelectorAll('input[type="checkbox"][data-max]').forEach(function(c) {
@@ -495,7 +489,7 @@ var Cart = (function() {
   }
 
   // Box-Auswahl lesbar machen (Warenkorb/Kasse)
-  var BOX_KEY_LABELS = { burger1: 'Burger 1', burger2: 'Burger 2', burger: 'Burger', pasta: 'Pasta', snacks: 'Snacks', toppings: 'Pizza', sauces: 'Saucen' };
+  var BOX_KEY_LABELS = { burger1: 'Burger 1', burger2: 'Burger 2', burger: 'Burger', pasta: 'Pasta', snacks: 'Snacks', toppings: 'Pizza', sauces: 'Saucen', sorten: 'Sorten' };
   function boxLines(box) {
     if (!box || !box.choices) return [];
     return Object.keys(box.choices).sort().map(function(k) {

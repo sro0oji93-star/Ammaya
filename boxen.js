@@ -4,6 +4,8 @@ const { TOPPINGS } = require('./extras');
 
 const BURGER_OPTS = ['Cheeseburger', 'Chickenburger'];
 
+const MIX_FLAVORS = ['Vanille', 'Schokolade', 'Erdbeere', 'Banane'];
+
 const BOX_DEFS = {
   'box-1': [
     { key: 'burger1', type: 'radio', label: 'Burger 1', options: BURGER_OPTS },
@@ -22,6 +24,9 @@ const BOX_DEFS = {
     { key: 'pasta', type: 'radio', label: 'Pasta', source: 'pastas' },
     { key: 'toppings', type: 'check', min: 3, max: 3, label: 'Pizza-Zutaten', title: 'Pizza: 3 Zutaten nach Wahl', source: 'toppings' },
     { key: 'sauces', type: 'check', min: 2, max: 2, label: 'Saucen', title: '2 Saucen nach Wahl', source: 'sauces' },
+  ],
+  'mix-milkshake': [
+    { key: 'sorten', type: 'check', min: 2, max: 2, label: 'Sorten', title: '2 Sorten nach Wahl', options: MIX_FLAVORS },
   ],
 };
 
