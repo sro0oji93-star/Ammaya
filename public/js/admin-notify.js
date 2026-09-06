@@ -67,18 +67,37 @@
     if (printing || !printQueue.length) return;
     printing = true;
     var order = printQueue.shift();
+    var done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      printing = false;
+      try { f.remove(); } catch (e) {}
+      pumpQueue();
+    }
     var f = document.createElement('iframe');
-    f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+    // Off-screen aber gerendert: visibility:hidden / 0x0 wird von Chrome teils nicht gedruckt
+    f.style.cssText = 'position:fixed;left:-9999px;top:0;width:80mm;height:600px;border:0;background:#fff';
     f.src = '/admin/bestellungen/' + order.id + '/bon';
+    // Aufräumen erst nach Druckdialog (afterprint) – sonst wird der Druck abgebrochen
+    var fallback = setTimeout(finish, 60000);
     f.onload = function () {
-      setTimeout(function () {
-        try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { console.warn('print err', e); }
-        // Als gedruckt markieren + aus Queue nehmen
-        fetch('/admin/api/bestellungen/' + order.id + '/gedruckt', { method: 'POST', credentials: 'same-origin' }).catch(function(){});
-        setTimeout(function () { f.remove(); printing = false; pumpQueue(); }, 2000);
-      }, 400);
+      try {
+        var w = f.contentWindow;
+        var doc = w.document;
+        var go = function () {
+          setTimeout(function () {
+            try { w.focus(); w.print(); } catch (e) { console.warn('print err', e); }
+            fetch('/admin/api/bestellungen/' + order.id + '/gedruckt', { method: 'POST', credentials: 'same-origin' }).catch(function(){});
+          }, 600);
+        };
+        // afterprint -> Dialog geschlossen -> aufräumen
+        try { w.onafterprint = function () { clearTimeout(fallback); finish(); }; } catch (e) {}
+        if (doc.readyState === 'complete') go();
+        else { w.onload = go; setTimeout(go, 1500); }
+      } catch (e) { console.warn('print err', e); clearTimeout(fallback); finish(); }
     };
-    f.onerror = function () { f.remove(); printing = false; pumpQueue(); };
+    f.onerror = function () { clearTimeout(fallback); finish(); };
     document.body.appendChild(f);
   }
 
