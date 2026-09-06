@@ -78,6 +78,7 @@ function isValidPhone(p) {
 }
 
 router.get('/', async (req, res) => {
+  res.set('Cache-Control', 'no-store');
   const settings = res.locals.settings;
   
   res.render('checkout', {
@@ -144,9 +145,12 @@ router.post('/', async (req, res) => {
       };
     }
     for (const item of parsedItems) {
-      const product = await db.get('SELECT p.id, p.slug, p.price, p.sizes, c.slug AS catslug FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.id = $1', [item.id]);
+      const product = await db.get('SELECT p.id, p.slug, p.price, p.sizes, p.is_available, c.slug AS catslug FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.id = $1', [item.id]);
       if (!product) {
         return res.status(400).json({ success: false, message: 'Produkt nicht gefunden: ' + item.name });
+      }
+      if (!product.is_available) {
+        return res.status(400).json({ success: false, message: 'Zurzeit ausverkauft: ' + item.name + ' – bitte aus dem Warenkorb entfernen.' });
       }
       if (product.slug === 'nexo-night-deal' || product.slug === 'deal-night-abholung') hasPickupOnlyDeal = true;
       // Tageszeit-Angebote serverseitig prüfen (Client-Zeit kann manipuliert sein)

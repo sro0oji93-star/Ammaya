@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../db');
 
 router.get('/', async (req, res) => {
+  res.set('Cache-Control', 'no-store');
   // Hero-Deals (nur über Hero-Button bestellbar) nicht im Homepage-Raster zeigen
   const products = await db.all("SELECT p.*, c.name as category_name, c.slug as category_slug FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id IN (SELECT MIN(id) FROM products WHERE is_available = 1 GROUP BY name) AND p.slug NOT IN ('deal-grosse-pizza-getraenke','deal-mix-match','deal-grosse-hamburger-getraenk','deal-night-abholung') ORDER BY c.sort_order, p.sort_order");
   // Deals separat für den Hero-Button laden (bleiben bestellbar, aber unsichtbar im Menü)

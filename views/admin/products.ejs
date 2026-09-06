@@ -47,6 +47,9 @@
           </form>
         </td>
         <td class="actions-cell">
+          <form method="POST" action="/admin/produkte/verfuegbarkeit/<%= p.id %>" style="display:inline" title="<%= p.is_available ? 'Auf Ausverkauft setzen' : 'Auf Verfügbar setzen' %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-sm <%= p.is_available ? 'btn-primary' : 'btn-outline' %>" title="<%= p.is_available ? 'Verfügbar – klicken zum Sperren' : 'Ausverkauft – klicken zum Freigeben' %>"><i class="fas <%= p.is_available ? 'fa-toggle-on' : 'fa-toggle-off' %>"></i></button>
+          </form>
           <button class="btn btn-sm btn-outline" onclick='editProduct(<%= JSON.stringify(p) %>)'><i class="fas fa-edit"></i></button>
           <form method="POST" action="/admin/produkte/loeschen/<%= p.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
