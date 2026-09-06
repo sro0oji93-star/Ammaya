@@ -178,10 +178,13 @@
             <% } %>
           </figure>
           <div class="mad-product-description">
-            <h4 class="mad-product-title"><a href="/speisekarte/produkt/<%= p.slug %>" class="mad-link"><%= p.name %></a></h4>
+            <h4 class="mad-product-title"><a href="/speisekarte/produkt/<%= p.slug %>" class="mad-link"><%= p.name %></a><% if (p.is_featured) { %> <span style="display:inline-block;font-size:10px;font-weight:700;color:#0a0a0a;background:linear-gradient(135deg,#f5d67b,#d4af37);border-radius:50px;padding:2px 8px;vertical-align:middle;white-space:nowrap">⭐ Empfohlen</span><% } %></h4>
             <p><%= p.description ? p.description.substring(0, 80) + (p.description.length > 80 ? '...' : '') : '' %></p>
           </div>
           <div class="mad-product-calc">
+            <% if (!p.is_available) { %>
+            <span style="display:inline-block;padding:8px 18px;border-radius:50px;background:rgba(220,53,53,.1);color:#dc3545;font-size:12px;font-weight:700">Ausverkauft</span>
+            <% } else { %>
             <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); %>
             <span class="mad-product-price">ab <%= minP.toFixed(2) %> €</span>
             <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-has-sizes="1">In den Warenkorb</button>
@@ -191,6 +194,7 @@
             <a href="/speisekarte/produkt/<%= p.slug %>" class="btn btn-style-3 btn-small">Auswählen</a>
             <% } else { %>
             <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>">In den Warenkorb</button>
+            <% } %>
             <% } %>
             <% } %>
           </div>

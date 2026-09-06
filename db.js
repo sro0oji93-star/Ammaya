@@ -412,7 +412,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, image=COALESCE(products.image, EXCLUDED.image)`,
           [burgerCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order]
         );
       }
@@ -460,7 +460,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, image=COALESCE(products.image, EXCLUDED.image)`,
           [croqueCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order]
         );
       }
@@ -513,7 +513,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
           [pizzaCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -553,7 +553,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [dessertCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -586,7 +586,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [beilagenCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -619,7 +619,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [friesCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -650,7 +650,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [boxCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -681,7 +681,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [kidsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -721,7 +721,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [shakeCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -755,7 +755,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [pastaCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -780,7 +780,7 @@ async function initialize() {
       await query(
         `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
          VALUES ($1,'NEXO Deluxe','pasta-nexo-deluxe','Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce',12.90,NULL,'/images/products/img10.jpg','Crispy Chicken, Mais, Paprika, Hollandaise, Sahnesauce',0,1,13,NULL)
-         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=NULL, image=COALESCE(products.image, EXCLUDED.image)`,
+         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=NULL, image=COALESCE(products.image, EXCLUDED.image)`,
         [pastaCatFix.id]
       );
       // Falsche Pasta-Deluxe-Duplikate (mit Pizza-Größen) entfernen
@@ -951,7 +951,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,NULL)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, sort_order=EXCLUDED.sort_order, image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), sort_order=EXCLUDED.sort_order, image=COALESCE(products.image, EXCLUDED.image)`,
           [boxCat.id, name, slug, desc, price, img, ingr, feat, sort]
         );
         await query('DELETE FROM products WHERE name = $1 AND slug != $2', [name, slug]);
@@ -1051,7 +1051,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [schnitzelCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1080,7 +1080,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [saucenCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1108,7 +1108,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [salatCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1143,7 +1143,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
           [snacksCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1177,7 +1177,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [ringsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1206,7 +1206,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
           [boxCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1226,7 +1226,7 @@ async function initialize() {
       await query(
         `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
          VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
         [boxCat2.id, '1 Grosser Hamburger + 1 Getränk', 'deal-grosse-hamburger-getraenk', '1 großer Hamburger + 1 Getränk (0,33 l) nach Wahl', 19.99, '/images/products/img14.jpg', 'Hamburger, 1 Getränk (0,33 l)', 0, 12, JSON.stringify([{ label: 'Abholung', price: 19.99 }, { label: 'Lieferung', price: 21.99 }])]
       );
     }
@@ -1247,7 +1247,7 @@ async function initialize() {
       await query(
         `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
          VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+         ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
         [boxCat3.id, 'Night Deal · Pizza Ø 26', 'deal-night-abholung', 'Pizza Ø 26 cm nach Wunsch, bis zu 3 Beläge + 1 Sauce nach Wahl (Fisch & Käserand ausgeschlossen). Nur für Abholer, ab 21:00 Uhr.', 5.99, '/images/products/img3.jpg', 'Pizza 26 cm, 3 Beläge, 1 Sauce nach Wahl', 0, 13, JSON.stringify([{ label: 'Abholung', price: 5.99 }])]
       );
     }
@@ -1278,7 +1278,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
           [getrCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1311,7 +1311,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [wrapsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1345,7 +1345,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [bowlsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1382,7 +1382,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=EXCLUDED.sizes, image=COALESCE(products.image, EXCLUDED.image)`,
           [broetchenCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1411,7 +1411,7 @@ async function initialize() {
         await query(
           `INSERT INTO products (category_id, name, slug, description, price, old_price, image, ingredients, is_featured, is_available, sort_order, sizes)
            VALUES ($1,$2,$3,$4,$5,NULL,$6,$7,$8,1,$9,$10)
-           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=EXCLUDED.is_featured, is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
+           ON CONFLICT (slug) DO UPDATE SET category_id=EXCLUDED.category_id, name=EXCLUDED.name, description=EXCLUDED.description, price=EXCLUDED.price, ingredients=EXCLUDED.ingredients, is_featured=COALESCE(products.is_featured, EXCLUDED.is_featured), is_available=1, sort_order=EXCLUDED.sort_order, sizes=COALESCE(EXCLUDED.sizes, products.sizes), image=COALESCE(products.image, EXCLUDED.image)`,
           [dealsCat.id, name, slug, description, price, image, ingredients, is_featured, sort_order, sizes]
         );
       }
@@ -1505,6 +1505,19 @@ async function initialize() {
       'INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO NOTHING',
       [key, value]
     );
+  }
+
+  // Einmalig: alle Empfohlen-Markierungen entfernen (Eigentümer vergibt sie danach selbst).
+  // Läuft nur einmal dank Marker – danach bleiben Admin-Änderungen erhalten.
+  try {
+    const flag = await get("SELECT value FROM settings WHERE key = 'featured_reset_2026_09'");
+    if (!flag) {
+      await query('UPDATE products SET is_featured = 0 WHERE COALESCE(is_featured, 0) != 0');
+      await query("INSERT INTO settings (key, value) VALUES ('featured_reset_2026_09', '1') ON CONFLICT (key) DO NOTHING");
+      console.log('Empfohlen-Markierungen zurückgesetzt.');
+    }
+  } catch (e) {
+    console.error('Featured-Reset übersprungen:', e.message);
   }
 
   // Ensure hero_slides table has correct schema and data

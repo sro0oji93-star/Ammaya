@@ -112,9 +112,9 @@
               <figure style="max-width:88px;min-width:88px;width:100%;margin-right:1.5rem;border-radius:50%;overflow:hidden;height:88px;background:#f8f5f0;display:flex;align-items:center;justify-content:center">
                 <img src="<%= p.image || productImgMap[p.slug] || '/images/products/img1.jpg' %>" alt="<%= p.name %>" style="width:100%;height:100%;object-fit:cover">
               </figure>
-              <div class="mad-spec-info" style="flex:1">
+              <div class="mad-spec-info" style="flex:1<%= p.is_available ? '' : ';opacity:.55' %>">
                 <div class="mad-spec-header" style="display:flex;font-family:'Josefin Sans',sans-serif;font-weight:bold;font-size:1.5rem;line-height:2rem;color:#232223;justify-content:space-between;margin:0 -1.5rem">
-                  <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
+                  <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %><% if (p.is_featured) { %> <span style="display:inline-block;font-size:11px;font-weight:700;color:#0a0a0a;background:linear-gradient(135deg,#f5d67b,#d4af37);border-radius:50px;padding:2px 10px;vertical-align:middle;white-space:nowrap">⭐ Empfohlen</span><% } %></div>
                   <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
                   <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); var maxP = Math.max.apply(null, sz.map(function(s){return s.price})); %>
                   <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= cat.slug === 'burger' ? ('ab ' + p.price.toFixed(2)) : ((minP === maxP ? '' : 'ab ') + minP.toFixed(2)) %> €</div>
@@ -125,6 +125,9 @@
                 <div class="mad-spec-tags" style="font-size:1rem;line-height:1.5rem;color:#7a7879;margin-top:0.25rem">
                   <div class="mad-spec-el"><%= p.description %></div>
                 </div>
+                <% if (!p.is_available) { %>
+                <div style="margin-top:10px"><span style="display:inline-block;padding:6px 16px;border-radius:50px;background:rgba(220,53,53,.1);color:#dc3545;font-size:12px;font-weight:700">Ausverkauft</span></div>
+                <% } else { %>
                 <% if (p.sizes) { var sizeData = JSON.parse(p.sizes); %>
                 <% if (cat.slug === 'croque' || cat.slug === 'salat' || cat.slug === 'rings') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData }) %><% } else if (cat.slug === 'schnitzel' || cat.slug === 'bowls') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData, boxTitle: '1 Beilage nach Wahl' }) %><% } else if (cat.slug === 'burger') { %><%- include('partials/burger-menue', { productId: p.id, productName: p.name, sizeData: sizeData }) %><% } else { %>
                 <div class="size-picker" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
@@ -152,6 +155,7 @@
                 <% } else { %>
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%- dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %><%- p.slug === 'nexo-night-deal' ? ' data-pickup-only="1"' : '' %> style="margin-top:8px">In den Warenkorb</button>
                 <% } %>
+                <% } %>
               </div>
             </div>
             <% }); %>
@@ -162,9 +166,9 @@
               <figure style="max-width:88px;min-width:88px;width:100%;margin-right:1.5rem;border-radius:50%;overflow:hidden;height:88px;background:#f8f5f0;display:flex;align-items:center;justify-content:center">
                 <img src="<%= p.image || productImgMap[p.slug] || '/images/products/img1.jpg' %>" alt="<%= p.name %>" style="width:100%;height:100%;object-fit:cover">
               </figure>
-              <div class="mad-spec-info" style="flex:1">
+              <div class="mad-spec-info" style="flex:1<%= p.is_available ? '' : ';opacity:.55' %>">
                 <div class="mad-spec-header" style="display:flex;font-family:'Josefin Sans',sans-serif;font-weight:bold;font-size:1.5rem;line-height:2rem;color:#232223;justify-content:space-between;margin:0 -1.5rem">
-                  <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %></div>
+                  <div class="mad-spec-title" style="padding:0 1.5rem"><%= p.name %><% if (p.is_featured) { %> <span style="display:inline-block;font-size:11px;font-weight:700;color:#0a0a0a;background:linear-gradient(135deg,#f5d67b,#d4af37);border-radius:50px;padding:2px 10px;vertical-align:middle;white-space:nowrap">⭐ Empfohlen</span><% } %></div>
                   <div class="mad-line" style="flex:1;border-bottom:2px dotted #7a7879;height:1.4rem;margin:0 0.25rem"></div>
                   <% if (p.sizes) { var sz = JSON.parse(p.sizes); var minP = Math.min.apply(null, sz.map(function(s){return s.price})); var maxP = Math.max.apply(null, sz.map(function(s){return s.price})); %>
                   <div class="mad-spec-price" style="padding:0 1.5rem;color:var(--primary);white-space:nowrap"><%= cat.slug === 'burger' ? ('ab ' + p.price.toFixed(2)) : ((minP === maxP ? '' : 'ab ') + minP.toFixed(2)) %> €</div>
@@ -175,6 +179,9 @@
                 <div class="mad-spec-tags" style="font-size:1rem;line-height:1.5rem;color:#7a7879;margin-top:0.25rem">
                   <div class="mad-spec-el"><%= p.description %></div>
                 </div>
+                <% if (!p.is_available) { %>
+                <div style="margin-top:10px"><span style="display:inline-block;padding:6px 16px;border-radius:50px;background:rgba(220,53,53,.1);color:#dc3545;font-size:12px;font-weight:700">Ausverkauft</span></div>
+                <% } else { %>
                 <% if (p.sizes) { var sizeData = JSON.parse(p.sizes); %>
                 <% if (cat.slug === 'croque' || cat.slug === 'salat' || cat.slug === 'rings') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData }) %><% } else if (cat.slug === 'schnitzel' || cat.slug === 'bowls') { %><%- include('partials/croque-sauces', { productId: p.id, sizeData: sizeData, boxTitle: '1 Beilage nach Wahl' }) %><% } else if (cat.slug === 'burger') { %><%- include('partials/burger-menue', { productId: p.id, productName: p.name, sizeData: sizeData }) %><% } else { %>
                 <div class="size-picker" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
@@ -201,6 +208,7 @@
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>" data-has-choco="1" style="margin-top:8px">In den Warenkorb</button>
                 <% } else { %>
                 <button class="btn btn-style-3 btn-small add-to-cart" data-id="<%= p.id %>" data-name="<%= p.name %>" data-price="<%= p.price %>"<%- dealWindows[p.slug] ? ' data-deal-from="' + dealWindows[p.slug].from + '" data-deal-to="' + dealWindows[p.slug].to + '" data-deal-hint="' + dealWindows[p.slug].hint + '"' : '' %><%- p.slug === 'nexo-night-deal' ? ' data-pickup-only="1"' : '' %> style="margin-top:8px">In den Warenkorb</button>
+                <% } %>
                 <% } %>
               </div>
             </div>
