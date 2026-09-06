@@ -1,3 +1,39 @@
+// Produktsuche (live, Name + Kategorie)
+function filterProducts() {
+  var q = (document.getElementById('productSearch').value || '').toLowerCase().trim();
+  document.querySelectorAll('#productsTable tbody tr').forEach(function(row) {
+    row.style.display = !q || row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// Auswahl-Box-Presets für Größen/Auswahlen (Labels passend zu Menü-Logik)
+var CHOICE_PRESETS = {
+  sauces: ['Knoblauch', 'American', 'Remoulade', 'NEXO Haus', 'Chili', 'BBQ', 'Curry'],
+  dressings: ['Knoblauch', 'Hausdressing', 'Yoghurt', 'American', 'Kräuter'],
+  beilagen: ['Reis', 'Pommes'],
+  drinks: ['Coca-Cola', 'Fanta', 'Sprite', 'Mezzo Mix', 'Coca-Cola Zero'],
+  stk612: ['6 Stk.', '12 Stk.']
+};
+var CHOICE_PREFIX = { sauces: 'Sauce: ', dressings: 'Dressing: ', beilagen: 'Beilage: ', drinks: 'Menü mit ', stk612: '' };
+function fillPreset(kind, builderId) {
+  var builder = document.getElementById(builderId);
+  var form = builder.closest('form');
+  var base = parseFloat(form.querySelector('input[name="price"]').value);
+  if (isNaN(base)) {
+    alert('Bitte zuerst einen Preis eingeben – die Auswahl übernimmt ihn.');
+    form.querySelector('input[name="price"]').focus();
+    return;
+  }
+  var rows = builder.querySelector('.sizes-rows');
+  rows.innerHTML = '';
+  CHOICE_PRESETS[kind].forEach(function(nm, idx) {
+    var price = base;
+    if (kind === 'drinks') price = parseFloat((base + 5).toFixed(2));
+    if (kind === 'stk612' && idx === 1) price = parseFloat((base + 4).toFixed(2));
+    addSizeRow(rows, CHOICE_PREFIX[kind] + nm, price);
+  });
+}
+
 function openModal(id) {
   document.getElementById(id).classList.add('active');
 }

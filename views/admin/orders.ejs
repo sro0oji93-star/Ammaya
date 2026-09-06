@@ -1,12 +1,19 @@
 <%- include('layout') %>
 <div class="section-header-row">
   <h2><i class="fas fa-clipboard-list"></i> Bestellungen</h2>
+  <form method="GET" action="/admin/bestellungen" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <input type="hidden" name="status" value="<%= currentStatus %>">
+    <a href="/admin/bestellungen?status=<%= currentStatus %>&datum=<%= new Date(new Date(datum).getTime() - 86400000).toISOString().slice(0,10) %>" class="btn btn-sm btn-outline">‹</a>
+    <input type="date" name="datum" value="<%= datum %>" onchange="this.form.submit()" style="padding:8px 12px;border-radius:8px;border:1px solid #e8e4de;font-size:13px">
+    <a href="/admin/bestellungen?status=<%= currentStatus %>&datum=<%= new Date(new Date(datum).getTime() + 86400000).toISOString().slice(0,10) %>" class="btn btn-sm btn-outline">›</a>
+    <span class="badge"><%= dayCount %> Bestellungen · <%= parseFloat(dayRevenue).toFixed(2) %> €</span>
+  </form>
   <div class="filter-group">
-    <a href="/admin/bestellungen?status=alle" class="btn btn-sm <%= currentStatus === 'alle' ? 'btn-primary' : 'btn-outline' %>">Alle</a>
-    <a href="/admin/bestellungen?status=neu" class="btn btn-sm <%= currentStatus === 'neu' ? 'btn-primary' : 'btn-outline' %>">Neu</a>
-    <a href="/admin/bestellungen?status=in_bearbeitung" class="btn btn-sm <%= currentStatus === 'in_bearbeitung' ? 'btn-primary' : 'btn-outline' %>">In Bearbeitung</a>
-    <a href="/admin/bestellungen?status=unterwegs" class="btn btn-sm <%= currentStatus === 'unterwegs' ? 'btn-primary' : 'btn-outline' %>">Unterwegs</a>
-    <a href="/admin/bestellungen?status=geliefert" class="btn btn-sm <%= currentStatus === 'geliefert' ? 'btn-primary' : 'btn-outline' %>">Geliefert</a>
+    <a href="/admin/bestellungen?status=alle&datum=<%= datum %>" class="btn btn-sm <%= currentStatus === 'alle' ? 'btn-primary' : 'btn-outline' %>">Alle</a>
+    <a href="/admin/bestellungen?status=neu&datum=<%= datum %>" class="btn btn-sm <%= currentStatus === 'neu' ? 'btn-primary' : 'btn-outline' %>">Neu</a>
+    <a href="/admin/bestellungen?status=in_bearbeitung&datum=<%= datum %>" class="btn btn-sm <%= currentStatus === 'in_bearbeitung' ? 'btn-primary' : 'btn-outline' %>">In Bearbeitung</a>
+    <a href="/admin/bestellungen?status=unterwegs&datum=<%= datum %>" class="btn btn-sm <%= currentStatus === 'unterwegs' ? 'btn-primary' : 'btn-outline' %>">Unterwegs</a>
+    <a href="/admin/bestellungen?status=geliefert&datum=<%= datum %>" class="btn btn-sm <%= currentStatus === 'geliefert' ? 'btn-primary' : 'btn-outline' %>">Geliefert</a>
   </div>
 </div>
 

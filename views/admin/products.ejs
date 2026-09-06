@@ -6,14 +6,15 @@
 <% } %>
 <div class="section-header-row">
   <h2><i class="fas fa-utensils"></i> Produkte verwalten</h2>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <input type="search" id="productSearch" placeholder="🔍 Produkt oder Kategorie suchen…" oninput="filterProducts()" style="padding:10px 16px;border-radius:50px;border:1px solid #e8e4de;font-size:13px;min-width:240px;outline:none">
     <a href="/admin/produkte/pizza-groesen" class="btn btn-sm btn-outline"><i class="fas fa-pizza-slice"></i> Pizza-Größen</a>
     <button class="btn btn-primary" onclick="openModal('addProductModal')"><i class="fas fa-plus"></i> Neues Produkt</button>
   </div>
 </div>
 
 <div class="table-container">
-  <table class="admin-table">
+  <table class="admin-table" id="productsTable">
     <thead>
       <tr>
         <th>Bild</th>
@@ -37,6 +38,9 @@
         <td><%= parseFloat(p.price).toFixed(2) %> €</td>
         <td><span class="status-badge <%= p.is_available ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= p.is_available ? 'Verfügbar' : 'Ausverkauft' %></span></td>
         <td class="actions-cell">
+          <form method="POST" action="/admin/produkte/verfuegbarkeit/<%= p.id %>" style="display:inline" title="<%= p.is_available ? 'Auf Ausverkauft setzen' : 'Auf Verfügbar setzen' %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-sm <%= p.is_available ? 'btn-primary' : 'btn-outline' %>" title="<%= p.is_available ? 'Verfügbar – klicken zum Sperren' : 'Ausverkauft – klicken zum Freigeben' %>"><i class="fas <%= p.is_available ? 'fa-toggle-on' : 'fa-toggle-off' %>"></i></button>
+          </form>
           <button class="btn btn-sm btn-outline" onclick='editProduct(<%= JSON.stringify(p) %>)'><i class="fas fa-edit"></i></button>
           <form method="POST" action="/admin/produkte/loeschen/<%= p.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
@@ -97,7 +101,14 @@
         <input type="text" name="ingredients" placeholder="Zutaten, durch Komma getrennt">
       </div>
       <div class="form-group" id="addSizesBuilder">
-        <label>Größen</label>
+        <label>Größen / Auswahl-Box</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('sauces','addSizesBuilder')">🥫 Saucen (7)</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('dressings','addSizesBuilder')">🥗 Dressings (5)</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('beilagen','addSizesBuilder')">🍟 Beilagen (2)</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('drinks','addSizesBuilder')">🥤 Menü-Drinks (5)</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('stk612','addSizesBuilder')">🍗 6/12 Stück</button>
+        </div>
         <div class="sizes-rows"></div>
         <button type="button" class="btn btn-sm btn-outline add-size-btn" onclick="addSizeRow(this, null, null)"><i class="fas fa-plus"></i> Größe hinzufügen</button>
         <input type="hidden" name="sizes" value="">
@@ -161,7 +172,14 @@
         <input type="text" name="ingredients" id="edit_ingredients">
       </div>
       <div class="form-group" id="editSizesBuilder">
-        <label>Größen</label>
+        <label>Größen / Auswahl-Box</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('sauces','editSizesBuilder')">🥫 Saucen (7)</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('dressings','editSizesBuilder')">🥗 Dressings (5)</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('beilagen','editSizesBuilder')">🍟 Beilagen (2)</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('drinks','editSizesBuilder')">🥤 Menü-Drinks (5)</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="fillPreset('stk612','editSizesBuilder')">🍗 6/12 Stück</button>
+        </div>
         <div class="sizes-rows"></div>
         <button type="button" class="btn btn-sm btn-outline add-size-btn" onclick="addSizeRow(this, null, null)"><i class="fas fa-plus"></i> Größe hinzufügen</button>
         <input type="hidden" name="sizes" id="edit_sizes" value="">

@@ -129,6 +129,14 @@ router.post('/produkte/loeschen/:id', auth, async (req, res) => {
   res.redirect('/admin/produkte');
 });
 
+// Schnell-Umschalter Verfügbar/Ausverkauft
+router.post('/produkte/verfuegbarkeit/:id', auth, async (req, res) => {
+  const p = await db.get('SELECT is_available FROM products WHERE id = $1', [req.params.id]);
+  if (!p) return res.redirect('/admin/produkte');
+  await db.run('UPDATE products SET is_available = $1 WHERE id = $2', [p.is_available ? 0 : 1, req.params.id]);
+  res.redirect('/admin/produkte');
+});
+
 router.get('/kategorien', auth, async (req, res) => {
   const categories = await db.all('SELECT c.*, (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) as product_count FROM categories c ORDER BY sort_order');
   res.render('admin/categories', { title: 'Kategorien – Admin', categories });
@@ -156,13 +164,18 @@ router.post('/kategorien/loeschen/:id', auth, async (req, res) => {
 
 router.get('/bestellungen', auth, async (req, res) => {
   const status = req.query.status || 'alle';
+  let datum = typeof req.query.datum === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(req.query.datum)
+    ? req.query.datum
+    : new Date().toISOString().slice(0, 10);
   let orders;
   if (status === 'alle') {
-    orders = await db.all('SELECT * FROM orders WHERE COALESCE(is_deleted,0) = 0 ORDER BY created_at DESC');
+    orders = await db.all('SELECT * FROM orders WHERE COALESCE(is_deleted,0) = 0 AND created_at::date = $1 ORDER BY created_at DESC', [datum]);
   } else {
-    orders = await db.all('SELECT * FROM orders WHERE order_status = $1 AND COALESCE(is_deleted,0) = 0 ORDER BY created_at DESC', [status]);
+    orders = await db.all('SELECT * FROM orders WHERE order_status = $1 AND COALESCE(is_deleted,0) = 0 AND created_at::date = $2 ORDER BY created_at DESC', [status, datum]);
   }
-  res.render('admin/orders', { title: 'Bestellungen – Admin', orders, currentStatus: status });
+  const dayCount = orders.length;
+  const dayRevenue = orders.filter(o => o.order_status !== 'storniert').reduce((s, o) => s + parseFloat(o.total || 0), 0);
+  res.render('admin/orders', { title: 'Bestellungen – Admin', orders, currentStatus: status, datum, dayCount, dayRevenue });
 });
 
 router.post('/bestellungen/status/:id', auth, async (req, res) => {
