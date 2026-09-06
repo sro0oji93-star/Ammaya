@@ -43,7 +43,24 @@
                 <%- include('partials/croque-sauces', { productId: product.id, sizeData: sizeData, radioName: 'detailSize', boxTitle: '1 Beilage nach Wahl' }) %>
                 <% } else if (product.category_name === 'Burger') { %>
                 <%- include('partials/burger-menue', { productId: product.id, productName: product.name, sizeData: sizeData, radioName: 'detailSize' }) %>
-                <% } else { %>
+            <% } else if (['crepe-nutella','crepe-frucht','crepe-lotus','crepe-oreo','crepe-bueno','mini-pancakes','mini-waffel'].indexOf(product.slug) !== -1) { %>
+            <div class="form-control content-element-6">
+              <div class="content-element-2">
+                <%- include('partials/choco-box', { productId: product.id }) %>
+                <p class="mad-text-color-2 content-element">Anzahl:</p>
+                <div class="btn-set big-btns">
+                  <div class="quantity size-2">
+                    <input type="text" id="qtyInput" value="1" readonly>
+                    <button type="button" class="qty-plus"><i class="material-icons">add</i></button>
+                    <button type="button" class="qty-minus"><i class="material-icons">remove</i></button>
+                  </div>
+                  <button class="btn btn-big btn-style-3 add-to-cart" data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>" data-has-choco="1">
+                    <i class="material-icons-outlined">shopping_cart</i><span>In den Warenkorb</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <% } else { %>
                 <p class="mad-text-color-2 content-element">Größe wählen:</p>
                 <div class="size-picker-detail" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">
                   <% sizeData.forEach(function(s) { %>
@@ -58,6 +75,7 @@
                 <% if (product.category_name === 'Snacks') { %><%- include('partials/snacks-menue', { productId: product.id }) %><% } %>
                 <% if (product.category_name === 'Bowls') { %><%- include('partials/bowls-sauces', { productId: product.id }) %><% } %>
                 <% if (product.category_name === 'Pizza Brötchen') { %><%- include('partials/free-sauce', { productId: product.id }) %><% } %>
+                <% if (['crepe-nutella','crepe-frucht','crepe-lotus','crepe-oreo','crepe-bueno','mini-pancakes','mini-waffel'].indexOf(product.slug) !== -1) { %><%- include('partials/choco-box', { productId: product.id }) %><% } %>
                 <% if (isPizza) { %><%- include('partials/pizza-extras', { productId: product.id }) %><% } %>
                 <p class="mad-text-color-2 content-element">Anzahl:</p>
                 <div class="btn-set big-btns">

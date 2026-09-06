@@ -346,10 +346,10 @@ async function initialize() {
       [11, 'Spaghetti Eis', 'spaghetti-eis', '', 5.50, null, '', 1, 1, null],
       [11, 'Tiramisu', 'tiramisu', '', 5.50, null, '', 0, 2, null],
       [11, 'Cheesecake', 'cheesecake', '', 5.50, null, '', 0, 3, null],
-      [11, 'Oreo Choice', 'oreo-choice', 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 3.90, null, 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 0, 4, null],
+      [11, 'Oreo Choice', 'oreo-choice', 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 3.90, null, 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 0, 4, '[{"label":"Oreo Donut","price":3.9},{"label":"Oreo Muffin","price":3.9}]'],
       [11, 'Nutella Pizza', 'nutella-pizza', 'Nutella, Weiße Schokolade', 8.90, null, 'Nutella, Weiße Schokolade', 1, 5, null],
       [11, 'Crêpe Nutella', 'crepe-nutella', 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 7.90, null, 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 0, 6, null],
-      [11, 'Crêpe Frucht', 'crepe-frucht', 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 0, 7, null],
+      [11, 'Crêpe Frucht', 'crepe-frucht', 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 0, 7, '[{"label":"Banane","price":8.9},{"label":"Erdbeeren","price":8.9},{"label":"Kiwi","price":8.9}]'],
       [11, 'Crêpe Lotus', 'crepe-lotus', 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 0, 8, null],
       [11, 'Crêpe Oreo', 'crepe-oreo', 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 8.90, null, 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 0, 9, null],
       [11, 'Crêpe Bueno', 'crepe-bueno', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 9.50, null, 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 1, 10, null],
@@ -539,10 +539,10 @@ async function initialize() {
         ['Spaghetti Eis', 'spaghetti-eis', '', 5.50, '', 1, 1, '/images/products/img20.jpg', null],
         ['Tiramisu', 'tiramisu', '', 5.50, '', 0, 2, '/images/products/img19.jpg', null],
         ['Cheesecake', 'cheesecake', '', 5.50, '', 0, 3, '/images/products/img22.jpg', null],
-        ['Oreo Choice', 'oreo-choice', 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 3.90, 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 0, 4, '/images/products/img21.jpg', null],
+        ['Oreo Choice', 'oreo-choice', 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 3.90, 'Oreo Donut oder Oreo Muffin, 1 nach Wahl', 0, 4, '/images/products/img21.jpg', '[{"label":"Oreo Donut","price":3.9},{"label":"Oreo Muffin","price":3.9}]'],
         ['Nutella Pizza', 'nutella-pizza', 'Nutella, Weiße Schokolade', 8.90, 'Nutella, Weiße Schokolade', 1, 5, '/images/products/img19.jpg', null],
         ['Crêpe Nutella', 'crepe-nutella', 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 7.90, 'Nutella, inklusive 2 Schokoladensorten nach Wahl', 0, 6, '/images/products/img20.jpg', null],
-        ['Crêpe Frucht', 'crepe-frucht', 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 8.90, 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 0, 7, '/images/products/img21.jpg', null],
+        ['Crêpe Frucht', 'crepe-frucht', 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 8.90, 'Banane, Erdbeeren oder Kiwi nach Wahl, inklusive 2 Schokoladensorten nach Wahl', 0, 7, '/images/products/img21.jpg', '[{"label":"Banane","price":8.9},{"label":"Erdbeeren","price":8.9},{"label":"Kiwi","price":8.9}]'],
         ['Crêpe Lotus', 'crepe-lotus', 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 8.90, 'Lotus, inklusive 2 Schokoladensorten nach Wahl', 0, 8, '/images/products/img22.jpg', null],
         ['Crêpe Oreo', 'crepe-oreo', 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 8.90, 'Oreo, inklusive 2 Schokoladensorten nach Wahl', 0, 9, '/images/products/img19.jpg', null],
         ['Crêpe Bueno', 'crepe-bueno', 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 9.50, 'Bueno, inklusive 2 Schokoladensorten nach Wahl', 1, 10, '/images/products/img20.jpg', null],
@@ -913,6 +913,21 @@ async function initialize() {
     }
   } catch (e) {
     console.error('Bowls-Beilage übersprungen:', e.message);
+  }
+
+  // Auto-Migration Dessert-Auswahl 2026-09-06: Oreo Donut/Muffin + Frucht-Auswahl (Crepe Frucht).
+  // Schoko-Boxen (2 Pflicht) kommen aus Code (choco-box), keine DB-Änderung nötig.
+  // Nur Größen setzen, wo noch keine sind.
+  try {
+    await query(`UPDATE products SET sizes = $1 WHERE slug = 'oreo-choice' AND sizes IS NULL`,
+      ['[{"label":"Oreo Donut","price":3.9},{"label":"Oreo Muffin","price":3.9}]']);
+    const fr = await get("SELECT id, price FROM products WHERE slug = 'crepe-frucht'");
+    if (fr) {
+      const fopts = ['Banane', 'Erdbeeren', 'Kiwi'].map(n => ({ label: n, price: parseFloat(fr.price) }));
+      await query('UPDATE products SET sizes = $1 WHERE id = $2 AND sizes IS NULL', [JSON.stringify(fopts), fr.id]);
+    }
+  } catch (e) {
+    console.error('Dessert-Auswahl übersprungen:', e.message);
   }
 
   // Textfix BOX 2: "Snack Rolls" → "Snacks" (Auswahl aus der Snacks-Karte)

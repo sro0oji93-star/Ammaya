@@ -125,6 +125,8 @@ router.post('/', async (req, res) => {
     const validSauces = sauceCatRow
       ? (await db.all('SELECT name FROM products WHERE category_id = $1', [sauceCatRow.id])).map(r => r.name)
       : [];
+    // Schoko-Liste Dessert (Crêpes, Mini Pancakes/Waffel) – fest, inkl. je 2 Pflicht
+    const CHOCO_LIST = ['Nutella', 'Weiße Schokolade', 'Pistaziencreme', 'Puderzucker'];
     // Listen für NEXO Box-Konfiguration – einmal laden
     const { validateBox, BOX_SLUGS } = require('../boxen');
     const { TOPPINGS } = require('../extras');
@@ -226,6 +228,20 @@ router.post('/', async (req, res) => {
         } else {
           delete item.sauces;
         }
+        // Schoko-Box Dessert: genau 2 Pflicht (inklusive), nur Dessert
+        if (item.chocos && item.chocos.length) {
+          if (product.catslug !== 'dessert') {
+            return res.status(400).json({ success: false, message: 'Ungültige Schoko-Auswahl für: ' + item.name });
+          }
+          const cleanChoc = [...new Set(item.chocos)].filter(s => CHOCO_LIST.includes(s));
+          if (cleanChoc.length !== 2) {
+            return res.status(400).json({ success: false, message: 'Bitte 2 Schoko-Sorten wählen (' + item.name + ')' });
+          }
+          cleanChoc.forEach(sn => item.extras.push({ name: 'Schoko: ' + sn, price: 0 }));
+          item.chocos = cleanChoc;
+        } else {
+          delete item.chocos;
+        }
       } else {
         realPrice = parseFloat(product.price);
         delete item.extras;
@@ -241,6 +257,20 @@ router.post('/', async (req, res) => {
           delete item.sauce;
         }
         delete item.sauces;
+        // Schoko-Box Dessert: genau 2 Pflicht (inklusive), nur Dessert
+        if (item.chocos && item.chocos.length) {
+          if (product.catslug !== 'dessert') {
+            return res.status(400).json({ success: false, message: 'Ungültige Schoko-Auswahl für: ' + item.name });
+          }
+          const cleanChoc2 = [...new Set(item.chocos)].filter(s => CHOCO_LIST.includes(s));
+          if (cleanChoc2.length !== 2) {
+            return res.status(400).json({ success: false, message: 'Bitte 2 Schoko-Sorten wählen (' + item.name + ')' });
+          }
+          item.extras = cleanChoc2.map(sn => ({ name: 'Schoko: ' + sn, price: 0 }));
+          item.chocos = cleanChoc2;
+        } else {
+          delete item.chocos;
+        }
       }
       // Notiz pro Position (aus der Kasse), max. 200 Zeichen
       if (typeof item.note === 'string' && item.note.trim()) {
