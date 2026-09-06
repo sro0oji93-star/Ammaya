@@ -937,6 +937,18 @@ async function initialize() {
     console.error('Box-Textfix übersprungen:', e.message);
   }
 
+  // Konsistenz: Namens-Duplikate auf einen Status bringen (wenn eines geschlossen, alle schließen).
+  // Sonst zeigen Admin (neueste Zeile) und Menü (älteste verfügbare Zeile) Unterschiedliches.
+  try {
+    const dupes = await all(`SELECT name FROM products GROUP BY name HAVING COUNT(*) > 1`);
+    for (const d of dupes) {
+      await query('UPDATE products SET is_available = (SELECT MIN(COALESCE(is_available, 0)) FROM products WHERE name = $1) WHERE name = $1', [d.name]);
+      console.log('Duplikat-Status vereinheitlicht:', d.name);
+    }
+  } catch (e) {
+    console.error('Duplikat-Fix übersprungen:', e.message);
+  }
+
   // Auto-Migration Burger-Menü 2026-09-06: Solo oder Menü (+5 €, Pommes + 0,33l Softdrink nach Wahl).
   // Nur setzen, wenn noch keine Auswahl da ist.
   try {

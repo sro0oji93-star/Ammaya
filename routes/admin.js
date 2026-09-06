@@ -129,12 +129,12 @@ router.post('/produkte/loeschen/:id', auth, async (req, res) => {
   res.redirect('/admin/produkte');
 });
 
-// Schnell-Umschalter Verfügbar/Ausverkauft
+// Schnell-Umschalter Verfügbar/Ausverkauft (gilt für alle Namens-Duplikate, damit Menü + Admin immer übereinstimmen)
 router.post('/produkte/verfuegbarkeit/:id', auth, async (req, res) => {
   const p = await db.get('SELECT id, name, is_available FROM products WHERE id = $1', [req.params.id]);
   if (!p) return res.redirect('/admin/produkte');
   const next = p.is_available ? 0 : 1;
-  await db.run('UPDATE products SET is_available = $1 WHERE id = $2', [next, req.params.id]);
+  await db.run('UPDATE products SET is_available = $1 WHERE name = $2', [next, p.name]);
   res.redirect('/admin/produkte?toggled=' + encodeURIComponent(p.name) + '&state=' + next);
 });
 
