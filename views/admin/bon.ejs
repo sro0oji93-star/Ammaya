@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Bon <%= order.order_number %></title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #000; background: #fff; width: 72mm; margin: 0 auto; padding: 4mm 2mm; }
+  .center { text-align: center; }
+  .big { font-size: 18px; font-weight: bold; }
+  .medium { font-size: 15px; font-weight: bold; }
+  hr { border: none; border-top: 1px dashed #000; margin: 6px 0; }
+  .row { display: flex; justify-content: space-between; }
+  .item { margin: 4px 0; }
+  .item-name { font-weight: bold; }
+  .extra, .note { font-size: 12px; padding-left: 6px; }
+  .total { font-size: 17px; font-weight: bold; }
+  @media print {
+    @page { size: 80mm auto; margin: 0; }
+    body { width: 72mm; padding: 2mm; }
+  }
+</style>
+</head>
+<body>
+  <div class="center">
+    <div class="big"><%= (typeof settings !== 'undefined' && settings.site_name) ? settings.site_name : 'Restaurant' %></div>
+    <% if (typeof settings !== 'undefined' && settings.address) { %><div><%= settings.address %></div><% } %>
+    <% if (typeof settings !== 'undefined' && settings.phone) { %><div>Tel: <%= settings.phone %></div><% } %>
+  </div>
+  <hr>
+  <div class="center medium"><%= order.order_type === 'abholung' ? '*** ABHOLUNG ***' : '*** LIEFERUNG ***' %></div>
+  <div class="center"><strong><%= order.order_number %></strong></div>
+  <div class="center"><%= new Date(order.created_at).toLocaleDateString('de-DE') %> <%= new Date(order.created_at).toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) %></div>
+  <hr>
+  <div><strong>Kunde:</strong> <%= order.customer_name %></div>
+  <% if (order.customer_phone) { %><div><strong>Tel:</strong> <%= order.customer_phone %></div><% } %>
+  <% if (order.order_type !== 'abholung') { %>
+    <div><%= order.delivery_address || '' %></div>
+    <div><%= order.delivery_zip || '' %> <%= order.delivery_city || '' %></div>
+  <% } %>
+  <hr>
+  <% order.items.forEach(function(it) { %>
+    <div class="item">
+      <div class="row"><span class="item-name"><%= it.qty %>x <%= it.name %><% if (it.size && it.size.label) { %> (<%= it.size.label %>)<% } %></span><span><%= (it.qty * it.price).toFixed(2) %></span></div>
+      <% if (it.extras && it.extras.length) { %><div class="extra">+ <%= it.extras.map(function(e){ return e.name; }).join(', ') %></div><% } %>
+      <% if (it.note) { %><div class="note">Notiz: <%= it.note %></div><% } %>
+    </div>
+  <% }); %>
+  <hr>
+  <div class="row"><span>Zwischensumme</span><span><%= parseFloat(order.subtotal).toFixed(2) %></span></div>
+  <% if (parseFloat(order.discount) > 0) { %><div class="row"><span>Rabatt <%= order.discount_code || '' %></span><span>-<%= parseFloat(order.discount).toFixed(2) %></span></div><% } %>
+  <div class="row"><span>Lieferung</span><span><%= parseFloat(order.delivery_fee).toFixed(2) %></span></div>
+  <div class="row total"><span>GESAMT</span><span><%= parseFloat(order.total).toFixed(2) %> €</span></div>
+  <hr>
+  <div>Zahlung: <%= order.payment_method === 'bar' ? 'Bar' : (order.payment_method === 'karte' ? 'Karte' : 'Online') %></div>
+  <% if (order.notes) { %><div>Hinweis: <%= order.notes %></div><% } %>
+  <br><br>
+  <div class="center">* * * Danke! * * *</div>
+  <br><br><br>
+<script>
+  if (new URLSearchParams(location.search).get('autoprint') === '1') { window.onload = function() { setTimeout(function(){ window.print(); }, 300); }; }
+</script>
+</body>
+</html>

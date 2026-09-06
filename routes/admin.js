@@ -185,6 +185,47 @@ router.post('/bestellungen/status/:id', auth, async (req, res) => {
   res.redirect('/admin/bestellungen');
 });
 
+// --- Auto-Print + Sound: neue Bestellungen seit last_id abfragen (Admin-PC pollt alle paar Sekunden) ---
+router.get('/api/neue-bestellungen', auth, async (req, res) => {
+  try {
+    const lastId = parseInt(req.query.last_id, 10) || 0;
+    const rows = await db.all(
+      "SELECT * FROM orders WHERE id > $1 AND order_status = 'neu' AND COALESCE(is_deleted,0) = 0 ORDER BY id ASC LIMIT 20",
+      [lastId]
+    );
+    const orders = rows.map(o => {
+      let items = [];
+      try { items = JSON.parse(o.items); } catch (e) { items = []; }
+      return { ...o, items };
+    });
+    const maxIdRow = await db.get('SELECT COALESCE(MAX(id), 0) as max_id FROM orders');
+    res.json({ success: true, orders, max_id: maxIdRow ? maxIdRow.max_id : lastId });
+  } catch (err) {
+    console.error('neue-bestellungen error:', err);
+    res.status(500).json({ success: false, message: 'Fehler beim Abrufen' });
+  }
+});
+
+// Als gedruckt markieren (damit kein Doppel-Druck bei mehreren Tabs/PCs)
+router.post('/api/bestellungen/:id/gedruckt', auth, async (req, res) => {
+  try {
+    await db.run('UPDATE orders SET printed = 1, printed_at = NOW() WHERE id = $1', [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('gedruckt error:', err);
+    res.status(500).json({ success: false });
+  }
+});
+
+// Thermo-Bon (80mm) für TM-T88V – wird im versteckten Iframe gedruckt
+router.get('/bestellungen/:id/bon', auth, async (req, res) => {
+  const order = await db.get('SELECT * FROM orders WHERE id = $1 AND COALESCE(is_deleted,0) = 0', [req.params.id]);
+  if (!order) return res.status(404).send('Bestellung nicht gefunden');
+  try { order.items = JSON.parse(order.items); } catch (e) { order.items = []; }
+  const settings = res.locals.settings;
+  res.render('admin/bon', { order, settings });
+});
+
 router.get('/bestellungen/:id', auth, async (req, res) => {
   const order = await db.get('SELECT * FROM orders WHERE id = $1 AND COALESCE(is_deleted,0) = 0', [req.params.id]);
   if (!order) return res.status(404).send('Bestellung nicht gefunden');
