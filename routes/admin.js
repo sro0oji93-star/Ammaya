@@ -84,7 +84,7 @@ router.post('/produkte/pizza-groesen', auth, async (req, res) => {
 router.get('/produkte', auth, async (req, res) => {
   const products = await db.all('SELECT DISTINCT ON (p.name) p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.name, p.id DESC');
   const categories = await db.all('SELECT * FROM categories ORDER BY sort_order');
-  res.render('admin/products', { title: 'Produkte – Admin', products, categories, duplicate: req.query.duplicate === '1' });
+  res.render('admin/products', { title: 'Produkte – Admin', products, categories, duplicate: req.query.duplicate === '1', toggled: req.query.toggled || null, toggledState: req.query.state || null });
 });
 
 router.post('/produkte', auth, upload.single('image'), async (req, res) => {
@@ -131,10 +131,11 @@ router.post('/produkte/loeschen/:id', auth, async (req, res) => {
 
 // Schnell-Umschalter Verfügbar/Ausverkauft
 router.post('/produkte/verfuegbarkeit/:id', auth, async (req, res) => {
-  const p = await db.get('SELECT is_available FROM products WHERE id = $1', [req.params.id]);
+  const p = await db.get('SELECT id, name, is_available FROM products WHERE id = $1', [req.params.id]);
   if (!p) return res.redirect('/admin/produkte');
-  await db.run('UPDATE products SET is_available = $1 WHERE id = $2', [p.is_available ? 0 : 1, req.params.id]);
-  res.redirect('/admin/produkte');
+  const next = p.is_available ? 0 : 1;
+  await db.run('UPDATE products SET is_available = $1 WHERE id = $2', [next, req.params.id]);
+  res.redirect('/admin/produkte?toggled=' + encodeURIComponent(p.name) + '&state=' + next);
 });
 
 router.get('/kategorien', auth, async (req, res) => {

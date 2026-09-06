@@ -1,4 +1,9 @@
 <%- include('layout') %>
+<% if (typeof toggled !== 'undefined' && toggled) { %>
+<div class="alert alert-success" style="background:#d4edda;border:1px solid #28a745;color:#155724;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+  <i class="fas fa-check-circle"></i> <%= toggled %> ist jetzt <%= toggledState === '1' ? 'Verfügbar' : 'Ausverkauft' %>.
+</div>
+<% } %>
 <% if (duplicate) { %>
 <div class="alert alert-warning" style="background:#fff3cd;border:1px solid #ffc107;color:#856404;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
   <i class="fas fa-exclamation-triangle"></i> Ein Produkt mit diesem Namen existiert bereits.
@@ -36,11 +41,12 @@
         <td><strong><%= p.name %></strong></td>
         <td><span class="badge badge-cat"><%= p.category_name || 'Unkategorisiert' %></span></td>
         <td><%= parseFloat(p.price).toFixed(2) %> €</td>
-        <td><span class="status-badge <%= p.is_available ? 'status-verfuegbar' : 'status-ausverkauft' %>"><%= p.is_available ? 'Verfügbar' : 'Ausverkauft' %></span></td>
-        <td class="actions-cell">
-          <form method="POST" action="/admin/produkte/verfuegbarkeit/<%= p.id %>" style="display:inline" title="<%= p.is_available ? 'Auf Ausverkauft setzen' : 'Auf Verfügbar setzen' %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button type="submit" class="btn btn-sm <%= p.is_available ? 'btn-primary' : 'btn-outline' %>" title="<%= p.is_available ? 'Verfügbar – klicken zum Sperren' : 'Ausverkauft – klicken zum Freigeben' %>"><i class="fas <%= p.is_available ? 'fa-toggle-on' : 'fa-toggle-off' %>"></i></button>
+        <td>
+          <form method="POST" action="/admin/produkte/verfuegbarkeit/<%= p.id %>" style="display:inline" title="Klicken zum Umschalten (Verfügbar ⇄ Ausverkauft)"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="status-badge <%= p.is_available ? 'status-verfuegbar' : 'status-ausverkauft' %>" style="cursor:pointer;border:none;font:inherit"><%= p.is_available ? 'Verfügbar' : 'Ausverkauft' %></button>
           </form>
+        </td>
+        <td class="actions-cell">
           <button class="btn btn-sm btn-outline" onclick='editProduct(<%= JSON.stringify(p) %>)'><i class="fas fa-edit"></i></button>
           <form method="POST" action="/admin/produkte/loeschen/<%= p.id %>" style="display:inline" onsubmit="return confirm('Wirklich löschen?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
